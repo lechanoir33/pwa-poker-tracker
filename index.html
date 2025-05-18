@@ -1,16 +1,58 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PWA Poker Tracker</title>
-    <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-<body>
-  <h1 class="app-title">HISTORIQUE DES PREMIUM SERVIES</h1>
-<main id="sessions"></main>
-  <main id="sessions"></main>
-  <script src="script.js"></script>
-</body>
-</html>
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #000;
+  color: #fff;
+  padding: 1rem;
+}
+
+.app-title {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.session {
+  border-bottom: 1px solid #444;
+  padding-bottom: 1rem;
+}
+
+.session h2 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+  color: #fff;
+}
+
+.hand-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.hand-label {
+  width: 50px;
+  margin-right: 1rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.checkboxes {
+  display: flex;
+  gap: 0.75rem;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: white;
+  background-color: #000;
+  border: 1px solid #fff;
+}
