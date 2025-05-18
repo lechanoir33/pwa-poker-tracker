@@ -21,7 +21,7 @@ h1 {
 
 #tableau {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Ajuste la taille minimale ici */
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
   justify-content: center;
   padding: 20px;
