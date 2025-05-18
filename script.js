@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const hands = [
     'AA', 'KK', 'QQ', 'JJ', 'TT',
@@ -6,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   const grid = document.getElementById('grid');
-  grid.style.userSelect = 'none';
 
   hands.forEach(hand => {
     const container = document.createElement('div');
@@ -15,15 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.textContent = hand;
-    cell.style.userSelect = 'none';
 
     let count = 0;
     const counter = document.createElement('div');
     counter.className = 'counter';
     counter.textContent = count;
-    counter.style.userSelect = 'none';
 
     function getColorForCount(count) {
+      // Plus le compteur augmente, plus le bleu devient clair
       const maxCount = 20;
       const intensity = Math.min(255, 50 + (count / maxCount) * 205);
       return `rgb(0, 0, ${intensity})`;
@@ -31,38 +30,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cell.style.backgroundColor = getColorForCount(count);
 
+    // Incrémenter le compteur au clic
     cell.addEventListener('click', () => {
       count++;
       counter.textContent = count;
       cell.style.backgroundColor = getColorForCount(count);
     });
 
-    // Appui long sur le compteur pour réinitialiser
+    // Réinitialiser le compteur sur appui long (souris)
     let pressTimer;
 
-    function startPressTimer() {
+    cell.addEventListener('mousedown', (e) => {
       pressTimer = setTimeout(() => {
         count = 0;
         counter.textContent = count;
         cell.style.backgroundColor = getColorForCount(count);
       }, 800);
-    }
+    });
 
-    function cancelPressTimer() {
+    cell.addEventListener('mouseup', () => {
       clearTimeout(pressTimer);
-    }
+    });
 
-    counter.addEventListener('mousedown', startPressTimer);
-    counter.addEventListener('mouseup', cancelPressTimer);
-    counter.addEventListener('mouseleave', cancelPressTimer);
-    counter.addEventListener('touchstart', startPressTimer);
-    counter.addEventListener('touchend', cancelPressTimer);
+    cell.addEventListener('mouseleave', () => {
+      clearTimeout(pressTimer);
+    });
+
+    // Réinitialiser le compteur sur appui long (tactile)
+    cell.addEventListener('touchstart', (e) => {
+      pressTimer = setTimeout(() => {
+        count = 0;
+        counter.textContent = count;
+        cell.style.backgroundColor = getColorForCount(count);
+      }, 800);
+    });
+
+    cell.addEventListener('touchend', () => {
+      clearTimeout(pressTimer);
+    });
 
     container.appendChild(cell);
     container.appendChild(counter);
     grid.appendChild(container);
   });
 });
-
-// Désactiver le clic droit
-document.addEventListener('contextmenu', event => event.preventDefault());
