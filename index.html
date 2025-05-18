@@ -8,6 +8,13 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
 </head>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker enregistré'))
+      .catch(err => console.error('Service Worker erreur', err));
+  }
+</script>
 <body>
   <h1>MAINS REÇUES</h1>
   <div id="tableau"></div>
