@@ -1,53 +1,27 @@
-const premiums = ['TT', 'JJ', 'QQ', 'KK', 'AA'];
-const nbCases = 4;
-const sessionsContainer = document.getElementById('sessions');
-
-function getPastSessions(startDate, endDate) {
-  const dates = [];
-  const current = new Date(startDate);
-  while (current <= endDate) {
-    const day = current.getDay();
-    if (day === 1 || day === 4) { // Lundi (1) et Jeudi (4)
-      dates.push(new Date(current));
-    }
-    current.setDate(current.getDate() + 1);
-  }
-  return dates.reverse(); // Du plus récent au plus ancien
+function isMondayOrThursday(date) {
+  const day = date.getDay();
+  return day === 1 || day === 4; // Lundi = 1, Jeudi = 4
 }
 
 function formatDate(date) {
-  return date.toISOString().split('T')[0];
-}
-
-function loadState(key) {
-  return localStorage.getItem(key) === '1';
-}
-
-function saveState(key, value) {
-  localStorage.setItem(key, value ? '1' : '0');
-}
-
-function createCheckbox(dateStr, hand, index) {
-  const id = `${dateStr}_${hand}_${index}`;
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = loadState(id);
-  checkbox.addEventListener('change', () => {
-    saveState(id, checkbox.checked);
+  return date.toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
   });
-  return checkbox;
 }
 
-function createSession(date) {
-  const dateStr = formatDate(date);
-  const sessionDiv = document.createElement('div');
-  sessionDiv.className = 'session';
+function generateSessionHTML(date) {
+  const hands = ['TT', 'JJ', 'QQ', 'KK', 'AA'];
+  const session = document.createElement('section');
+  session.className = 'session';
 
   const title = document.createElement('h2');
-  title.textContent = dateStr;
-  sessionDiv.appendChild(title);
+  title.textContent = formatDate(date);
+  session.appendChild(title);
 
-  premiums.forEach((hand) => {
+  hands.forEach(hand => {
     const row = document.createElement('div');
     row.className = 'hand-row';
 
@@ -56,18 +30,44 @@ function createSession(date) {
     label.textContent = hand;
     row.appendChild(label);
 
-    for (let i = 0; i < nbCases; i++) {
-      row.appendChild(createCheckbox(dateStr, hand, i));
+    const checkboxContainer = document.createElement('div');
+    checkboxContainer.className = 'checkboxes';
+
+    for (let i = 0; i < 4; i++) {
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = `${hand}-${i}-${date.toISOString()}`;
+
+      // Retenir l’état coché/décoché (sauvegarde locale)
+      checkbox.checked = localStorage.getItem(checkbox.id) === 'true';
+      checkbox.addEventListener('change', () => {
+        localStorage.setItem(checkbox.id, checkbox.checked);
+      });
+
+      checkboxContainer.appendChild(checkbox);
     }
 
-    sessionDiv.appendChild(row);
+    row.appendChild(checkboxContainer);
+    session.appendChild(row);
   });
 
-  sessionsContainer.appendChild(sessionDiv);
+  return session;
 }
 
-// Génère les sessions depuis début 2024 jusqu’à aujourd’hui
+function renderSessions(startDate, endDate) {
+  const container = document.getElementById('sessions');
+  const current = new Date(startDate);
+
+  while (current <= endDate) {
+    if (isMondayOrThursday(current)) {
+      const sessionEl = generateSessionHTML(new Date(current));
+      container.appendChild(sessionEl);
+    }
+    current.setDate(current.getDate() + 1);
+  }
+}
+
+// ⚙️ Plage de dates : du 12 mai 2025 au 12 novembre 2025
 const start = new Date('2025-05-12');
 const end = new Date('2025-11-12');
-const sessions = getPastSessions(start, end);
-sessions.forEach(createSession);
+renderSessions(start, end);
