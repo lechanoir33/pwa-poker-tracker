@@ -38,11 +38,12 @@ body {
   height: 70px;
   justify-content: center;
   position: relative;
-  background-color: #001F4D; /* bleu foncé par défaut */
+  background-color: #001F4D;
 }
 
 .hand-text {
   user-select: none;
+  font-size: 20px;
 }
 
 .counter {
@@ -54,5 +55,5 @@ body {
   width: 100%;
   border-radius: 4px;
   user-select: none;
-  pointer-events: none; /* pas cliquable */
+  pointer-events: none;
 }

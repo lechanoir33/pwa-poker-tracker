@@ -7,11 +7,11 @@ function generateHands() {
   for (let i = 0; i < ranks.length; i++) {
     for (let j = 0; j < ranks.length; j++) {
       if (i === j) {
-        hands.push(ranks[i] + ranks[j]); // paire ex: AA
+        hands.push(ranks[i] + ranks[j]);
       } else if (i < j) {
-        hands.push(ranks[i] + ranks[j] + 's'); // suited, s minuscule
+        hands.push(ranks[i] + ranks[j] + 's');
       } else {
-        hands.push(ranks[j] + ranks[i] + 'o'); // offsuit, o minuscule
+        hands.push(ranks[j] + ranks[i] + 'o');
       }
     }
   }
@@ -32,7 +32,6 @@ function saveCounters() {
   localStorage.setItem('pokerCounters', JSON.stringify(counters));
 }
 
-// Fonction pour interpoler entre deux couleurs hexadécimales
 function interpolateColor(color1, color2, factor) {
   let result = "#";
   for (let i = 1; i < 7; i += 2) {
@@ -49,7 +48,6 @@ function createCell(hand) {
   const cell = document.createElement('div');
   cell.className = 'cell';
 
-  // Texte main avec s/o minuscules
   const handText = document.createElement('span');
   handText.className = 'hand-text';
   if (hand.endsWith('s') || hand.endsWith('o')) {
@@ -59,15 +57,13 @@ function createCell(hand) {
   }
   cell.appendChild(handText);
 
-  // compteur
   const counter = document.createElement('div');
   counter.className = 'counter';
   counter.textContent = counters[hand] || 0;
   cell.appendChild(counter);
 
-  // fonction pour mettre à jour la couleur de fond selon compteur
   function updateBackground() {
-    const maxCount = 20; // max compteur attendu pour le dégradé
+    const maxCount = 20;
     const count = counters[hand] || 0;
     const factor = Math.min(count / maxCount, 1);
     const darkBlue = '#001F4D';
@@ -77,7 +73,6 @@ function createCell(hand) {
 
   updateBackground();
 
-  // clic simple pour incrémenter compteur
   cell.addEventListener('click', () => {
     counters[hand] = (counters[hand] || 0) + 1;
     counter.textContent = counters[hand];
@@ -85,7 +80,6 @@ function createCell(hand) {
     saveCounters();
   });
 
-  // appui long pour reset compteur
   let pressTimer = null;
 
   cell.addEventListener('mousedown', () => {
@@ -97,12 +91,8 @@ function createCell(hand) {
     }, 700);
   });
 
-  cell.addEventListener('mouseup', () => {
-    clearTimeout(pressTimer);
-  });
-  cell.addEventListener('mouseleave', () => {
-    clearTimeout(pressTimer);
-  });
+  cell.addEventListener('mouseup', () => clearTimeout(pressTimer));
+  cell.addEventListener('mouseleave', () => clearTimeout(pressTimer));
 
   return cell;
 }
