@@ -67,7 +67,7 @@ function createSession(date) {
 }
 
 // Génère les sessions depuis début 2024 jusqu’à aujourd’hui
-const start = new Date('2024-01-01');
-const end = new Date();
+const start = new Date('2025-05-12');
+const end = new Date('2025-11-12');
 const sessions = getPastSessions(start, end);
 sessions.forEach(createSession);
