@@ -5,6 +5,20 @@
   user-select: none;
 }
 
+#titre {
+  text-align: center;
+  color: white;
+  text-transform: uppercase;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+@media (orientation: portrait) {
+  #titre {
+    text-align: center; /* Bien centré en portrait aussi */
+  }
+}
+
 body {
   background-color: black;
   color: white;
