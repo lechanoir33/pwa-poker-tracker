@@ -44,11 +44,39 @@ h1 {
 @media (orientation: portrait) {
   #tableau {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    justify-content: center;
-    padding: 20px;
+    grid-template-columns: repeat(5, 1fr); /* Force 5 colonnes */
+    gap: 6px;
+    padding: 10px;
   }
+
+  .mains {
+    min-width: 0;
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .counter {
+    font-size: 12px;
+  }
+
+  label {
+    font-size: 13px;
+  }
+}
+  .mains {
+    min-width: 0;
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .counter {
+    font-size: 12px;
+  }
+
+  label {
+    font-size: 13px;
+  }
+}
   
 }
 .mains {
