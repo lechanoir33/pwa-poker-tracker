@@ -27,6 +27,16 @@ h1 {
   padding: 20px;
 }
 
+@media (orientation: portrait) {
+  #tableau {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+}
 .mains {
   background-color: #001f3f;
   padding: 10px;
