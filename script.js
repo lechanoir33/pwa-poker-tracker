@@ -82,6 +82,32 @@ hands.forEach((hand) => {
   tableau.appendChild(div);
 });
 
+// Sauvegarde des compteurs dans localStorage
+function saveCounts() {
+  const counts = {};
+  document.querySelectorAll('.mains').forEach(div => {
+    const hand = div.dataset.hand;
+    const counter = div.querySelector('.counter');
+    counts[hand] = parseInt(counter.textContent) || 0;
+  });
+  localStorage.setItem('pokerHandCounts', JSON.stringify(counts));
+}
+
+// Chargement des compteurs au démarrage
+function loadCounts() {
+  const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
+  document.querySelectorAll('.mains').forEach(div => {
+    const hand = div.dataset.hand;
+    const counter = div.querySelector('.counter');
+    if (counts[hand]) {
+      counter.textContent = counts[hand];
+      const checkbox = div.querySelector('input[type="checkbox"]');
+      checkbox.checked = counts[hand] > 0;
+      updateColor(div, counts[hand]);
+    }
+  });
+}
+
 // Sécurité et protection
 document.addEventListener('contextmenu', e => e.preventDefault());  // Clic droit interdit
 document.addEventListener('selectstart', e => e.preventDefault());  // Empêche sélection
