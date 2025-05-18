@@ -1,73 +1,103 @@
-function isMondayOrThursday(date) {
-  const day = date.getDay();
-  return day === 1 || day === 4; // Lundi = 1, Jeudi = 4
-}
+const grid = document.getElementById('grid');
 
-function formatDate(date) {
-  return date.toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
+// Mains de départ poker 13x13 (simplifié en exemple complet)
+const ranks = ['A','K','Q','J','T','9','8','7','6','5','4','3','2'];
 
-function generateSessionHTML(date) {
-  const hands = ['TT', 'JJ', 'QQ', 'KK', 'AA'];
-  const session = document.createElement('section');
-  session.className = 'session';
-
-  const title = document.createElement('h2');
-  title.textContent = formatDate(date);
-  session.appendChild(title);
-
-  hands.forEach(hand => {
-    const row = document.createElement('div');
-    row.className = 'hand-row';
-
-    const label = document.createElement('div');
-    label.className = 'hand-label';
-    label.textContent = hand;
-    row.appendChild(label);
-
-    const checkboxContainer = document.createElement('div');
-    checkboxContainer.className = 'checkboxes';
-
-    for (let i = 0; i < 4; i++) {
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = `${hand}-${i}-${date.toISOString()}`;
-
-      // Retenir l’état coché/décoché (sauvegarde locale)
-      checkbox.checked = localStorage.getItem(checkbox.id) === 'true';
-      checkbox.addEventListener('change', () => {
-        localStorage.setItem(checkbox.id, checkbox.checked);
-      });
-
-      checkboxContainer.appendChild(checkbox);
+// Génère toutes les combinaisons standard (suited, offsuit, pocket pairs)
+function generateHands() {
+  const hands = [];
+  for (let i = 0; i < ranks.length; i++) {
+    for (let j = 0; j < ranks.length; j++) {
+      if (i === j) {
+        hands.push(ranks[i] + ranks[j]); // pocket pair, ex: AA
+      } else if (i < j) {
+        hands.push(ranks[i] + ranks[j] + 's'); // suited, ex: AKs
+      } else {
+        hands.push(ranks[j] + ranks[i] + 'o'); // offsuit, ex: AKo
+      }
     }
-
-    row.appendChild(checkboxContainer);
-    session.appendChild(row);
-  });
-
-  return session;
+  }
+  return hands;
 }
 
-function renderSessions(startDate, endDate) {
-  const container = document.getElementById('sessions');
-  const current = new Date(startDate);
+const hands = generateHands();
 
-  while (current <= endDate) {
-    if (isMondayOrThursday(current)) {
-      const sessionEl = generateSessionHTML(new Date(current));
-      container.appendChild(sessionEl);
-    }
-    current.setDate(current.getDate() + 1);
+const counters = {}; // clé=main, valeur=compteur
+
+// Charge compteurs depuis localStorage
+function loadCounters() {
+  const saved = localStorage.getItem('pokerCounters');
+  if (saved) {
+    Object.assign(counters, JSON.parse(saved));
   }
 }
 
-// ⚙️ Plage de dates : du 12 mai 2025 au 12 novembre 2025
-const start = new Date('2025-05-12');
-const end = new Date('2025-11-12');
-renderSessions(start, end);
+// Sauvegarde compteurs dans localStorage
+function saveCounters() {
+  localStorage.setItem('pokerCounters', JSON.stringify(counters));
+}
+
+// Calcule couleur jaune foncée en fonction du compteur (max 10)
+function getYellowShade(count) {
+  const maxCount = 10;
+  const base = 255; // clair
+  const min = 150;  // foncé
+  const val = Math.max(min, base - (count * 10));
+  return `rgb(${val}, ${val}, 0)`; // nuance de jaune foncé
+}
+
+// Crée une cellule main
+function createCell(hand) {
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  cell.textContent = hand.toUpperCase();
+
+  // compteur visuel
+  const counter = document.createElement('div');
+  counter.className = 'counter';
+  counter.textContent = counters[hand] || 0;
+  cell.appendChild(counter);
+
+  // applique la couleur selon compteur
+  const count = counters[hand] || 0;
+  cell.style.backgroundColor = getYellowShade(count);
+
+  // clic simple : incrémente compteur + sauvegarde + mise à jour affichage
+  cell.addEventListener('click', () => {
+    counters[hand] = (counters[hand] || 0) + 1;
+    counter.textContent = counters[hand];
+    cell.style.backgroundColor = getYellowShade(counters[hand]);
+    saveCounters();
+  });
+
+  // appui long pour reset compteur
+  let pressTimer = null;
+
+  cell.addEventListener('mousedown', () => {
+    pressTimer = setTimeout(() => {
+      counters[hand] = 0;
+      counter.textContent = 0;
+      cell.style.backgroundColor = getYellowShade(0);
+      saveCounters();
+    }, 700); // 700 ms appui long
+  });
+
+  cell.addEventListener('mouseup', () => {
+    clearTimeout(pressTimer);
+  });
+  cell.addEventListener('mouseleave', () => {
+    clearTimeout(pressTimer);
+  });
+
+  return cell;
+}
+
+function init() {
+  loadCounters();
+  hands.forEach(hand => {
+    const cell = createCell(hand);
+    grid.appendChild(cell);
+  });
+}
+
+init();
