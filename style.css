@@ -20,10 +20,10 @@ h1 {
 }
 
 #tableau {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Ajuste la taille minimale ici */
+  gap: 8px;
   justify-content: center;
-  gap: 15px;
   padding: 20px;
 }
 
