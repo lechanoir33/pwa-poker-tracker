@@ -12,7 +12,7 @@ h1 {
   color: white;
   font-size: 2em;
   text-transform: uppercase;
-  margin-top: 1rem;
+  margin: 1rem 0;
 }
 
 #grid {
@@ -35,7 +35,7 @@ h1 {
   padding: 10px 15px;
   border-radius: 5px;
   font-weight: bold;
-  color: black;
+  color: white;
   font-size: 1.2em;
   text-transform: uppercase;
   user-select: none;
@@ -50,4 +50,5 @@ h1 {
   padding: 4px 8px;
   border-radius: 4px;
   user-select: none;
+  pointer-events: none;
 }

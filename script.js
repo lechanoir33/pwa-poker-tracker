@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const counter = document.createElement('div');
     counter.className = 'counter';
     counter.textContent = count;
-    counter.style.userSelect = 'none';
 
     function getColorForCount(count) {
       const maxCount = 20;
@@ -51,6 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function cancelPressTimer() {
       clearTimeout(pressTimer);
     }
+
+    cell.addEventListener('mousedown', startPressTimer);
+    cell.addEventListener('mouseup', cancelPressTimer);
+    cell.addEventListener('mouseleave', cancelPressTimer);
+    cell.addEventListener('touchstart', startPressTimer);
+    cell.addEventListener('touchend', cancelPressTimer);
+    cell.addEventListener('touchcancel', cancelPressTimer);
 
     counter.addEventListener('mousedown', startPressTimer);
     counter.addEventListener('mouseup', cancelPressTimer);
