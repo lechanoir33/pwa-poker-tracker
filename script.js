@@ -32,14 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cell.style.backgroundColor = getColorForCount(count);
 
-    // Clic pour incrémenter
     cell.addEventListener('click', () => {
       count++;
       counter.textContent = count;
       cell.style.backgroundColor = getColorForCount(count);
     });
 
-    // Appui long pour réinitialiser (sur compteur uniquement)
     let pressTimer;
 
     function startPressTimer() {
@@ -47,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         count = 0;
         counter.textContent = count;
         cell.style.backgroundColor = getColorForCount(count);
-      }, 800); // 800 ms = durée appui long
+      }, 800);
     }
 
     function cancelPressTimer() {
@@ -67,5 +65,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Désactiver le clic droit
 document.addEventListener('contextmenu', event => event.preventDefault());

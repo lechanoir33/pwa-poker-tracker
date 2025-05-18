@@ -1,59 +1,53 @@
 body {
-  background-color: #000;
-  color: #fff;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
   font-family: sans-serif;
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  user-select: none;
 }
 
-.app-title {
-  color: white;
-  text-transform: uppercase;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+h1 {
   text-align: center;
+  color: white;
+  font-size: 2em;
+  text-transform: uppercase;
+  margin-top: 1rem;
 }
 
 #grid {
   display: grid;
-  grid-template-columns: repeat(13, 60px);
-  grid-gap: 8px;
-  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  justify-items: center;
 }
 
-.cell {
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  text-align: center;
-  border-radius: 6px;
-  user-select: none;
-  cursor: pointer;
+.cell-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px 4px;
-  height: 70px;
-  justify-content: center;
-  position: relative;
-  background-color: #001F4D;
+  user-select: none;
 }
 
-.hand-text {
+.cell {
+  background-color: rgb(0, 0, 50);
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: black;
+  font-size: 1.2em;
+  text-transform: uppercase;
   user-select: none;
-  font-size: 20px;
+  cursor: pointer;
 }
 
 .counter {
-  margin-top: 12px;
-  background-color: #000;
+  margin-top: 5px;
+  font-size: 1.2em;
   color: red;
-  font-weight: bold;
-  font-size: 16px;
-  width: 100%;
+  background-color: black;
+  padding: 4px 8px;
   border-radius: 4px;
   user-select: none;
-  pointer-events: none;
 }
