@@ -1,6 +1,6 @@
 const hands = [];
 
-const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+const ranks = ['A', '', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
