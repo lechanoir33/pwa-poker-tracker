@@ -1,10 +1,11 @@
 {
-  "name": "Poker Premium Tracker",
-  "short_name": "PokerTracker",
+  "name": "Mains Servies",
+  "short_name": "PokerHands",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "theme_color": "#000000",
+  "description": "Application pour tracker les mains de départ au poker",
   "icons": [
     {
       "src": "icon-192.png",
