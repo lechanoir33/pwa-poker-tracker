@@ -32,9 +32,7 @@ function saveCounters() {
   localStorage.setItem('pokerCounters', JSON.stringify(counters));
 }
 
-// Fonction pour interpoler entre deux couleurs hex (retourne hex)
-// color1, color2 en format '#RRGGBB'
-// factor entre 0 (color1) et 1 (color2)
+// Fonction pour interpoler entre deux couleurs hexadécimales
 function interpolateColor(color1, color2, factor) {
   let result = "#";
   for (let i = 1; i < 7; i += 2) {
