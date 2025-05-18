@@ -1,74 +1,65 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const hands = [
-    'AA', 'KK', 'QQ', 'JJ', 'TT',
-    'AKs', 'AQs', 'AJs', 'ATs',
-    'AKo', 'AQo', 'AJo', 'KQs'
-  ];
+const hands = [];
 
-  const grid = document.getElementById('grid');
-  grid.style.userSelect = 'none';
+const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
-  hands.forEach(hand => {
-    const container = document.createElement('div');
-    container.className = 'cell-container';
-    container.style.userSelect = 'none';
+for (let i = 0; i < ranks.length; i++) {
+  for (let j = 0; j < ranks.length; j++) {
+    if (i === j) {
+      hands.push(ranks[i] + ranks[j]); // Paire : AA, KK...
+    } else if (i < j) {
+      hands.push(ranks[i] + ranks[j] + 'o'); // Offsuit
+    } else {
+      hands.push(ranks[i] + ranks[j] + 's'); // Suited
+    }
+  }
+}
 
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-    cell.textContent = hand;
-    cell.style.userSelect = 'none';
+const tableau = document.getElementById('tableau');
 
-    let count = 0;
-    const counter = document.createElement('div');
-    counter.className = 'counter';
+hands.forEach((hand) => {
+  const div = document.createElement('div');
+  div.className = 'mains';
+
+  const label = document.createElement('label');
+  label.textContent = hand;
+  div.appendChild(label);
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  div.appendChild(checkbox);
+
+  const counter = document.createElement('div');
+  counter.className = 'counter';
+  counter.textContent = '0';
+  div.appendChild(counter);
+
+  checkbox.addEventListener('click', () => {
+    let count = parseInt(counter.textContent, 10);
+    count++;
     counter.textContent = count;
-
-    function getColorForCount(count) {
-      const maxCount = 20;
-      const intensity = Math.min(255, 50 + (count / maxCount) * 205);
-      return `rgb(0, 0, ${intensity})`;
-    }
-
-    cell.style.backgroundColor = getColorForCount(count);
-
-    cell.addEventListener('click', () => {
-      count++;
-      counter.textContent = count;
-      cell.style.backgroundColor = getColorForCount(count);
-    });
-
-    let pressTimer;
-
-    function startPressTimer() {
-      pressTimer = setTimeout(() => {
-        count = 0;
-        counter.textContent = count;
-        cell.style.backgroundColor = getColorForCount(count);
-      }, 800);
-    }
-
-    function cancelPressTimer() {
-      clearTimeout(pressTimer);
-    }
-
-    cell.addEventListener('mousedown', startPressTimer);
-    cell.addEventListener('mouseup', cancelPressTimer);
-    cell.addEventListener('mouseleave', cancelPressTimer);
-    cell.addEventListener('touchstart', startPressTimer);
-    cell.addEventListener('touchend', cancelPressTimer);
-    cell.addEventListener('touchcancel', cancelPressTimer);
-
-    counter.addEventListener('mousedown', startPressTimer);
-    counter.addEventListener('mouseup', cancelPressTimer);
-    counter.addEventListener('mouseleave', cancelPressTimer);
-    counter.addEventListener('touchstart', startPressTimer);
-    counter.addEventListener('touchend', cancelPressTimer);
-    counter.addEventListener('touchcancel', cancelPressTimer);
-
-    container.appendChild(cell);
-    container.appendChild(counter);
-    grid.appendChild(container);
+    const blue = Math.min(255, 31 + count * 5);
+    div.style.backgroundColor = `rgb(0, 0, ${blue})`;
   });
+
+  let pressTimer;
+  const resetCounter = () => {
+    counter.textContent = '0';
+    div.style.backgroundColor = '#001f3f';
+  };
+
+  [checkbox, counter].forEach((el) => {
+    el.addEventListener('mousedown', () => {
+      pressTimer = setTimeout(resetCounter, 1000);
+    });
+    el.addEventListener('mouseup', () => clearTimeout(pressTimer));
+    el.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+    el.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(resetCounter, 1000);
+    });
+    el.addEventListener('touchend', () => clearTimeout(pressTimer));
+  });
+
+  tableau.appendChild(div);
 });
 
-document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener('contextmenu', (e) => e.preventDefault());
