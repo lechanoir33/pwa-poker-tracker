@@ -21,8 +21,8 @@ h1 {
 
 #tableau {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(6, 1fr); /* 6 colonnes */
+  gap: 10px;
   justify-content: center;
   padding: 20px;
 }
