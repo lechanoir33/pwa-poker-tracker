@@ -24,7 +24,6 @@ body {
 }
 
 .cell {
-  background-color: #001F4D; /* bleu foncé */
   color: white;
   font-weight: bold;
   font-size: 18px;
@@ -39,15 +38,13 @@ body {
   height: 70px;
   justify-content: center;
   position: relative;
+  background-color: #001F4D; /* bleu foncé par défaut */
 }
 
-/* Texte main avec S et O en minuscules */
 .hand-text {
   user-select: none;
-  /* On va gérer les s et o en script */
 }
 
-/* Style compteur */
 .counter {
   margin-top: 12px;
   background-color: #000;
