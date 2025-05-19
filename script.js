@@ -54,10 +54,9 @@ hands.forEach((hand) => {
     saveCounts();
     ajouterMainSelectionnee(hand);
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-if (!selectedHands.includes(hand)) {
-  selectedHands.push(hand);
-  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-  updateSelectedHandsDisplay();
+selectedHands.push(hand);  // Ajoute la main même si elle est déjà présente
+localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+updateSelectedHandsDisplay();
 }
   };
 
