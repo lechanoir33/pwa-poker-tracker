@@ -3,6 +3,19 @@ const hands = [
   "AKo", "AQo", "AJo", "KQo"
 ];
 
+// Génération des 169 combinaisons
+for (let i = 0; i < ranks.length; i++) {
+  for (let j = 0; j < ranks.length; j++) {
+    if (i < j) {
+      hands.push(ranks[i] + ranks[j] + 'o'); // offsuit
+    } else if (i > j) {
+      hands.push(ranks[j] + ranks[i] + 's'); // suited
+    } else {
+      hands.push(ranks[i] + ranks[j]); // paires
+    }
+  }
+}
+
 const tableContainer = document.getElementById("hands-table");
 
 // Chargement des compteurs depuis le localStorage
