@@ -1,3 +1,11 @@
+const allHands = ['AA', 'AKs', 'AQs', ..., '72o']; // toutes les 169 mains
+allHands.forEach(hand => {
+  // crée les cases + compteurs
+});
+
+const container = document.getElementById('hands-table');
+// puis tu ajoutes dynamiquement du contenu à ce container
+
 document.addEventListener("DOMContentLoaded", () => {
   const counters = {};
 
