@@ -52,6 +52,7 @@ hands.forEach((hand) => {
     updateBackground(div, count);
     checkbox.checked = count > 0;
     saveCounts();
+    ajouterMainSelectionnee(hand);
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 if (!selectedHands.includes(hand)) {
   selectedHands.push(hand);
@@ -161,6 +162,26 @@ function updateSelectedHandsDisplay() {
       handContainer.appendChild(separator);
     }
 
+function ajouterMainSelectionnee(hand) {
+  const container = document.getElementById('mainsSelectionnees');
+  const wrapper = document.createElement('div');
+  wrapper.style.margin = '4px';
+  wrapper.style.display = 'flex';
+  wrapper.style.alignItems = 'center';
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.style.marginRight = '5px';
+
+  const label = document.createElement('span');
+  label.textContent = hand + ' /';
+  label.style.color = 'white';
+
+  wrapper.appendChild(checkbox);
+  wrapper.appendChild(label);
+  container.appendChild(wrapper);
+}
+    
     container.appendChild(handContainer);
   });
 }
