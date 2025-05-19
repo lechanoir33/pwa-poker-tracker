@@ -119,7 +119,7 @@ function loadCounts() {
 }
 
 function updateColor(div, count) {
-  const blue = Math.min(125, 31 + count * 8);
+  const blue = Math.min(125, 20 + count * 15);
   div.style.backgroundColor = `rgb(0, 0, ${blue})`;
 }
 
