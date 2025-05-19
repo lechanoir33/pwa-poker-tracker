@@ -18,10 +18,10 @@ const tableau = document.getElementById('tableau');
 
 hands.forEach((hand) => {
   const div = document.createElement('div');
-  div.dataset.hand = hand;
   div.className = 'mains';
   div.style.backgroundColor = 'rgb(0, 0, 31)'; // bleu foncé initial
-
+  div.dataset.hand = hand;
+  
   const label = document.createElement('label');
   label.textContent = hand;
   label.style.userSelect = 'none';
@@ -48,14 +48,16 @@ hands.forEach((hand) => {
     let count = parseInt(counter.textContent, 10);
     count++;
     counter.textContent = count.toString();
-    updateBackground(count);
+    updateBackground(div, count);
     checkbox.checked = count > 0;
+    saveCounts();
   };
 
   const resetCounter = () => {
     counter.textContent = '0';
     checkbox.checked = false;
     div.style.backgroundColor = 'rgb(0, 0, 31)';
+    saveCounts();
   };
 
   // Incrémentation au clic sur n'importe quelle partie de la ligne
