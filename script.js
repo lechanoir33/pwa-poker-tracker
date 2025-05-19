@@ -42,15 +42,20 @@ hands.forEach(hand => {
 
   // Réinitialisation sur appui long sur le compteur
   let pressTimer;
-  counter.addEventListener("mousedown", () => {
-    pressTimer = setTimeout(() => {
-      counters[hand] = 0;
-      counter.textContent = "0";
-      checkbox.checked = false;
-      updateColor(container, 0);
-      saveCounters();
-    }, 1000);
-  });
+
+const startPress = () => {
+  pressTimer = setTimeout(() => {
+    counters[hand] = 0;
+    counter.textContent = "0";
+    checkbox.checked = false;
+    updateColor(container, 0);
+    saveCounters();
+  }, 1000); // 1 seconde d'appui long
+};
+
+const cancelPress = () => {
+  clearTimeout(pressTimer);
+};
 
   counter.addEventListener("mouseup", () => clearTimeout(pressTimer));
   counter.addEventListener("mouseleave", () => clearTimeout(pressTimer));
