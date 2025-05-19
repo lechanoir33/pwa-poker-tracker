@@ -1,22 +1,28 @@
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.hand-cell').forEach(cell => {
-        const hand = cell.dataset.hand;
-        const counterEl = cell.querySelector('.counter');
+  const counters = {};
 
-        // Lire la valeur du compteur depuis le localStorage
+  document.querySelectorAll(".hand-cell").forEach((cell) => {
+    const hand = cell.dataset.hand;
+    const counterDisplay = cell.querySelector(".counter");
+      
+      // Charger le compteur depuis le localStorage
+    let count = parseInt(localStorage.getItem(`counter_${hand}`)) || 0;
+    counterDisplay.textContent = count;
+    counters[hand] = count;  
+        
+      // Lire la valeur du compteur depuis le localStorage
         let count = parseInt(localStorage.getItem(hand)) || 0;
         counterEl.textContent = count;
 
         // Mettre à jour la couleur dès le chargement
         updateBackgroundColor(cell, count);
 
-        // Incrémentation au clic
-        cell.addEventListener('click', () => {
-            count++;
-            counterEl.textContent = count;
-            localStorage.setItem(hand, count);
-            updateBackgroundColor(cell, count);
-        });
+        / Clic pour incrémenter
+    cell.addEventListener("click", () => {
+      counters[hand]++;
+      localStorage.setItem(`counter_${hand}`, counters[hand]);
+      counterDisplay.textContent = counters[hand];
+    });
 
         // Appui long pour réinitialiser (PC)
         let pressTimer;
@@ -49,6 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateBackgroundColor(cell, count) {
     const maxCount = 20;
     const ratio = Math.min(count / maxCount, 1);
-    const blueLevel = 50 + Math.floor(ratio * 205); // bleu foncé à bleu clair
+    const blueLevel = 25 + Math.floor(ratio * 205); // bleu foncé à bleu clair
     cell.style.backgroundColor = `rgb(0, 0, ${blueLevel})`;
 }
