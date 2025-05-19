@@ -146,7 +146,7 @@ function updateSelectedHandsDisplay() {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = true;
-    checkbox.disabled = true;
+    checkbox.disabled = false;
     checkbox.style.marginRight = '5px';
 
     const label = document.createElement('span');
