@@ -40,7 +40,7 @@ hands.forEach((hand) => {
   div.appendChild(checkbox);
   div.appendChild(counter);
 
-  const updateBackground = (count) => {
+  const updateBackground = (div, count) => {
     const blue = Math.min(125, 31 + count * 8); // Éclaircissement progressif
     div.style.backgroundColor = `rgb(0, 0, ${blue})`;
   };
@@ -49,7 +49,7 @@ hands.forEach((hand) => {
     let count = parseInt(counter.textContent, 10);
     count++;
     counter.textContent = count.toString();
-    updateBackground(count);
+    updateBackground(div, count);
     checkbox.checked = count > 0;
     saveCounts();
   };
@@ -107,7 +107,7 @@ function loadCounts() {
       counter.textContent = counts[hand];
       const checkbox = div.querySelector('input[type="checkbox"]');
       checkbox.checked = counts[hand] > 0;
-      updateBackground(counts[hand]);
+      updateBackground(div, counts[hand]);
     }
   });
 }
