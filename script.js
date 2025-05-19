@@ -41,7 +41,7 @@ hands.forEach((hand) => {
   div.appendChild(counter);
 
   const updateBackground = (div, count) => {
-    const blue = Math.min(200, 50 + count * 20); // Éclaircissement progressif
+    const blue = Math.min(125, 50 + count * 20); // Éclaircissement progressif
     div.style.backgroundColor = `rgb(0, 0, ${blue})`;
   };
 
@@ -119,7 +119,7 @@ function loadCounts() {
 }
 
 function updateColor(div, count) {
-  const blue = Math.min(200, 40 + count * 20);
+  const blue = Math.min(125, 31 + count * 20);
   div.style.backgroundColor = `rgb(0, 0, ${blue})`;
 }
 
