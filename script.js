@@ -99,15 +99,21 @@ function saveCounts() {
 
 // Chargement des compteurs au démarrage
 function loadCounts() {
-  const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
+    const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
   document.querySelectorAll('.mains').forEach(div => {
     const hand = div.dataset.hand;
     const counter = div.querySelector('.counter');
-    if (counts[hand]) {
-      counter.textContent = counts[hand];
-      const checkbox = div.querySelector('input[type="checkbox"]');
-      checkbox.checked = counts[hand] > 0;
-      updateColor(div, counts[hand]);
+    const checkbox = div.querySelector('input[type="checkbox"]');
+    if (counts.hasOwnProperty(hand)) {   // <-- ici
+      const count = counts[hand];
+      counter.textContent = count;
+      checkbox.checked = count > 0;
+      updateColor(div, count);
+    } else {
+      // Reset visuel si pas de compteur
+      counter.textContent = '0';
+      checkbox.checked = false;
+      updateColor(div, 0);
     }
   });
 }
