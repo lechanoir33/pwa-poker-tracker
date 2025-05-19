@@ -112,7 +112,10 @@ function loadCounts() {
   });
 }
 
+
 // Sécurité et protection
 document.addEventListener('contextmenu', e => e.preventDefault());  // Clic droit interdit
 document.addEventListener('selectstart', e => e.preventDefault());  // Empêche sélection
 document.addEventListener('dblclick', e => e.preventDefault());     // Empêche zoom ou sélection double clic
+
+loadCounts();
