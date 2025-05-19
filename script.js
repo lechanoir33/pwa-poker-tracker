@@ -1,5 +1,4 @@
 const hands = [];
-
 const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
 for (let i = 0; i < ranks.length; i++) {
@@ -19,17 +18,16 @@ const tableau = document.getElementById('tableau');
 hands.forEach((hand) => {
   const div = document.createElement('div');
   div.className = 'mains';
-  div.style.backgroundColor = 'rgb(0, 0, 31)'; // bleu foncé initial
+  div.style.backgroundColor = 'rgb(0, 0, 31)';
   div.dataset.hand = hand;
-  loadCounts();
-  
+
   const label = document.createElement('label');
   label.textContent = hand;
   label.style.userSelect = 'none';
 
   const checkbox = document.createElement('input');
   checkbox.type = 'checkbox';
-  checkbox.style.pointerEvents = 'none'; // Empêche l'interaction directe
+  checkbox.style.pointerEvents = 'none';
 
   const counter = document.createElement('div');
   counter.className = 'counter';
@@ -41,26 +39,24 @@ hands.forEach((hand) => {
   div.appendChild(counter);
 
   const updateBackground = (div, count) => {
-    const blue = Math.min(200, 31 + count * 30); // Éclaircissement progressif
+    const blue = Math.min(200, 31 + count * 30);
     div.style.backgroundColor = `rgb(0, 0, ${blue})`;
   };
 
   const increment = () => {
-  let count = parseInt(counter.textContent, 10);
-  count++;
-  counter.textContent = count.toString();
-  updateBackground(div, count);
-  checkbox.checked = count > 0;
-  saveCounts();
+    let count = parseInt(counter.textContent, 10);
+    count++;
+    counter.textContent = count.toString();
+    updateBackground(div, count);
+    checkbox.checked = count > 0;
+    saveCounts();
 
-  ajouterMainSelectionnee(hand);  // Ajout visuel immédiat
+    ajouterMainSelectionnee(hand);  // Visuel immédiat
 
-  let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-  selectedHands.push(hand);  // Toujours ajouter, même doublon
-  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-  updateSelectedHandsDisplay();  // Met à jour l'affichage
-};
-}
+    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+    selectedHands.push(hand);  // Toujours ajouter (doublons autorisés)
+    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    updateSelectedHandsDisplay();
   };
 
   const resetCounter = () => {
@@ -68,19 +64,18 @@ hands.forEach((hand) => {
     checkbox.checked = false;
     div.style.backgroundColor = 'rgb(0, 0, 31)';
     saveCounts();
+
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-selectedHands = selectedHands.filter(h => h !== hand);
-localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-updateSelectedHandsDisplay();
+    selectedHands = selectedHands.filter(h => h !== hand);
+    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    updateSelectedHandsDisplay();
   };
 
-  // Incrémentation au clic sur n'importe quelle partie de la ligne
   div.addEventListener('click', (e) => {
     e.preventDefault();
     increment();
   });
 
-  // Appui long pour reset
   let pressTimer;
   const longPressTarget = [div, counter];
 
@@ -99,7 +94,7 @@ updateSelectedHandsDisplay();
   tableau.appendChild(div);
 });
 
-// Sauvegarde des compteurs dans localStorage
+// Sauvegarde des compteurs
 function saveCounts() {
   const counts = {};
   document.querySelectorAll('.mains').forEach(div => {
@@ -110,20 +105,19 @@ function saveCounts() {
   localStorage.setItem('pokerHandCounts', JSON.stringify(counts));
 }
 
-// Chargement des compteurs au démarrage
+// Chargement des compteurs
 function loadCounts() {
-    const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
+  const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
   document.querySelectorAll('.mains').forEach(div => {
     const hand = div.dataset.hand;
     const counter = div.querySelector('.counter');
     const checkbox = div.querySelector('input[type="checkbox"]');
-    if (counts.hasOwnProperty(hand)) {   // <-- ici
+    if (counts.hasOwnProperty(hand)) {
       const count = counts[hand];
       counter.textContent = count;
       checkbox.checked = count > 0;
       updateColor(div, count);
     } else {
-      // Reset visuel si pas de compteur
       counter.textContent = '0';
       checkbox.checked = false;
       updateColor(div, 0);
@@ -136,34 +130,36 @@ function updateColor(div, count) {
   div.style.backgroundColor = `rgb(0, 0, ${blue})`;
 }
 
+// Affichage bas de page
 function updateSelectedHandsDisplay() {
   const container = document.getElementById('mainsSelectionnees');
-  container.innerHTML = ''; // Réinitialise l'affichage
+  container.innerHTML = '';
 
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 
-  selectedHands.forEach((hand, index) => {
-    const handContainer = document.createElement('div');
-    handContainer.className = 'main-selectionnee';
+  selectedHands.forEach((hand) => {
+    const wrapper = document.createElement('div');
+    wrapper.style.margin = '4px';
+    wrapper.style.display = 'flex';
+    wrapper.style.alignItems = 'center';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = true;
     checkbox.disabled = true;
+    checkbox.style.marginRight = '5px';
 
     const label = document.createElement('span');
-    label.textContent = hand;
+    label.textContent = hand + ' /';
+    label.style.color = 'white';
 
-    handContainer.appendChild(checkbox);
-    handContainer.appendChild(label);
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+    container.appendChild(wrapper);
+  });
+}
 
-    // Ajouter un séparateur sauf pour le dernier
-    if (index < selectedHands.length - 1) {
-      const separator = document.createElement('span');
-      separator.textContent = ' / ';
-      handContainer.appendChild(separator);
-    }
-
+// Ajout immédiat au clic
 function ajouterMainSelectionnee(hand) {
   const container = document.getElementById('mainsSelectionnees');
   const wrapper = document.createElement('div');
@@ -183,15 +179,12 @@ function ajouterMainSelectionnee(hand) {
   wrapper.appendChild(label);
   container.appendChild(wrapper);
 }
-    
-    container.appendChild(handContainer);
-  });
-}
 
-// Sécurité et protection
-document.addEventListener('contextmenu', e => e.preventDefault());  // Clic droit interdit
-document.addEventListener('selectstart', e => e.preventDefault());  // Empêche sélection
-document.addEventListener('dblclick', e => e.preventDefault());     // Empêche zoom ou sélection double clic
+// Sécurité
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+document.addEventListener('dblclick', e => e.preventDefault());
 
+// Chargement initial
 loadCounts();
 updateSelectedHandsDisplay();
