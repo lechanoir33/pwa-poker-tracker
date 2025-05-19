@@ -107,11 +107,15 @@ function loadCounts() {
       counter.textContent = counts[hand];
       const checkbox = div.querySelector('input[type="checkbox"]');
       checkbox.checked = counts[hand] > 0;
-      updateBackground(div, counts[hand]);
+      updateColor(div, counts[hand]);
     }
   });
 }
 
+function updateColor(div, count) {
+  const blue = Math.min(125, 31 + count * 8);
+  div.style.backgroundColor = `rgb(0, 0, ${blue})`;
+}
 
 // Sécurité et protection
 document.addEventListener('contextmenu', e => e.preventDefault());  // Clic droit interdit
