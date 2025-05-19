@@ -145,11 +145,9 @@ function updateSelectedHandsDisplay() {
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.checked = checked;
-    checkbox.addEventListener('change', () => {
-      selectedHands[index].checked = checkbox.checked;
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-    });
+    checkbox.checked = true;
+    checkbox.disabled = true;
+    checkbox.style.marginRight = '5px';
 
     const label = document.createElement('span');
     label.textContent = hand + ' /';
