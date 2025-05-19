@@ -46,17 +46,20 @@ hands.forEach((hand) => {
   };
 
   const increment = () => {
-    let count = parseInt(counter.textContent, 10);
-    count++;
-    counter.textContent = count.toString();
-    updateBackground(div, count);
-    checkbox.checked = count > 0;
-    saveCounts();
-    ajouterMainSelectionnee(hand);
-    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-selectedHands.push(hand);  // Ajoute la main même si elle est déjà présente
-localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-updateSelectedHandsDisplay();
+  let count = parseInt(counter.textContent, 10);
+  count++;
+  counter.textContent = count.toString();
+  updateBackground(div, count);
+  checkbox.checked = count > 0;
+  saveCounts();
+
+  ajouterMainSelectionnee(hand);  // Ajout visuel immédiat
+
+  let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  selectedHands.push(hand);  // Toujours ajouter, même doublon
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  updateSelectedHandsDisplay();  // Met à jour l'affichage
+};
 }
   };
 
