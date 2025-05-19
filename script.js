@@ -52,6 +52,12 @@ hands.forEach((hand) => {
     updateBackground(div, count);
     checkbox.checked = count > 0;
     saveCounts();
+    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+if (!selectedHands.includes(hand)) {
+  selectedHands.push(hand);
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  updateSelectedHandsDisplay();
+}
   };
 
   const resetCounter = () => {
@@ -59,6 +65,10 @@ hands.forEach((hand) => {
     checkbox.checked = false;
     div.style.backgroundColor = 'rgb(0, 0, 31)';
     saveCounts();
+    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+selectedHands = selectedHands.filter(h => h !== hand);
+localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+updateSelectedHandsDisplay();
   };
 
   // Incrémentation au clic sur n'importe quelle partie de la ligne
@@ -123,9 +133,42 @@ function updateColor(div, count) {
   div.style.backgroundColor = `rgb(0, 0, ${blue})`;
 }
 
+function updateSelectedHandsDisplay() {
+  const container = document.getElementById('mainsSelectionnees');
+  container.innerHTML = ''; // Réinitialise l'affichage
+
+  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+
+  selectedHands.forEach((hand, index) => {
+    const handContainer = document.createElement('div');
+    handContainer.className = 'main-selectionnee';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = true;
+    checkbox.disabled = true;
+
+    const label = document.createElement('span');
+    label.textContent = hand;
+
+    handContainer.appendChild(checkbox);
+    handContainer.appendChild(label);
+
+    // Ajouter un séparateur sauf pour le dernier
+    if (index < selectedHands.length - 1) {
+      const separator = document.createElement('span');
+      separator.textContent = ' / ';
+      handContainer.appendChild(separator);
+    }
+
+    container.appendChild(handContainer);
+  });
+}
+
 // Sécurité et protection
 document.addEventListener('contextmenu', e => e.preventDefault());  // Clic droit interdit
 document.addEventListener('selectstart', e => e.preventDefault());  // Empêche sélection
 document.addEventListener('dblclick', e => e.preventDefault());     // Empêche zoom ou sélection double clic
 
 loadCounts();
+updateSelectedHandsDisplay();
