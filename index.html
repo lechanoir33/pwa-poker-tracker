@@ -16,8 +16,23 @@
   }
 </script>
 <body>
-  <h1 class="title">MAINS REÇUES</h1>
-  <div id="hands-table"></div>
+  <h1>MAINS REÇUES</h1>
+  <div id="tableau"></div>
+
   <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("service-worker.js");
+      });
+    }
+  </script>
+  
+<script src="compteurService.js"></script>
+<script>
+  // Exemple simple : incrémente et affiche le compteur 'AA'
+  compteurService.increment('AA');
+  alert('Compteur AA : ' + compteurService.getCount('AA'));
+</script>
 </body>
 </html>

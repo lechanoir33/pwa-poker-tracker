@@ -1,95 +1,112 @@
-const hands = [
-  "AA", "KK", "QQ", "JJ", "TT", "AKs", "AQs", "AJs", "ATs", "KQs",
-  "AKo", "AQo", "AJo", "KQo"
-];
+const hands = [];
 
-// Génération des 169 combinaisons
+const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
-    if (i < j) {
-      hands.push(ranks[i] + ranks[j] + 'o'); // offsuit
-    } else if (i > j) {
-      hands.push(ranks[j] + ranks[i] + 's'); // suited
+    if (i === j) {
+      hands.push(ranks[i] + ranks[j]);
+    } else if (i < j) {
+      hands.push(ranks[i] + ranks[j] + 'o');
     } else {
-      hands.push(ranks[i] + ranks[j]); // paires
+      hands.push(ranks[i] + ranks[j] + 's');
     }
   }
 }
 
-const tableContainer = document.getElementById("hands-table");
+const tableau = document.getElementById('tableau');
 
-// Chargement des compteurs depuis le localStorage
-const counters = JSON.parse(localStorage.getItem("pokerCounters")) || {};
+hands.forEach((hand) => {
+  const div = document.createElement('div');
+  div.className = 'mains';
+  div.style.backgroundColor = 'rgb(0, 0, 31)'; // bleu foncé initial
 
-hands.forEach(hand => {
-  const container = document.createElement("div");
-  container.className = "hand-container";
+  const label = document.createElement('label');
+  label.textContent = hand;
+  label.style.userSelect = 'none';
 
-  // Crée la case à cocher
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.id = `checkbox-${hand}`;
-  checkbox.checked = counters[hand] > 0;
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.style.pointerEvents = 'none'; // Empêche l'interaction directe
 
-  // Crée le label (nom de la main)
-  const label = document.createElement("label");
-  label.setAttribute("for", `checkbox-${hand}`);
-  label.textContent = hand.toUpperCase().replace("S", "s").replace("O", "o");
+  const counter = document.createElement('div');
+  counter.className = 'counter';
+  counter.textContent = '0';
+  counter.style.userSelect = 'none';
 
-  // Crée le compteur
-  const counter = document.createElement("div");
-  counter.className = "counter";
-  counter.textContent = counters[hand] || 0;
+  div.appendChild(label);
+  div.appendChild(checkbox);
+  div.appendChild(counter);
 
-  // Incrémentation au clic sur la case ou le label
-  const handleClick = () => {
-    counters[hand] = (counters[hand] || 0) + 1;
-    counter.textContent = counters[hand];
-    checkbox.checked = true;
-    updateColor(container, counters[hand]);
-    saveCounters();
+  const updateBackground = (count) => {
+    const blue = Math.min(125, 31 + count * 8); // Éclaircissement progressif
+    div.style.backgroundColor = `rgb(0, 0, ${blue})`;
   };
 
-  checkbox.addEventListener("click", handleClick);
-  label.addEventListener("click", handleClick);
+  const increment = () => {
+    let count = parseInt(counter.textContent, 10);
+    count++;
+    counter.textContent = count.toString();
+    updateBackground(count);
+    checkbox.checked = count > 0;
+  };
 
-  // Réinitialisation sur appui long sur le compteur
-  let pressTimer;
-
-const startPress = () => {
-  pressTimer = setTimeout(() => {
-    counters[hand] = 0;
-    counter.textContent = "0";
+  const resetCounter = () => {
+    counter.textContent = '0';
     checkbox.checked = false;
-    updateColor(container, 0);
-    saveCounters();
-  }, 1000); // 1 seconde d'appui long
-};
+    div.style.backgroundColor = 'rgb(0, 0, 31)';
+  };
 
-const cancelPress = () => {
-  clearTimeout(pressTimer);
-};
+  // Incrémentation au clic sur n'importe quelle partie de la ligne
+  div.addEventListener('click', (e) => {
+    e.preventDefault();
+    increment();
+  });
 
-  counter.addEventListener("mouseup", () => clearTimeout(pressTimer));
-  counter.addEventListener("mouseleave", () => clearTimeout(pressTimer));
+  // Appui long pour reset
+  let pressTimer;
+  const longPressTarget = [div, counter];
 
-  container.appendChild(checkbox);
-  container.appendChild(label);
-  container.appendChild(counter);
-  updateColor(container, counters[hand]);
-  tableContainer.appendChild(container);
+  longPressTarget.forEach(el => {
+    el.addEventListener('mousedown', () => {
+      pressTimer = setTimeout(() => resetCounter(), 1000);
+    });
+    el.addEventListener('mouseup', () => clearTimeout(pressTimer));
+    el.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+    el.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => resetCounter(), 1000);
+    });
+    el.addEventListener('touchend', () => clearTimeout(pressTimer));
+  });
+
+  tableau.appendChild(div);
 });
 
-function updateColor(el, value) {
-  // plus la valeur est grande, plus le fond s’éclaircit
-  let brightness = Math.min(255, 40 + value * 20);
-  el.style.backgroundColor = `rgb(${brightness}, ${brightness}, 255)`; // Bleu clair
+// Sauvegarde des compteurs dans localStorage
+function saveCounts() {
+  const counts = {};
+  document.querySelectorAll('.mains').forEach(div => {
+    const hand = div.dataset.hand;
+    const counter = div.querySelector('.counter');
+    counts[hand] = parseInt(counter.textContent) || 0;
+  });
+  localStorage.setItem('pokerHandCounts', JSON.stringify(counts));
 }
 
-function saveCounters() {
-  localStorage.setItem("pokerCounters", JSON.stringify(counters));
+// Chargement des compteurs au démarrage
+function loadCounts() {
+  const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
+  document.querySelectorAll('.mains').forEach(div => {
+    const hand = div.dataset.hand;
+    const counter = div.querySelector('.counter');
+    if (counts[hand]) {
+      counter.textContent = counts[hand];
+      const checkbox = div.querySelector('input[type="checkbox"]');
+      checkbox.checked = counts[hand] > 0;
+      updateColor(div, counts[hand]);
+    }
+  });
 }
-
 
 // Sécurité et protection
 document.addEventListener('contextmenu', e => e.preventDefault());  // Clic droit interdit
