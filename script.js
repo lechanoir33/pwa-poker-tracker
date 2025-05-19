@@ -21,6 +21,7 @@ hands.forEach((hand) => {
   div.className = 'mains';
   div.style.backgroundColor = 'rgb(0, 0, 31)'; // bleu foncé initial
   div.dataset.hand = hand;
+  loadCounts();
   
   const label = document.createElement('label');
   label.textContent = hand;
@@ -48,7 +49,7 @@ hands.forEach((hand) => {
     let count = parseInt(counter.textContent, 10);
     count++;
     counter.textContent = count.toString();
-    updateBackground(div, count);
+    updateBackground(count);
     checkbox.checked = count > 0;
     saveCounts();
   };
@@ -106,7 +107,7 @@ function loadCounts() {
       counter.textContent = counts[hand];
       const checkbox = div.querySelector('input[type="checkbox"]');
       checkbox.checked = counts[hand] > 0;
-      updateColor(div, counts[hand]);
+      updateBackground(counts[hand]);
     }
   });
 }
