@@ -18,6 +18,7 @@ const tableau = document.getElementById('tableau');
 
 hands.forEach((hand) => {
   const div = document.createElement('div');
+  div.dataset.hand = hand;
   div.className = 'mains';
   div.style.backgroundColor = 'rgb(0, 0, 31)'; // bleu foncé initial
 
