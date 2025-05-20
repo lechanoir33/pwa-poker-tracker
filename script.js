@@ -161,10 +161,7 @@ function updateSelectedHandsDisplay() {
     container.appendChild(wrapper);
   });
 }
-
-// Ajout immédiat au clic
-
-
+  
 // Sécurité
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
