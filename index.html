@@ -82,6 +82,41 @@
   <h2>Mains sélectionnées :</h2>
   <div id="mainsSelectionnees" style="color: white; display: flex; flex-wrap: wrap;"></div>
 </div>
-    
+
+  <button id="btnStats">Stats</button>
+<script>
+  // La fonction normalizeHand doit être définie quelque part dans ton code,
+  // si ce n'est pas déjà fait, ajoute la fonction normalizeHand ici
+
+  function normalizeHand(hand) {
+    const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+    if (hand.length === 3) {
+      const [c1, c2, type] = hand.split('');
+      return ranks.indexOf(c1) < ranks.indexOf(c2) ? c2 + c1 + type : hand;
+    }
+    return hand;
+  }
+
+  // Ici, l'écouteur sur le bouton Stats
+  document.getElementById('btnStats').addEventListener('click', () => {
+    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+    let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+
+    const today = new Date().toLocaleDateString('fr-FR');
+    selectedHands = selectedHands.map(h => ({ hand: normalizeHand(h.hand), checked: h.checked }));
+
+    sessions.push({
+      date: today,
+      hands: selectedHands
+    });
+
+    localStorage.setItem('handSessions', JSON.stringify(sessions));
+
+    setTimeout(() => {
+      window.location.href = 'stats.html';
+    }, 100);
+  });
+</script>
+  
 </body>
 </html>
