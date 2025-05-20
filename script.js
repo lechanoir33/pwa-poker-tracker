@@ -136,19 +136,42 @@ function updateSelectedHandsDisplay() {
 
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 
-  selectedHands.forEach((hand) => {
-    if (typeof hand !== 'string') return;
+  selectedHands.forEach((item) => {
+  let hand;
+  let isChecked = false;
+
+  if (typeof item === 'string') {
+    hand = item;
+  } else if (typeof item === 'object') {
+    hand = item.hand;
+    isChecked = item.checked || false;
+  } else {
+    return;
+  }
     
     const wrapper = document.createElement('div');
     wrapper.style.margin = '4px';
     wrapper.style.display = 'flex';
     wrapper.style.alignItems = 'center';
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = false;
-    checkbox.style.marginRight = '5px';
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = isChecked;
+  checkbox.style.marginRight = '5px';
 
+  checkbox.addEventListener('change', () => {
+    const stored = JSON.parse(localStorage.getItem('selectedHands')) || [];
+    const updated = stored.map(h => {
+      if (typeof h === 'string') {
+        return { hand: h, checked: h === hand ? checkbox.checked : false };
+      } else if (typeof h === 'object' && h.hand === hand) {
+        return { ...h, checked: checkbox.checked };
+      }
+      return h;
+    });
+    localStorage.setItem('selectedHands', JSON.stringify(updated));
+  });
+    
     const label = document.createElement('span');
     console.log('Main récupérée du localStorage :', hand);
     label.textContent = hand + ' /';
