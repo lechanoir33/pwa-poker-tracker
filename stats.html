@@ -36,10 +36,17 @@
     a:hover {
       text-decoration: underline;
     }
+
+    .session-title {
+      text-align: left;
+      font-weight: bold;
+      font-size: 1.2em;
+      padding-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <h1>Stats des Mains Sélectionnées (Classement GTO)</h1>
+  <h1>Stats des Mains Sélectionnées (Classement Empirique)</h1>
   <a href="index.html">← Retour</a>
 
   <table id="statsTable">
@@ -53,22 +60,8 @@
   </table>
 
   <script>
-    // Fonction de normalisation : la carte la plus forte en premier
-    function normalizeHand(hand) {
-      if (hand.length !== 3) return hand;
-      const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
-      const c1 = hand[0];
-      const c2 = hand[1];
-      const type = hand[2]; // 's' ou 'o'
-      if (ranks.indexOf(c1) > ranks.indexOf(c2)) {
-        return c2 + c1 + type;
-      }
-      return hand;
-    }
-
-    // Classement empirique sans doublons (ordre décroissant de force)
-const handRanking = [
-  'AA','KK','AKs','QQ','JJ','AKo','AQs','AJs','TT','AQo','KQs','ATs','KJs','AJo','QJs',
+    const handRanking = [
+      'AA','KK','AKs','QQ','JJ','AKo','AQs','AJs','TT','AQo','KQs','ATs','KJs','AJo','QJs',
       '99','JTs','KTs','QTs','88','KQo','A9s','T9s','Q9s','KJo','77','A8s','A7s','J9s','66',
       'A5s','A6s','55','T8s','A4s','QJo','K9s','J8s','A3s','KTo','Q8s','A2s','44','98s',
       '33','J7s','87s','Q7s','K8s','T7s','22','Q6s','JTo','K7s','J6s','76s','QTo','K6s',
@@ -92,40 +85,28 @@ const handRanking = [
       });
     }
 
-    const selectedHandsRaw = localStorage.getItem('selectedHands');
-    let selectedHands = [];
-
-    try {
-      selectedHands = JSON.parse(selectedHandsRaw) || [];
-    } catch (e) {
-      selectedHands = [];
-    }
-
-    if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
-      selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
-    }
-
-    // Normalisation ici uniquement
-    selectedHands = selectedHands.map(entry => ({
-      ...entry,
-      hand: normalizeHand(entry.hand)
-    }));
-
-    const sortedHands = sortByStrength(selectedHands);
-
     const tbody = document.querySelector('#statsTable tbody');
-    sortedHands.forEach(entry => {
-      const row = document.createElement('tr');
+    const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
 
-      const handCell = document.createElement('td');
-      handCell.textContent = entry.hand;
+    sessionData.slice().reverse().forEach(session => {
+      const dateRow = document.createElement('tr');
+      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
+      tbody.appendChild(dateRow);
 
-      const checkedCell = document.createElement('td');
-      checkedCell.textContent = entry.checked ? '✔️' : '❌';
+      const sortedHands = sortByStrength(session.hands);
+      sortedHands.forEach(entry => {
+        const row = document.createElement('tr');
 
-      row.appendChild(handCell);
-      row.appendChild(checkedCell);
-      tbody.appendChild(row);
+        const handCell = document.createElement('td');
+        handCell.textContent = entry.hand;
+
+        const checkedCell = document.createElement('td');
+        checkedCell.textContent = entry.checked ? '✔️' : '❌';
+
+        row.appendChild(handCell);
+        row.appendChild(checkedCell);
+        tbody.appendChild(row);
+      });
     });
   </script>
 </body>
