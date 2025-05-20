@@ -1,24 +1,14 @@
 const hands = [];
 const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
-function normalizeHand(hand) {
-  if (hand.length !== 3) return hand;
-  const c1 = hand[0];
-  const c2 = hand[1];
-  const type = hand[2];
-  const rankOrder = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
-  return rankOrder.indexOf(c1) > rankOrder.indexOf(c2) ? c2 + c1 + type : hand;
-}
-
-// 🔁 Génération des mains avec normalisation automatique
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
     if (i === j) {
       hands.push(ranks[i] + ranks[j]);
     } else if (i < j) {
-      hands.push(normalizeHand(ranks[i] + ranks[j] + 'o'));
+      hands.push(ranks[i] + ranks[j] + 'o');
     } else {
-      hands.push(normalizeHand(ranks[i] + ranks[j] + 's'));
+      hands.push(ranks[i] + ranks[j] + 's');
     }
   }
 }
@@ -68,8 +58,7 @@ hands.forEach((hand) => {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
 
-    const normalizedHand = normalizeHand(hand);
-    selectedHands.push({ hand: normalizedHand, checked: false });
+    selectedHands.push({ hand, checked: false }); // ajout d'objet
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
