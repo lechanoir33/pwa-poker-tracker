@@ -17,27 +17,8 @@
 </script>
 <body>
   <h1>MAINS REÇUES</h1>
-
-<script>
-  function sauvegarderMainsPourStats() {
-    const allCells = document.querySelectorAll('.hand-cell');
-    const selectedHands = [];
-
-    allCells.forEach(cell => {
-      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
-      if (count > 0) {
-        selectedHands.push({
-          hand: cell.dataset.hand,
-          count: count
-        });
-      }
-    });
-
-    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-  }
-</script>
-  
-  <button onclick="sauvegarderMainsPourStats(); window.location.href='stats.html'" 
+ 
+  <button onclick="allerVersStats()" 
   style="
     margin: 20px 0;
     padding: 10px 20px;
@@ -50,7 +31,7 @@
   ">
   STATS
 </button>
-
+  
   <script>
   function allerVersStats() {
     const allCells = document.querySelectorAll('.hand-cell');
