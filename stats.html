@@ -55,18 +55,19 @@
   <script>
     // Classement GTO / jouabilité postflop des 169 mains (du plus fort au plus faible)
     const handRanking = [
-      'AA', 'KK', 'QQ', 'JJ', 'AKs', 'TT', 'AQs', '99', 'AJs', 'KQs',
-      '88', 'ATs', 'AQo', 'KJs', 'AKo', 'AJo', 'KTs', 'QJs', 'A9s',
-      'QTs', 'JTs', '77', 'J9s', 'T9s', 'A8s', 'KQo', 'A7s', '66', 'A5s',
-      'A6s', 'KJo', '55', 'Q9s', 'J8s', 'T8s', 'A4s', 'K9s', '44', 'Q8s',
-      '33', 'A3s', 'QJo', '87s', '22', 'A2s', 'J7s', 'K8s', 'T7s', 'K7s',
-      'JTo', '76s', 'K6s', '65s', 'Q7s', 'T9o', '54s', 'K5s', 'Q6s',
-      'J6s', 'K4s', 'Q5s', 'J5s', 'K3s', 'Q4s', 'J4s', 'K2s', 'Q3s',
-      'J3s', 'T6s', 'Q2s', 'J2s', 'T5s', 'T4s', 'T3s', 'T2s',
-      '98s', '97s', '96s', '95s', '94s', '93s', '92s',
-      '86s', '85s', '84s', '83s', '82s', '75s', '74s', '73s', '72s',
-      '64s', '63s', '62s', '53s', '52s', '43s', '42s', '32s',
-      '98o', '87o', '76o', '65o', '54o', 'QTo', 'J9o', 'T8o'
+      'AA', 'KK', 'QQ', 'JJ', 'AKs', 'TT', 'AKo', '99', 'AQs', 'AQo',
+      'AJs', 'KQs', 'ATs', 'QJs', 'KJs', 'KTs', '88', 'JTs', '77',
+      '66', 'AJo', 'A9s', 'KQo', '55', 'k9s', 'T9s', 'J9s', 'Q9s', '44',
+      'A8s', 'ATo', '33', 'A7s', 'A5s', 'KJo', '98s', '22', 'A6s', 'A9o',
+      'A4s', 'A3s', 'T8s', 'QJo', 'A2s', 'A8o', 'JTo', 'A7o', 'J8s', 'A5o',
+      'KTo', '87s', 'A6o', 'A4o', 'K8s', '97s', 'QTo', 'A3o', 'Q8s', '76s',
+      'A2o', 'T7s', '86s', 'k7s', 'k6s', 'K5s', 'K9o', 'J7s', '65s',
+      'T9o', 'K4s', '54s', 'Q7s', '96s', '85s', 'T8o', '64s', 'K3s', 'K8o', '75s',
+      'Q6s', 'J6s', '87o', 'T6s', '74s', '95s', 'K2s',
+      'K7o', 'Q9o', 'T5s', 'K6o', 'K5o', 'J9o', 'Q5s', 'Q4s', 'Q3s',
+      'J8o', '63s', '62s', '53s', '52s', '43s', '42s', '32s',
+      '98o', 'K4o', 'Q2s', 'K3o', 'Q8o', 'J7o', 'J5s', '97o', 'J4s', 'T4s', 'K2o',
+      'J3s', '43s', 'Q7o', 'Q6o', 'T7o'
     ];
 
     // Fonction de tri selon classement GTO
