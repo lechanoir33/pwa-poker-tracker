@@ -137,6 +137,8 @@ function updateSelectedHandsDisplay() {
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 
   selectedHands.forEach((hand) => {
+    if (typeof hand !== 'string') return;
+    
     const wrapper = document.createElement('div');
     wrapper.style.margin = '4px';
     wrapper.style.display = 'flex';
