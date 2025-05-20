@@ -40,20 +40,42 @@
 </div>
 
   <script>
-  document.getElementById('resetButton').addEventListener('click', () => {
-    if (confirm("Es-tu sûr de vouloir tout réinitialiser ?")) {
-      localStorage.removeItem('handCounts');
+  function resetApp() {
+      // 1. Réinitialiser les compteurs
+      const counters = document.querySelectorAll('.counter');
+      counters.forEach(counter => counter.textContent = '0');
+
+      // 2. Vider la section du bas
+      const selectedSection = document.getElementById('selectedHands');
+      if (selectedSection) selectedSection.innerHTML = '';
+
+      // 3. Collecte des mains avec compteurs > 0
+      const allCells = document.querySelectorAll('.hand-cell');
+      const selectedHands = [];
+
+      allCells.forEach(cell => {
+        const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+        if (count > 0) {
+          selectedHands.push({
+            hand: cell.dataset.hand,
+            checked: true
+          });
+        }
+      });
+
+      // 4. Sauvegarde dans une nouvelle session avec la date du jour
+      const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
+      const today = new Date().toISOString().split('T')[0];
+      sessionData.push({
+        date: today,
+        hands: selectedHands
+      });
+      localStorage.setItem('handSessions', JSON.stringify(sessionData));
+
+      // 5. Nettoyage
       localStorage.removeItem('selectedHands');
-
-      // Si tu maintiens une variable globale dans le script principal
-      if (window.handCounts) {
-        Object.keys(window.handCounts).forEach(key => window.handCounts[key] = 0);
-      }
-
-      location.reload();
     }
-  });
-</script>
+  </script>
 
 </body>
 </html>
