@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stats des Mains</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stats des Mains - Classement GTO</title>
   <style>
     body {
       background-color: #111;
@@ -39,7 +39,7 @@
   </style>
 </head>
 <body>
-  <h1>Stats des Mains Sélectionnées</h1>
+  <h1>Stats des Mains Sélectionnées (Classement GTO)</h1>
   <a href="index.html">← Retour</a>
 
   <table id="statsTable">
@@ -53,33 +53,35 @@
   </table>
 
   <script>
-    // Ordre de force des mains préflop
+    // Classement GTO / jouabilité postflop des 169 mains (du plus fort au plus faible)
     const handRanking = [
-  'AA', 'KK', 'QQ', 'JJ', 'AKs', 'TT', 'AQs', '99', 'AJs', 'KQs',
-  '88', 'ATs', 'AQo', 'KJs', 'AKo', 'AJo', 'KTs', 'QJs', 'A9s',
-  'QTs', 'JTs', '77', 'J9s', 'T9s', 'A8s', 'KQo', 'A7s', '66', 'A5s',
-  'A6s', 'KJo', '55', 'Q9s', 'J8s', 'T8s', 'A4s', 'K9s', '44', 'Q8s',
-  '33', 'A3s', 'QJo', '87s', '22', 'A2s', 'J7s', 'K8s', 'T7s', 'K7s',
-  'JTo', '76s', 'K6s', '65s', 'Q7s', 'T9o', '54s', 'K5s', 'Q6s',
-  'J6s', 'K4s', 'Q5s', 'J5s', 'K3s', 'Q4s', 'J4s', 'K2s', 'Q3s',
-  'J3s', 'T6s', 'Q2s', 'J2s', 'T5s', 'T4s', 'T3s', 'T2s',
-  '98s', '97s', '96s', '95s', '94s', '93s', '92s',
-  '86s', '85s', '84s', '83s', '82s', '75s', '74s', '73s', '72s',
-  '64s', '63s', '62s', '53s', '52s', '43s', '42s', '32s',
-  '98o', '87o', '76o', '65o', '54o', 'QTo', 'J9o', 'T8o'
-];
+      'AA', 'KK', 'QQ', 'JJ', 'AKs', 'TT', 'AQs', '99', 'AJs', 'KQs',
+      '88', 'ATs', 'AQo', 'KJs', 'AKo', 'AJo', 'KTs', 'QJs', 'A9s',
+      'QTs', 'JTs', '77', 'J9s', 'T9s', 'A8s', 'KQo', 'A7s', '66', 'A5s',
+      'A6s', 'KJo', '55', 'Q9s', 'J8s', 'T8s', 'A4s', 'K9s', '44', 'Q8s',
+      '33', 'A3s', 'QJo', '87s', '22', 'A2s', 'J7s', 'K8s', 'T7s', 'K7s',
+      'JTo', '76s', 'K6s', '65s', 'Q7s', 'T9o', '54s', 'K5s', 'Q6s',
+      'J6s', 'K4s', 'Q5s', 'J5s', 'K3s', 'Q4s', 'J4s', 'K2s', 'Q3s',
+      'J3s', 'T6s', 'Q2s', 'J2s', 'T5s', 'T4s', 'T3s', 'T2s',
+      '98s', '97s', '96s', '95s', '94s', '93s', '92s',
+      '86s', '85s', '84s', '83s', '82s', '75s', '74s', '73s', '72s',
+      '64s', '63s', '62s', '53s', '52s', '43s', '42s', '32s',
+      '98o', '87o', '76o', '65o', '54o', 'QTo', 'J9o', 'T8o'
+    ];
 
-function sortByStrength(hands) {
-  return hands.sort((a, b) => {
-    const aIndex = handRanking.indexOf(a.hand);
-    const bIndex = handRanking.indexOf(b.hand);
-    if (aIndex === -1 && bIndex === -1) return 0;
-    if (aIndex === -1) return 1; // mains inconnues en bas
-    if (bIndex === -1) return -1;
-    return aIndex - bIndex;
-  });
-}
+    // Fonction de tri selon classement GTO
+    function sortByStrength(hands) {
+      return hands.sort((a, b) => {
+        const aIndex = handRanking.indexOf(a.hand);
+        const bIndex = handRanking.indexOf(b.hand);
+        if (aIndex === -1 && bIndex === -1) return 0;
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+        return aIndex - bIndex;
+      });
+    }
 
+    // Récupération des mains sélectionnées depuis localStorage
     const selectedHandsRaw = localStorage.getItem('selectedHands');
     let selectedHands = [];
 
@@ -89,12 +91,15 @@ function sortByStrength(hands) {
       selectedHands = [];
     }
 
+    // Formatage si tableau de chaînes de caractères
     if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
 
+    // Tri selon classement GTO
     const sortedHands = sortByStrength(selectedHands);
 
+    // Affichage dans le tableau
     const tbody = document.querySelector('#statsTable tbody');
 
     sortedHands.forEach(entry => {
