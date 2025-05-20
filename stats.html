@@ -74,6 +74,25 @@
       '54o','53o','52o','43o','42o','32o'
     ];
 
+// Fonction pour normaliser la main (mettre la plus forte en premier)
+  function normalizeHand(hand) {
+    if (hand.length !== 2 && hand.length !== 3) return hand; // gère AA, KK, etc.
+
+    const ranks = '23456789TJQKA';
+    const firstCard = hand[0];
+    const secondCard = hand[1];
+    const suffix = hand.length === 3 ? hand[2] : '';
+
+    // Si paire, rien à changer
+    if (firstCard === secondCard) return hand;
+
+    // Compare les rangs, reorder si besoin
+    if (ranks.indexOf(firstCard) < ranks.indexOf(secondCard)) {
+      return secondCard + firstCard + suffix;
+    }
+    return hand;
+  }
+    
     function sortByStrength(hands) {
       return hands.sort((a, b) => {
         const aIndex = handRanking.indexOf(a.hand);
@@ -98,8 +117,8 @@
         const row = document.createElement('tr');
 
         const handCell = document.createElement('td');
-        handCell.textContent = entry.hand;
-
+        handCell.textContent = normalizeHand(entry.hand);
+        
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
 
