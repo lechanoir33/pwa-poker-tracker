@@ -60,7 +60,7 @@
       const c1 = hand[0];
       const c2 = hand[1];
       const type = hand[2]; // 's' ou 'o'
-      if (ranks.indexOf(c1) < ranks.indexOf(c2)) {
+      if (ranks.indexOf(c1) > ranks.indexOf(c2)) {
         return c2 + c1 + type;
       }
       return hand;
