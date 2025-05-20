@@ -68,17 +68,26 @@
 
     // Classement empirique sans doublons (ordre décroissant de force)
 const handRanking = [
-  'AA','KK','AKs','QQ','JJ','AKo','AQs','AJs','TT','AQo','KQs','ATs','KJs','AJo','QJs',
-      '99','JTs','KTs','QTs','88','KQo','A9s','T9s','Q9s','KJo','77','A8s','A7s','J9s','66',
-      'A5s','A6s','55','T8s','A4s','QJo','K9s','J8s','A3s','KTo','Q8s','A2s','44','98s',
-      '33','J7s','87s','Q7s','K8s','T7s','22','Q6s','JTo','K7s','J6s','76s','QTo','K6s',
-      'J5s','K5s','J4s','K4s','K3s','65s','K2s','T6s','Q5s','Q4s','T5s','T4s','Q3s','54s',
-      'J3s','Q2s','J2s','T3s','T2s','43s','42s','32s','A9o','A8o','A7o','A5o','A6o','A4o',
-      'A3o','A2o','K9o','K8o','K7o','K6o','K5o','K4o','K3o','K2o','Q9o','Q8o','Q7o','Q6o',
-      'Q5o','Q4o','Q3o','Q2o','J9o','J8o','J7o','J6o','J5o','J4o','J3o','J2o','T9o','T8o',
-      'T7o','T6o','T5o','T4o','T3o','T2o','98o','97o','96o','95o','94o','93o','92o','87o',
-      '86o','85o','84o','83o','82o','76o','75o','74o','73o','72o','65o','64o','63o','62o',
-      '54o','53o','52o','43o','42o','32o'
+  'AA', 'KK', 'AKs', 'QQ', 'JJ', 'AKo', 'AQs', 'AJs', 'TT', 'AQo',
+  'KQs', 'ATs', 'KJs', 'AJo', 'QJs', '99', 'JTs', 'KTs', 'QTs', '88',
+  'KQo', 'A9s', 'T9s', 'Q9s', 'KJo', '77', 'A8s', 'A7s', 'J9s', '66',
+  'A6s', 'A5s', '55', 'T8s', 'A4s', 'QJo', 'K9s', 'J8s', 'A3s', 'KTo',
+  'Q8s', 'A2s', '44', '98s', '33', 'J7s', '87s', 'Q7s', 'K8s', 'T7s',
+  '92s', '93s', '94s', '95s', '96s', '22', 'Q6s', 'JTo', 'K7s', 'J6s',
+  '76s', 'QTo', 'K6s', 'J5s', 'K5s', 'J4s', 'K4s', 'K3s', '65s', 'K2s',
+  'T6s', 'Q5s', 'Q4s', 'T5s', 'T4s', 'Q3s', '54s', 'J3s', 'Q2s', 'J2s',
+  'T3s', 'T2s', '43s', '42s', '32s',
+  'A9o', 'A8o', 'A7o', 'A6o', 'A5o', 'A4o', 'A3o', 'A2o',
+  'K9o', 'K8o', 'K7o', 'K6o', 'K5o', 'K4o', 'K3o', 'K2o',
+  'Q9o', 'Q8o', 'Q7o', 'Q6o', 'Q5o', 'Q4o', 'Q3o', 'Q2o',
+  'J9o', 'J8o', 'J7o', 'J6o', 'J5o', 'J4o', 'J3o', 'J2o',
+  'T9o', 'T8o', 'T7o', 'T6o', 'T5o', 'T4o', 'T3o', 'T2o',
+  '98o', '97o', '96o', '95o', '94o', '93o', '92o',
+  '87o', '86o', '85o', '84o', '83o', '82o',
+  '76o', '75o', '74o', '73o', '72o',
+  '65o', '64o', '63o', '62o',
+  '54o', '53o', '52o',
+  '43o', '42o', '32o'
     ];
 
     function sortByStrength(hands) {
