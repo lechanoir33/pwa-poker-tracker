@@ -53,7 +53,19 @@
   </table>
 
   <script>
-    // Classement GTO / jouabilité postflop des 169 mains (du plus fort au plus faible)
+    // Fonction de normalisation : la carte la plus forte en premier
+    function normalizeHand(hand) {
+      if (hand.length !== 3) return hand;
+      const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+      const c1 = hand[0];
+      const c2 = hand[1];
+      const type = hand[2]; // 's' ou 'o'
+      if (ranks.indexOf(c1) < ranks.indexOf(c2)) {
+        return c2 + c1 + type;
+      }
+      return hand;
+    }
+
     const handRanking = [
       'AA', 'KK', 'QQ', 'JJ', 'AKs', 'TT', 'AKo', '99', 'AQs', 'AQo',
       'AJs', 'KQs', 'ATs', 'QJs', 'KJs', 'KTs', '88', 'JTs', '77',
@@ -72,7 +84,6 @@
       '52s', 'J2o', 'T2o', '52o', '92s', '42s', '92o', '42o', '82s', '82o', '72o'
     ];
 
-    // Fonction de tri selon classement GTO
     function sortByStrength(hands) {
       return hands.sort((a, b) => {
         const aIndex = handRanking.indexOf(a.hand);
@@ -84,7 +95,6 @@
       });
     }
 
-    // Récupération des mains sélectionnées depuis localStorage
     const selectedHandsRaw = localStorage.getItem('selectedHands');
     let selectedHands = [];
 
@@ -94,17 +104,19 @@
       selectedHands = [];
     }
 
-    // Formatage si tableau de chaînes de caractères
     if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
 
-    // Tri selon classement GTO
+    // Normalisation ici uniquement
+    selectedHands = selectedHands.map(entry => ({
+      ...entry,
+      hand: normalizeHand(entry.hand)
+    }));
+
     const sortedHands = sortByStrength(selectedHands);
 
-    // Affichage dans le tableau
     const tbody = document.querySelector('#statsTable tbody');
-
     sortedHands.forEach(entry => {
       const row = document.createElement('tr');
 
