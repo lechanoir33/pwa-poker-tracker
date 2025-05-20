@@ -149,8 +149,6 @@ function updateSelectedHandsDisplay() {
     checkbox.checked = false;
     checkbox.style.marginRight = '5px';
 
-    });
-
     const label = document.createElement('span');
     console.log('Main récupérée du localStorage :', hand);
     label.textContent = hand + ' /';
