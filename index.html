@@ -20,22 +20,6 @@
   <button onclick="location.href='stats.html'" style="margin-bottom: 20px;">STATS</button>
   <button onclick="resetPage()">RESET</button>
   
-  <script>
-  document.getElementById('resetButton').addEventListener('click', () => {
-    if (confirm("Es-tu sûr de vouloir tout réinitialiser ?")) {
-      localStorage.removeItem('handCounts');
-      localStorage.removeItem('selectedHands');
-
-      // Si tu maintiens une variable globale dans le script principal
-      if (window.handCounts) {
-        Object.keys(window.handCounts).forEach(key => window.handCounts[key] = 0);
-      }
-
-      location.reload();
-    }
-  });
-</script
-  
 </div>
   <div id="tableau"></div>
 
@@ -54,6 +38,22 @@
   <h2>Mains sélectionnées :</h2>
   <div id="mainsSelectionnees" style="color: white; display: flex; flex-wrap: wrap;"></div>
 </div>
-    
+
+  <script>
+  document.getElementById('resetButton').addEventListener('click', () => {
+    if (confirm("Es-tu sûr de vouloir tout réinitialiser ?")) {
+      localStorage.removeItem('handCounts');
+      localStorage.removeItem('selectedHands');
+
+      // Si tu maintiens une variable globale dans le script principal
+      if (window.handCounts) {
+        Object.keys(window.handCounts).forEach(key => window.handCounts[key] = 0);
+      }
+
+      location.reload();
+    }
+  });
+</script>
+
 </body>
 </html>
