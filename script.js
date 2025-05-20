@@ -52,7 +52,13 @@ hands.forEach((hand) => {
     saveCounts();
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands.push(hand);  // Toujours ajouter (doublons autorisés)
+    
+    if (typeof selectedHands[0] === 'string') {
+      // migration ancien format
+      selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
+    }
+
+    selectedHands.push({ hand, checked: false }); // ajout d'objet
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
@@ -131,23 +137,26 @@ function updateColor(div, count) {
 // Affichage bas de page
 function updateSelectedHandsDisplay() {
   const container = document.getElementById('mainsSelectionnees');
-  if (!container) return; // Sécurité si l’élément n’existe pas
+  if (!container) return;
+
+  // Migration ancien format si nécessaire
+  let raw = localStorage.getItem('selectedHands');
+  let selectedHands = [];
+
+  try {
+    selectedHands = JSON.parse(raw) || [];
+    if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
+      selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    }
+  } catch (e) {
+    selectedHands = [];
+  }
+
   container.innerHTML = '';
 
-  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-
-  selectedHands.forEach((item) => {
-  let hand;
-  let isChecked = false;
-
-  if (typeof item === 'string') {
-    hand = item;
-  } else if (typeof item === 'object') {
-    hand = item.hand;
-    isChecked = item.checked || false;
-  } else {
-    return;
-  }
+  selectedHands.forEach((entry, index) => {
+    if (typeof entry.hand !== 'string') return;
     
     const wrapper = document.createElement('div');
     wrapper.style.margin = '4px';
