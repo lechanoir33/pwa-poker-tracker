@@ -135,7 +135,8 @@ function updateColor(div, count) {
 }
 
 // Affichage bas de page
-const container = document.getElementById('mainsSelectionnees');
+function updateSelectedHandsDisplay() {
+  const container = document.getElementById('mainsSelectionnees');
   if (!container) return;
 
   let raw = localStorage.getItem('selectedHands');
@@ -170,10 +171,9 @@ const container = document.getElementById('mainsSelectionnees');
       selectedHands[index].checked = checkbox.checked;
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     });
-    
+
     const label = document.createElement('span');
-    console.log('Main récupérée du localStorage :', hand);
-    label.textContent = hand + ' /';
+    label.textContent = entry.hand + ' /';
     label.style.color = 'white';
 
     wrapper.appendChild(checkbox);
