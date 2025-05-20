@@ -131,6 +131,7 @@ function updateColor(div, count) {
 // Affichage bas de page
 function updateSelectedHandsDisplay() {
   const container = document.getElementById('mainsSelectionnees');
+  if (!container) return; // Sécurité si l’élément n’existe pas
   container.innerHTML = '';
 
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
