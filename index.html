@@ -51,6 +51,37 @@
   STATS
 </button>
 
+  <script>
+  function allerVersStats() {
+    const allCells = document.querySelectorAll('.hand-cell');
+    const selectedHands = [];
+
+    allCells.forEach(cell => {
+      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+      if (count > 0) {
+        selectedHands.push({
+          hand: cell.dataset.hand,
+          checked: true
+        });
+      }
+    });
+
+    if (selectedHands.length > 0) {
+      const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+      const today = new Date().toLocaleDateString('fr-FR');
+
+      sessions.push({
+        date: today,
+        hands: selectedHands
+      });
+
+      localStorage.setItem('handSessions', JSON.stringify(sessions));
+    }
+
+    window.location.href = 'stats.html';
+  }
+</script>
+
   
   <div id="tableau"></div>
  
