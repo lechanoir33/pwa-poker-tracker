@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stats des Mains</title>
+  <style>
+    body {
+      background-color: #111;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
 
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid white;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #333;
+    }
+
+    a {
+      color: #00f;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stats des Mains Sélectionnées</h1>
+  <a href="index.html">← Retour</a>
+
+  <table id="statsTable">
+    <thead>
+      <tr>
+        <th>Main</th>
+        <th>Coché ?</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // Ordre de force des mains préflop
+    const strengthOrder = [
+      'AA', 'KK', 'QQ', 'JJ', 'TT',
+      'AKs', 'AQs', 'AJs', 'ATs',
+      'KQs', 'KJs', 'QJs', 'JTs',
+      'AKo', 'AQo', 'AJo', 'KQo'
+      // Tu peux étendre cette liste selon ta préférence
+    ];
+
+    function sortByStrength(hands) {
+      return hands.sort((a, b) => {
+        const aIndex = strengthOrder.indexOf(a.hand);
+        const bIndex = strengthOrder.indexOf(b.hand);
+        if (aIndex === -1 && bIndex === -1) return 0;
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+        return aIndex - bIndex;
+      });
+    }
+
+    const selectedHandsRaw = localStorage.getItem('selectedHands');
+    let selectedHands = [];
+
+    try {
+      selectedHands = JSON.parse(selectedHandsRaw) || [];
+    } catch (e) {
+      selectedHands = [];
+    }
+
+    if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
+      selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
+    }
+
+    const sortedHands = sortByStrength(selectedHands);
+
+    const tbody = document.querySelector('#statsTable tbody');
+
+    sortedHands.forEach(entry => {
+      const row = document.createElement('tr');
+
+      const handCell = document.createElement('td');
+      handCell.textContent = entry.hand;
+
+      const checkedCell = document.createElement('td');
+      checkedCell.textContent = entry.checked ? '✔️' : '❌';
+
+      row.appendChild(handCell);
+      row.appendChild(checkedCell);
+      tbody.appendChild(row);
+    });
+  </script>
+</body>
+</html>
