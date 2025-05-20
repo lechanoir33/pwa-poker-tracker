@@ -1,6 +1,14 @@
 const hands = [];
 const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
+function normalizeHand(hand) {
+  if (hand.length === 3) {
+    const [c1, c2, type] = hand.split('');
+    return ranks.indexOf(c1) < ranks.indexOf(c2) ? c2 + c1 + type : hand;
+  }
+  return hand;
+}
+
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
     if (i === j) {
@@ -58,7 +66,8 @@ hands.forEach((hand) => {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
 
-    selectedHands.push({ hand, checked: false }); // ajout d'objet
+    const normalizedHand = normalizeHand(hand);
+    selectedHands.push({ hand: normalizedHand, checked: false });
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
