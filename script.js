@@ -6,20 +6,19 @@ function normalizeHand(hand) {
   const c1 = hand[0];
   const c2 = hand[1];
   const type = hand[2];
-  const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
-  return ranks.indexOf(c1) > ranks.indexOf(c2) ? c2 + c1 + type : hand;
-  }
-  return hand;
+  const rankOrder = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+  return rankOrder.indexOf(c1) > rankOrder.indexOf(c2) ? c2 + c1 + type : hand;
 }
 
+// 🔁 Génération des mains avec normalisation automatique
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
     if (i === j) {
       hands.push(ranks[i] + ranks[j]);
     } else if (i < j) {
-      hands.push(ranks[i] + ranks[j] + 'o');
+      hands.push(normalizeHand(ranks[i] + ranks[j] + 'o'));
     } else {
-      hands.push(ranks[i] + ranks[j] + 's');
+      hands.push(normalizeHand(ranks[i] + ranks[j] + 's'));
     }
   }
 }
