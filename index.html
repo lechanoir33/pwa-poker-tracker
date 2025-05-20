@@ -99,23 +99,33 @@
 
   // Ici, l'écouteur sur le bouton Stats
   document.getElementById('btnStats').addEventListener('click', () => {
-    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
 
-    const today = new Date().toLocaleDateString('fr-FR');
-    selectedHands = selectedHands.map(h => ({ hand: normalizeHand(h.hand), checked: h.checked }));
+  const today = new Date().toLocaleDateString('fr-FR');
+  selectedHands = selectedHands.map(h => ({ hand: normalizeHand(h.hand), checked: h.checked }));
 
+  // Cherche s'il existe déjà une session pour aujourd'hui
+  let todaySession = sessions.find(session => session.date === today);
+
+  if (todaySession) {
+    // Si oui, on met à jour les mains (par exemple, on concatène ou remplace)
+    // Ici, on remplace entièrement les mains de la session du jour
+    todaySession.hands = selectedHands;
+  } else {
+    // Sinon, on crée une nouvelle session
     sessions.push({
       date: today,
       hands: selectedHands
     });
+  }
 
-    localStorage.setItem('handSessions', JSON.stringify(sessions));
+  localStorage.setItem('handSessions', JSON.stringify(sessions));
 
-    setTimeout(() => {
-      window.location.href = 'stats.html';
-    }, 100);
-  });
+  setTimeout(() => {
+    window.location.href = 'stats.html';
+  }, 100);
+});
 </script>
   
 </body>
