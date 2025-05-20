@@ -70,7 +70,7 @@ hands.forEach((hand) => {
     saveCounts();
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands = selectedHands.filter(h => h !== hand);
+    selectedHands = selectedHands.filter(h => h.hand !== hand);
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
@@ -135,11 +135,9 @@ function updateColor(div, count) {
 }
 
 // Affichage bas de page
-function updateSelectedHandsDisplay() {
-  const container = document.getElementById('mainsSelectionnees');
+const container = document.getElementById('mainsSelectionnees');
   if (!container) return;
 
-  // Migration ancien format si nécessaire
   let raw = localStorage.getItem('selectedHands');
   let selectedHands = [];
 
@@ -157,29 +155,21 @@ function updateSelectedHandsDisplay() {
 
   selectedHands.forEach((entry, index) => {
     if (typeof entry.hand !== 'string') return;
-    
+
     const wrapper = document.createElement('div');
     wrapper.style.margin = '4px';
     wrapper.style.display = 'flex';
     wrapper.style.alignItems = 'center';
 
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = isChecked;
-  checkbox.style.marginRight = '5px';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = entry.checked;
+    checkbox.style.marginRight = '5px';
 
-  checkbox.addEventListener('change', () => {
-    const stored = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    const updated = stored.map(h => {
-      if (typeof h === 'string') {
-        return { hand: h, checked: h === hand ? checkbox.checked : false };
-      } else if (typeof h === 'object' && h.hand === hand) {
-        return { ...h, checked: checkbox.checked };
-      }
-      return h;
+    checkbox.addEventListener('change', () => {
+      selectedHands[index].checked = checkbox.checked;
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     });
-    localStorage.setItem('selectedHands', JSON.stringify(updated));
-  });
     
     const label = document.createElement('span');
     console.log('Main récupérée du localStorage :', hand);
@@ -198,5 +188,8 @@ document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault());
 
 // Chargement initial
-loadCounts();
-updateSelectedHandsDisplay();
+window.onload = () => {
+  loadCounts();
+  updateSelectedHandsDisplay();
+};
+
