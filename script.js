@@ -52,7 +52,7 @@ hands.forEach((hand) => {
     saveCounts();
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands.push({ hand, checked: false });  // Toujours ajouter (doublons autorisés)
+    selectedHands.push(hand);  // Toujours ajouter (doublons autorisés)
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
@@ -154,6 +154,7 @@ function updateSelectedHandsDisplay() {
     });
 
     const label = document.createElement('span');
+    console.log('Main récupérée du localStorage :', hand);
     label.textContent = hand + ' /';
     label.style.color = 'white';
 
