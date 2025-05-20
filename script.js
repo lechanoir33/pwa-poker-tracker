@@ -2,9 +2,12 @@ const hands = [];
 const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
 function normalizeHand(hand) {
-  if (hand.length === 3) {
-    const [c1, c2, type] = hand.split('');
-    return ranks.indexOf(c1) < ranks.indexOf(c2) ? c2 + c1 + type : hand;
+  if (hand.length !== 3) return hand;
+  const c1 = hand[0];
+  const c2 = hand[1];
+  const type = hand[2];
+  const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+  return ranks.indexOf(c1) > ranks.indexOf(c2) ? c2 + c1 + type : hand;
   }
   return hand;
 }
