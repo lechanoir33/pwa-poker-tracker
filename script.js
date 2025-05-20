@@ -51,10 +51,8 @@ hands.forEach((hand) => {
     checkbox.checked = count > 0;
     saveCounts();
 
-    ajouterMainSelectionnee(hand);  // Visuel immédiat
-
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands.push(hand);  // Toujours ajouter (doublons autorisés)
+    selectedHands.push({ hand, checked: false });  // Toujours ajouter (doublons autorisés)
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
@@ -149,6 +147,12 @@ function updateSelectedHandsDisplay() {
     checkbox.disabled = false;
     checkbox.style.marginRight = '5px';
 
+    checkbox.addEventListener('change', () => {
+      const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+      selectedHands[index].checked = checkbox.checked;
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    });
+
     const label = document.createElement('span');
     label.textContent = hand + ' /';
     label.style.color = 'white';
@@ -160,25 +164,7 @@ function updateSelectedHandsDisplay() {
 }
 
 // Ajout immédiat au clic
-function ajouterMainSelectionnee(hand) {
-  const container = document.getElementById('mainsSelectionnees');
-  const wrapper = document.createElement('div');
-  wrapper.style.margin = '4px';
-  wrapper.style.display = 'flex';
-  wrapper.style.alignItems = 'center';
 
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.style.marginRight = '5px';
-
-  const label = document.createElement('span');
-  label.textContent = hand + ' /';
-  label.style.color = 'white';
-
-  wrapper.appendChild(checkbox);
-  wrapper.appendChild(label);
-  container.appendChild(wrapper);
-}
 
 // Sécurité
 document.addEventListener('contextmenu', e => e.preventDefault());
