@@ -36,7 +36,11 @@
   <script>
     document.getElementById('btnStats').addEventListener('click', () => {
       const allCells = document.querySelectorAll('.mains');
-      const selectedHands = [];
+      const selectedHands = [
+  { hand: 'AA', count: 3 },
+  { hand: 'KK', count: 2 },
+  // Ajoute d'autres mains et leurs comptes
+];
 
       allCells.forEach(cell => {
         const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
