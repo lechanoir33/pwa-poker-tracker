@@ -75,25 +75,23 @@
       '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
     ];
 
-// Compter les occurrences de chaque main sélectionnée
-function getSelectedHandCounts() {
-  const raw = localStorage.getItem('selectedHands');
-  const counts = {};
+    // Compter les occurrences de chaque main sélectionnée
+    function getSelectedHandCounts() {
+      const raw = localStorage.getItem('selectedHands');
+      const counts = {};
 
-  try {
-    const hands = JSON.parse(raw) || [];
-    console.log("Parsed hands:", hands); // ← AJOUT
-    hands.forEach(entry => {
-      const key = entry.hand;
-      counts[key] = (counts[key] || 0) + 1;
-    });
-  } catch (e) {
-    console.error("Erreur de parsing de selectedHands:", e); // ← AJOUT
-    return {};
-  }
+      try {
+        const hands = JSON.parse(raw) || [];
+        hands.forEach(entry => {
+          const key = entry.hand;
+          counts[key] = (counts[key] || 0) + 1;
+        });
+      } catch (e) {
+        return {};
+      }
 
-  return counts;
-}
+      return counts;
+    }
     
     // Fonction pour trier les mains selon le classement handRanking
     function sortByRanking(hands) {
@@ -112,6 +110,9 @@ function getSelectedHandCounts() {
     const tbody = document.querySelector('#statsTable tbody');
     const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
 
+    // Récupère les comptes des mains sélectionnées
+    const selectedHandCounts = getSelectedHandCounts();
+
     sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
       dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
@@ -123,9 +124,9 @@ function getSelectedHandCounts() {
 
         const handCell = document.createElement('td');
         const count = selectedHandCounts[entry.hand] || 1;
-handCell.innerHTML = count > 1
-  ? `${entry.hand}<sup style="color:red;">${count}</sup>`
-  : entry.hand;
+        handCell.innerHTML = count > 1
+          ? `${entry.hand}<sup style="color:red;">${count}</sup>`
+          : entry.hand;
 
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
@@ -138,3 +139,4 @@ handCell.innerHTML = count > 1
   </script>
 </body>
 </html>
+
