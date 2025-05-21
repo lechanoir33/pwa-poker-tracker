@@ -70,7 +70,7 @@
     });
   </script>
 
-  <!-- ✅ Script de RESET -->
+  <!-- ✅ Script de RESET avec délai -->
   <script>
     document.getElementById('btnReset').addEventListener('click', () => {
       // Réinitialise tous les compteurs visibles (sans affecter les données dans localStorage)
@@ -91,8 +91,11 @@
       // localStorage.removeItem('selectedHands'); // À ne pas supprimer
       // localStorage.removeItem('pokerHandCounts'); // À ne pas supprimer
 
-      // Recharge propre de la page sans recharger les anciennes données
-      location.reload();
+      // Ajout d'un délai avant de recharger la page (1 à 2 secondes)
+      setTimeout(() => {
+        // Recharge propre de la page sans recharger les anciennes données
+        location.reload();
+      }, 1500); // 1500ms = 1,5 secondes
     });
   </script>
 </body>
