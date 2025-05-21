@@ -73,7 +73,7 @@
   <!-- ✅ Script de RESET avec délai -->
   <script>
     document.getElementById('btnReset').addEventListener('click', () => {
-      // Réinitialise tous les compteurs visibles (sans affecter les données dans localStorage)
+      // Réinitialise tous les compteurs visibles
       document.querySelectorAll('.counter').forEach(counter => {
         counter.textContent = '0';
       });
@@ -83,19 +83,15 @@
         checkbox.checked = false;
       });
 
-      // Vide la section des mains sélectionnées (affichage uniquement)
+      // Vide la section des mains sélectionnées
       const section = document.getElementById('mainsSelectionnees');
       if (section) section.innerHTML = '';
 
-      // Ne supprime pas 'selectedHands' et 'pokerHandCounts' dans localStorage
-      // localStorage.removeItem('selectedHands'); // À ne pas supprimer
-      // localStorage.removeItem('pokerHandCounts'); // À ne pas supprimer
+      // Supprime les mains sélectionnées stockées localement
+      localStorage.removeItem('selectedHands');
+      localStorage.removeItem('pokerHandCounts');
 
-      // Ajout d'un délai avant de recharger la page (1 à 2 secondes)
-      setTimeout(() => {
-        // Recharge propre de la page sans recharger les anciennes données
-        location.reload();
-      }, 1500); // 1500ms = 1,5 secondes
+        location.reload(); // Recharge la page 
     });
   </script>
 </body>
