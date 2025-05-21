@@ -84,17 +84,12 @@
       });
 
       // Vide la section des mains sélectionnées
-    const section = document.getElementById('mainsSelectionnees');
-    if (section) section.innerHTML = '';
+      const section = document.getElementById('mainsSelectionnees');
+      if (section) section.innerHTML = '';
 
-    // ✅ Supprime les données locales utilisées au chargement (adapté à ton code)
-    localStorage.removeItem('selectedHands');
-    localStorage.removeItem('handCounts'); // ← si tu utilises un compteur persistant
-    localStorage.removeItem('checkedHands'); // ← si tu as un tableau de mains cochées
-
-    // 👇 Recharge propre de la page sans recharger les anciennes données
-    location.reload();
-  });
+      // Supprime les mains sélectionnées stockées localement (mais pas handSessions)
+      localStorage.removeItem('selectedHands');
+    });
   </script>
 </body>
 </html>
