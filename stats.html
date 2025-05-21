@@ -119,8 +119,6 @@
       tbody.appendChild(dateRow);
 
       const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
-      const handsToSave = []; // Initialisation de handsToSave
-      
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
 
@@ -130,30 +128,12 @@
           ? `${entry.hand}<sup style="color:red;">${count}</sup>`
           : entry.hand;
 
-// Fonction pour sauvegarder les mains reportées
-function saveReportedHands(hands) {
-  const savedHands = JSON.parse(localStorage.getItem('reportedHands')) || [];
-  hands.forEach(hand => {
-    if (!savedHands.includes(hand)) {
-      savedHands.push(hand);
-    }
-  });
-  localStorage.setItem('reportedHands', JSON.stringify(savedHands));
-}
-       
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
 
         row.appendChild(handCell);
         row.appendChild(checkedCell);
         tbody.appendChild(row);
-
-        // Ajouter la main à la liste des mains à sauvegarder
-handsToSave.push(entry.hand);
-
-// Sauvegarder toutes les mains de la session dans localStorage sous 'reportedHands'
-saveReportedHands(handsToSave);
-
       });
     });
   </script>
