@@ -76,12 +76,16 @@
 
   <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
   <script>
-    document.getElementById('btnReset').addEventListener('click', () => {
-      // Réinitialise tous les compteurs visibles
-      document.querySelectorAll('.counter').forEach(counter => {
-        counter.textContent = '0';
-      });
+    document.getElementById('resetButton').addEventListener('click', function() {
+    // Réinitialisation des mains sélectionnées uniquement
+    localStorage.removeItem('selectedHands');  // Réinitialiser uniquement les mains sélectionnées
 
+    // Réinitialiser les compteurs des mains sélectionnées sur la page index
+    const selectedHandCounts = {};  // On vide les comptages des mains sélectionnées
+
+    // Ce code ne touche pas à 'handSessions' et ne réinitialise pas l'historique des sessions
+    console.log('Les mains sélectionnées ont été réinitialisées.');
+      
       // Décoche toutes les cases à cocher
       document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
