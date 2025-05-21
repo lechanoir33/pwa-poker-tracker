@@ -82,11 +82,13 @@ function getSelectedHandCounts() {
 
   try {
     const hands = JSON.parse(raw) || [];
+    console.log("Parsed hands:", hands); // ← AJOUT
     hands.forEach(entry => {
       const key = entry.hand;
       counts[key] = (counts[key] || 0) + 1;
     });
   } catch (e) {
+    console.error("Erreur de parsing de selectedHands:", e); // ← AJOUT
     return {};
   }
 
