@@ -89,7 +89,12 @@
 
       // Supprime les mains sélectionnées stockées localement (mais pas handSessions)
       localStorage.removeItem('selectedHands');
-    });
-  </script>
+    localStorage.removeItem('handCounts'); // ← si tu utilises un compteur persistant
+    localStorage.removeItem('checkedHands'); // ← si tu as un tableau de mains cochées
+
+    // 👇 Recharge propre de la page sans recharger les anciennes données
+    location.reload();
+  });
+</script>
 </body>
 </html>
