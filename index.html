@@ -8,117 +8,88 @@
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#000000" />
 </head>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log('Service Worker enregistré'))
-      .catch(err => console.error('Service Worker erreur', err));
-  }
-</script>
 <body>
   <h1>MAINS REÇUES</h1>
 
-  <button id="btnReset">RESET</button>
   <button id="btnStats">Stats</button>
-  
-  <script>
-  function allerVersStats() {
-    const allCells = document.querySelectorAll('.mains');
-    const selectedHands = [];
+  <button id="btnReset">Reset</button> <!-- ✅ Bouton RESET ajouté -->
 
-    allCells.forEach(cell => {
-      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
-      if (count > 0) {
-        selectedHands.push({
-          hand: cell.dataset.hand,
-          checked: true
-        });
-      }
-    });
-
-    if (selectedHands.length > 0) {
-      const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-      const today = new Date().toLocaleDateString('fr-FR');
-
-      sessions.push({
-        date: today,
-        hands: selectedHands
-      });
-
-      localStorage.setItem('handSessions', JSON.stringify(sessions));
-    }
-
-    window.location.href = 'stats.html';
-  }
-</script>
-
-  
   <div id="tableau"></div>
- 
-  <script src="script.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("service-worker.js");
-      });
-    }
-  </script>
-
-  
-<script src="compteurService.js"></script>
 
   <div id="sectionSelectionnees">
-  <h2>Mains sélectionnées :</h2>
-  <div id="mainsSelectionnees" style="color: white; display: flex; flex-wrap: wrap;"></div>
-</div>
-
-  <button id="btnStats">Stats</button>
-<script>
-  // Ici, l'écouteur sur le bouton Stats
-  document.getElementById('btnStats').addEventListener('click', () => {
-  let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-  let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-
-  const today = new Date().toLocaleDateString('fr-FR');
-  selectedHands = selectedHands.map(h => ({ hand: h.hand, checked: h.checked }));
-
-  // Cherche s'il existe déjà une session pour aujourd'hui
-  let todaySession = sessions.find(session => session.date === today);
-
-  if (todaySession) {
-    // Si oui, on met à jour les mains (par exemple, on concatène ou remplace)
-    // Ici, on remplace entièrement les mains de la session du jour
-    todaySession.hands = selectedHands;
-  } else {
-    // Sinon, on crée une nouvelle session
-    sessions.push({
-      date: today,
-      hands: selectedHands
-    });
-  }
-
-  localStorage.setItem('handSessions', JSON.stringify(sessions));
-
-  setTimeout(() => {
-    window.location.href = 'stats.html';
-  }, 100);
-});
-</script>
+    <h2>Mains sélectionnées :</h2>
+    <div id="mainsSelectionnees" style="color: white; display: flex; flex-wrap: wrap;"></div>
+  </div>
 
   <script>
-  // Ajouter un gestionnaire d'événements pour le bouton RESET
-    document.getElementById('btnReset').addEventListener('click', () => {
-      // Réinitialiser le tableau des mains sélectionnées
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log('Service Worker enregistré'))
+        .catch(err => console.error('Service Worker erreur', err));
+    }
+  </script>
+
+  <script src="script.js"></script>
+  <script src="compteurService.js"></script>
+
+  <!-- Script pour aller vers stats.html et enregistrer les mains -->
+  <script>
+    document.getElementById('btnStats').addEventListener('click', () => {
+      const allCells = document.querySelectorAll('.mains');
       const selectedHands = [];
 
-      // Mettre à jour localStorage pour effacer les mains sélectionnées
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+      allCells.forEach(cell => {
+        const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+        if (count > 0) {
+          selectedHands.push({
+            hand: cell.dataset.hand,
+            checked: true
+          });
+        }
+      });
 
-      // Réinitialiser le bas de la page (les mains sélectionnées)
-      document.getElementById('mainsSelectionnees').innerHTML = '';
-      
+      if (selectedHands.length > 0) {
+        const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+        const today = new Date().toLocaleDateString('fr-FR');
+
+        // Remplace la session du jour si elle existe, sinon ajoute-la
+        const existing = sessions.find(session => session.date === today);
+        if (existing) {
+          existing.hands = selectedHands;
+        } else {
+          sessions.push({
+            date: today,
+            hands: selectedHands
+          });
+        }
+
+        localStorage.setItem('handSessions', JSON.stringify(sessions));
+      }
+
+      window.location.href = 'stats.html';
     });
   </script>
-    
+
+  <!-- ✅ Script de RESET -->
+  <script>
+    document.getElementById('btnReset').addEventListener('click', () => {
+      // Réinitialise tous les compteurs
+      document.querySelectorAll('.counter').forEach(counter => {
+        counter.textContent = '0';
+      });
+
+      // Décoche toutes les cases à cocher
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+
+      // Vide la section des mains sélectionnées
+      const section = document.getElementById('mainsSelectionnees');
+      if (section) section.innerHTML = '';
+
+      // Supprime les mains sélectionnées stockées localement (mais pas handSessions)
+      localStorage.removeItem('selectedHands');
+    });
+  </script>
 </body>
 </html>
