@@ -75,6 +75,24 @@
       '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
     ];
 
+// Compter les occurrences de chaque main sélectionnée
+function getSelectedHandCounts() {
+  const raw = localStorage.getItem('selectedHands');
+  const counts = {};
+
+  try {
+    const hands = JSON.parse(raw) || [];
+    hands.forEach(entry => {
+      const key = entry.hand;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+  } catch (e) {
+    return {};
+  }
+
+  return counts;
+}
+    
     // Fonction pour trier les mains selon le classement handRanking
     function sortByRanking(hands) {
       return hands.sort((a, b) => {
@@ -102,7 +120,10 @@
         const row = document.createElement('tr');
 
         const handCell = document.createElement('td');
-        handCell.textContent = entry.hand;
+        const count = selectedHandCounts[entry.hand] || 1;
+handCell.innerHTML = count > 1
+  ? `${entry.hand}<sup style="color:red;">${count}</sup>`
+  : entry.hand;
 
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
