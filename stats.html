@@ -85,12 +85,15 @@
 
     // Fonction de normalisation des mains
     function normalizeHand(hand) {
+      // Si la main a 3 caractères (par exemple, AKs, KQs)
       if (hand.length === 3) {
         const [c1, c2, type] = hand.split('');
-        // Inverser les cartes si la première carte est plus faible (indice plus élevé)
         return getCardRank(c1) > getCardRank(c2) ? c2 + c1 + type : hand;
       }
-      return hand;
+      // Si la main a 2 caractères (par exemple, AA, KK)
+      else {
+        return hand;
+      }
     }
 
     // Fonction de tri des mains par force
