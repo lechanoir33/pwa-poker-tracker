@@ -60,6 +60,7 @@
   </table>
 
   <script>
+    // Liste des mains triées par force
     const handRanking = [
       'AA','KK','AKs','QQ','JJ','AKo','AQs','AJs','TT','AQo','KQs','ATs','KJs','AJo','QJs',
       '99','JTs','KTs','QTs','88','KQo','A9s','T9s','Q9s','KJo','77','A8s','A7s','J9s','66',
@@ -74,33 +75,28 @@
       '54o','53o','52o','43o','42o','32o'
     ];
 
-// Fonction pour normaliser la main (mettre la plus forte en premier)
-  function normalizeHand(hand) {
-    if (hand.length !== 2 && hand.length !== 3) return hand; // gère AA, KK, etc.
-
-    const ranks = '23456789TJQKA';
-    const firstCard = hand[0];
-    const secondCard = hand[1];
-    const suffix = hand.length === 3 ? hand[2] : '';
-
-    // Si paire, rien à changer
-    if (firstCard === secondCard) return hand;
-
-    // Compare les rangs, reorder si besoin
-    if (ranks.indexOf(firstCard) < ranks.indexOf(secondCard)) {
-      return secondCard + firstCard + suffix;
+    // Fonction de normalisation des mains
+    function normalizeHand(hand) {
+      if (hand.length === 3) {
+        const [c1, c2, type] = hand.split('');
+        return handRanking.indexOf(c1 + c2 + type) !== -1 ? c2 + c1 + type : hand;
+      }
+      return hand;
     }
-    return hand;
-  }
-    
+
+    // Fonction de tri des mains par force
     function sortByStrength(hands) {
       return hands.sort((a, b) => {
-        const aIndex = handRanking.indexOf(a.hand);
-        const bIndex = handRanking.indexOf(b.hand);
+        const aNorm = normalizeHand(a.hand);  // Normaliser la main a
+        const bNorm = normalizeHand(b.hand);  // Normaliser la main b
+
+        const aIndex = handRanking.indexOf(aNorm);  // Trouver l'index de la main normalisée a
+        const bIndex = handRanking.indexOf(bNorm);  // Trouver l'index de la main normalisée b
+
         if (aIndex === -1 && bIndex === -1) return 0;
         if (aIndex === -1) return 1;
         if (bIndex === -1) return -1;
-        return aIndex - bIndex;
+        return aIndex - bIndex;  // Comparer les indices
       });
     }
 
@@ -112,13 +108,13 @@
       dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
       tbody.appendChild(dateRow);
 
-      const sortedHands = sortByStrength(session.hands);
+      const sortedHands = sortByStrength(session.hands); // Trier les mains par force
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
 
         const handCell = document.createElement('td');
-        handCell.textContent = normalizeHand(entry.hand);
-        
+        handCell.textContent = entry.hand;
+
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
 
@@ -130,3 +126,4 @@
   </script>
 </body>
 </html>
+
