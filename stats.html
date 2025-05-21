@@ -75,16 +75,17 @@
       '54o', '53o', '52o', '43o', '42o', '32o'
     ];
 
-    // Fonction de tri des mains par force
-    function sortByStrength(hands) {
+    // Fonction pour trier les mains selon le classement handRanking
+    function sortByRanking(hands) {
       return hands.sort((a, b) => {
-        const aIndex = handRanking.indexOf(a.hand);  // Trouver l'index de la main a
-        const bIndex = handRanking.indexOf(b.hand);  // Trouver l'index de la main b
-
-        if (aIndex === -1 && bIndex === -1) return 0;
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-        return aIndex - bIndex;  // Comparer les indices
+        const indexA = handRanking.indexOf(a.hand);
+        const indexB = handRanking.indexOf(b.hand);
+        
+        if (indexA === -1 && indexB === -1) return 0;
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        
+        return indexA - indexB; // Tri selon l'indice dans handRanking
       });
     }
 
@@ -96,7 +97,7 @@
       dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
       tbody.appendChild(dateRow);
 
-      const sortedHands = sortByStrength(session.hands); // Trier les mains par force
+      const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
 
