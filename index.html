@@ -70,7 +70,7 @@
     });
   </script>
 
-  <!-- ✅ Script de RESET avec délai -->
+  <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
   <script>
     document.getElementById('btnReset').addEventListener('click', () => {
       // Réinitialise tous les compteurs visibles
@@ -87,11 +87,14 @@
       const section = document.getElementById('mainsSelectionnees');
       if (section) section.innerHTML = '';
 
-      // Supprime les mains sélectionnées stockées localement
+      // Supprime uniquement les mains sélectionnées locales pour la session actuelle
       localStorage.removeItem('selectedHands');
       localStorage.removeItem('pokerHandCounts');
 
-        location.reload(); // Recharge la page 
+      // 👇 Introduire un délai de 1,5 secondes avant de recharger la page
+      setTimeout(() => {
+        location.reload(); // Recharge la page sans affecter le reporting
+      }, 1500); // 1,5 seconde de délai
     });
   </script>
 </body>
