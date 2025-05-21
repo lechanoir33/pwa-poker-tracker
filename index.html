@@ -73,7 +73,7 @@
   <!-- ✅ Script de RESET -->
   <script>
     document.getElementById('btnReset').addEventListener('click', () => {
-      // Réinitialise tous les compteurs
+      // Réinitialise tous les compteurs visibles (sans affecter les données dans localStorage)
       document.querySelectorAll('.counter').forEach(counter => {
         counter.textContent = '0';
       });
@@ -83,18 +83,17 @@
         checkbox.checked = false;
       });
 
-      // Vide la section des mains sélectionnées
+      // Vide la section des mains sélectionnées (affichage uniquement)
       const section = document.getElementById('mainsSelectionnees');
       if (section) section.innerHTML = '';
 
-      // Supprime les mains sélectionnées stockées localement (mais pas handSessions)
-      localStorage.removeItem('selectedHands');
-localStorage.removeItem('pokerHandCounts');
-location.reload();
+      // Ne supprime pas 'selectedHands' et 'pokerHandCounts' dans localStorage
+      // localStorage.removeItem('selectedHands'); // À ne pas supprimer
+      // localStorage.removeItem('pokerHandCounts'); // À ne pas supprimer
 
-    // 👇 Recharge propre de la page sans recharger les anciennes données
-    location.reload();
-  });
-</script>
+      // Recharge propre de la page sans recharger les anciennes données
+      location.reload();
+    });
+  </script>
 </body>
 </html>
