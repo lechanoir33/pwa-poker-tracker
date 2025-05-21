@@ -2,150 +2,104 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Page Principale - Mains de Poker</title>
-  <style>
-    body {
-      background-color: #111;
-      color: white;
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #333;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #555;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid white;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #333;
-    }
-
-    .main-title {
-      font-size: 1.5em;
-      font-weight: bold;
-      text-align: center;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mains reçues</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />
 </head>
 <body>
-  <h1 class="main-title">Sélectionnez les Mains de Poker</h1>
+  <h1>MAINS REÇUES</h1>
 
-  <button id="resetButton">Réinitialiser</button>
+  <button id="btnStats">Stats</button>
+  <button id="btnReset">Reset</button> <!-- ✅ Bouton RESET ajouté -->
 
-  <table id="handsTable">
-    <thead>
-      <tr>
-        <th>Main</th>
-        <th>Cocher</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Les mains et cases à cocher seront ajoutées ici -->
-    </tbody>
-  </table>
+  <div id="tableau"></div>
+
+  <div id="sectionSelectionnees">
+    <h2>Mains sélectionnées :</h2>
+    <div id="mainsSelectionnees" style="color: white; display: flex; flex-wrap: wrap;"></div>
+  </div>
 
   <script>
-    // Liste des mains triées par force
-    const handRanking = [
-      'AA', 'KK', 'AKs', 'QQ', 'JJ', 'AKo', 'AQs', 'AQo', 'AJs', 'TT', 'KQs', 'ATs', 'KJs', 'AJo', 'QJs',
-      '99', 'JTs', 'KTs', 'QTs', '88', 'KQo', 'A9s', 'T9s', 'Q9s', 'KJo', 'A8s', 'A7s', 'J9s',
-      'A5s', 'A6s', 'T8s', 'A4s', 'QJo', 'K9s', 'J8s', 'A3s', 'KTo', 'Q8s', 'A2s', 
-      'J7s', 'Q7s', 'K8s', '98s', '97s', '87s', 'T7s', 'Q6s', 'JTo', 'K7s', 'J6s', '76s', 'QTo', 'K6s',
-      'J5s', 'K5s', 'J4s', 'K4s', 'K3s', '65s', 'K2s', 'T6s', 'Q5s', 'Q4s', 'T5s', 'T4s', 'Q3s', '54s',
-      'J3s', 'Q2s', 'J2s', 'T3s', 'T2s', '43s', '42s', '32s', 'A9o', 'A8o', 'A7o', 'A5o', 'A6o', 'A4o',
-      'A3o', 'A2o', 'K9o', 'K8o', 'K7o', 'K6o', 'K5o', 'K4o', 'K3o', 'K2o', 'Q9o', 'Q8o', 'Q7o', 'Q6o',
-      'Q5o', 'Q4o', 'Q3o', 'Q2o', 'J9o', 'J8o', 'J7o', 'J6o', 'J5o', 'J4o', 'J3o', 'J2o', 'T9o', 'T8o',
-      'T7o', 'T6o', 'T5o', 'T4o', 'T3o', 'T2o', '98o', '97o', '96o', '95o', '94o', '93o', '92o', '87o',
-      '86o', '85o', '84o', '83o', '82o', '76o', '75o', '74o', '73o', '72o', '65o', '64o', '63o', '62o',
-      '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
-    ];
-
-    // Fonction pour sauvegarder les mains sélectionnées dans localStorage
-    function saveSelectedHands(selectedHands) {
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log('Service Worker enregistré'))
+        .catch(err => console.error('Service Worker erreur', err));
     }
+  </script>
 
-    // Charger les mains déjà sélectionnées depuis localStorage
-    function loadSelectedHands() {
-      const raw = localStorage.getItem('selectedHands');
-      return raw ? JSON.parse(raw) : [];
-    }
+  <script src="script.js"></script>
+  <script src="compteurService.js"></script>
 
-    // Récupérer le tableau des mains et ajouter les cases à cocher
-    function loadHands() {
-      const handsTableBody = document.querySelector('#handsTable tbody');
-      const selectedHands = loadSelectedHands();
+  <!-- Script pour aller vers stats.html et enregistrer les mains -->
+  <script>
+    document.getElementById('btnStats').addEventListener('click', () => {
+      const allCells = document.querySelectorAll('.mains');
+      const selectedHands = [
+  { hand: 'AA', count: 3 },
+  { hand: 'KK', count: 2 },
+  // Ajoute d'autres mains et leurs comptes
+];
 
-      // Supprimer les lignes existantes
-      handsTableBody.innerHTML = '';
-
-      handRanking.forEach(hand => {
-        const row = document.createElement('tr');
-
-        const handCell = document.createElement('td');
-        handCell.textContent = hand;
-
-        const checkboxCell = document.createElement('td');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = selectedHands.includes(hand);
-        checkbox.addEventListener('change', () => handleHandSelection(hand, checkbox.checked));
-
-        checkboxCell.appendChild(checkbox);
-        row.appendChild(handCell);
-        row.appendChild(checkboxCell);
-
-        handsTableBody.appendChild(row);
-      });
-    }
-
-    // Ajouter ou supprimer une main dans les mains sélectionnées
-    function handleHandSelection(hand, isChecked) {
-      let selectedHands = loadSelectedHands();
-
-      if (isChecked) {
-        if (!selectedHands.includes(hand)) {
-          selectedHands.push(hand);
+      allCells.forEach(cell => {
+        const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+        if (count > 0) {
+          selectedHands.push({
+            hand: cell.dataset.hand,
+            checked: true
+          });
         }
-      } else {
-        selectedHands = selectedHands.filter(h => h !== hand);
+      });
+
+      if (selectedHands.length > 0) {
+        const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+        const today = new Date().toLocaleDateString('fr-FR');
+
+        // Remplace la session du jour si elle existe, sinon ajoute-la
+        const existing = sessions.find(session => session.date === today);
+        if (existing) {
+          existing.hands = selectedHands;
+        } else {
+          sessions.push({
+            date: today,
+            hands: selectedHands
+          });
+        }
+
+        localStorage.setItem('handSessions', JSON.stringify(sessions));
       }
 
-      saveSelectedHands(selectedHands);
-    }
-
-    // Fonction pour réinitialiser les exposants sur la page principale
-    document.getElementById('resetButton').addEventListener('click', () => {
-      // Réinitialiser uniquement les mains sélectionnées sur la page principale
-      saveSelectedHands([]); // Effacer les mains sélectionnées
-
-      // Recharger la page pour refléter la réinitialisation
-      loadHands();
+      window.location.href = 'stats.html';
     });
+  </script>
 
-    // Charger les mains à l'ouverture de la page
-    loadHands();
+  <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
+  <script>
+    document.getElementById('btnReset').addEventListener('click', () => {
+      // Réinitialise tous les compteurs visibles
+      document.querySelectorAll('.counter').forEach(counter => {
+        counter.textContent = '0';
+      });
+
+      // Décoche toutes les cases à cocher
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+
+      // Vide la section des mains sélectionnées
+      const section = document.getElementById('mainsSelectionnees');
+      if (section) section.innerHTML = '';
+
+      // Supprime uniquement les mains sélectionnées locales pour la session actuelle
+      localStorage.removeItem('selectedHands');
+      localStorage.removeItem('pokerHandCounts');
+
+      // 👇 Introduire un délai de 1,5 secondes avant de recharger la page
+      setTimeout(() => {
+        location.reload(); // Recharge la page sans affecter le reporting
+      }, 500); // 1,5 seconde de délai
+    });
   </script>
 </body>
 </html>

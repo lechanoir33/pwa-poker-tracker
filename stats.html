@@ -75,7 +75,7 @@
       '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
     ];
 
-    // Récupérer les comptes des mains sélectionnées depuis localStorage
+    // Compter les occurrences de chaque main sélectionnée
     function getSelectedHandCounts() {
       const raw = localStorage.getItem('selectedHands');
       const counts = {};
@@ -92,8 +92,8 @@
 
       return counts;
     }
-
-    // Trier les mains selon leur rang dans handRanking
+    
+    // Fonction pour trier les mains selon le classement handRanking
     function sortByRanking(hands) {
       return hands.sort((a, b) => {
         const indexA = handRanking.indexOf(a.hand);
@@ -110,10 +110,9 @@
     const tbody = document.querySelector('#statsTable tbody');
     const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
 
-    // Récupérer les comptes des mains sélectionnées
+    // Récupère les comptes des mains sélectionnées
     const selectedHandCounts = getSelectedHandCounts();
 
-    // Afficher toutes les sessions
     sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
       dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
@@ -140,3 +139,4 @@
   </script>
 </body>
 </html>
+
