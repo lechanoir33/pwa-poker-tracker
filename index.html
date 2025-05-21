@@ -2,88 +2,104 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Poker Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mains reçues</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />
 </head>
 <body>
-  <h1>Suivi des Mains de Poker</h1>
+  <h1>MAINS REÇUES</h1>
 
-  <button id="resetButton">Réinitialiser</button>
+  <button id="btnStats">Stats</button>
+  <button id="btnReset">Reset</button> <!-- ✅ Bouton RESET ajouté -->
 
-  <table id="statsTable">
-    <thead>
-      <tr>
-        <th>Main</th>
-        <th>Cocher ?</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div id="tableau"></div>
 
-  <!-- Placer le script ici, avant la balise de fermeture </body> -->
+  <div id="sectionSelectionnees">
+    <h2>Mains sélectionnées :</h2>
+    <div id="mainsSelectionnees" style="color: white; display: flex; flex-wrap: wrap;"></div>
+  </div>
+
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Lorsque le DOM est prêt, on peut ajouter l'écouteur
-      document.getElementById('resetButton').addEventListener('click', function() {
-        // Réinitialiser uniquement les mains sélectionnées
-        localStorage.removeItem('selectedHands');  // Réinitialise 'selectedHands' dans localStorage
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log('Service Worker enregistré'))
+        .catch(err => console.error('Service Worker erreur', err));
+    }
+  </script>
 
-        // Réinitialiser les compteurs des mains sélectionnées sur la page index
-        const selectedHandCounts = {};  // On vide les comptages des mains sélectionnées
+  <script src="script.js"></script>
+  <script src="compteurService.js"></script>
 
-        // Ce code ne touche pas à 'handSessions' et ne réinitialise pas l'historique des sessions
-        console.log('Les mains sélectionnées ont été réinitialisées.');
+  <!-- Script pour aller vers stats.html et enregistrer les mains -->
+  <script>
+    document.getElementById('btnStats').addEventListener('click', () => {
+      const allCells = document.querySelectorAll('.mains');
+      const selectedHands = [
+  { hand: 'AA', count: 3 },
+  { hand: 'KK', count: 2 },
+  // Ajoute d'autres mains et leurs comptes
+];
 
-        // Optionnel : recharge la page pour réinitialiser visuellement les données
-        location.reload();  // Cela permettra de vider l'affichage des mains sélectionnées
+      allCells.forEach(cell => {
+        const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+        if (count > 0) {
+          selectedHands.push({
+            hand: cell.dataset.hand,
+            checked: true
+          });
+        }
       });
 
-      // Récupérer et afficher les données dans la table Stats
-      const tbody = document.querySelector('#statsTable tbody');
-      const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
+      if (selectedHands.length > 0) {
+        const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+        const today = new Date().toLocaleDateString('fr-FR');
 
-      sessionData.slice().reverse().forEach(session => {
-        const dateRow = document.createElement('tr');
-        dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
-        tbody.appendChild(dateRow);
+        // Remplace la session du jour si elle existe, sinon ajoute-la
+        const existing = sessions.find(session => session.date === today);
+        if (existing) {
+          existing.hands = selectedHands;
+        } else {
+          sessions.push({
+            date: today,
+            hands: selectedHands
+          });
+        }
 
-        session.hands.forEach(entry => {
-          const row = document.createElement('tr');
-
-          const handCell = document.createElement('td');
-          const count = getSelectedHandCounts()[entry.hand] || 1;
-          handCell.innerHTML = count > 1
-            ? `${entry.hand}<sup style="color:red;">${count}</sup>`
-            : entry.hand;
-
-          const checkedCell = document.createElement('td');
-          checkedCell.textContent = entry.checked ? '✔️' : '❌';
-
-          row.appendChild(handCell);
-          row.appendChild(checkedCell);
-          tbody.appendChild(row);
-        });
-      });
-    });
-
-    // Fonction pour récupérer les comptes des mains sélectionnées depuis le localStorage
-    function getSelectedHandCounts() {
-      const raw = localStorage.getItem('selectedHands');
-      const counts = {};
-
-      try {
-        const hands = JSON.parse(raw) || [];
-        hands.forEach(entry => {
-          const key = entry.hand;
-          counts[key] = (counts[key] || 0) + 1;
-        });
-      } catch (e) {
-        return {};
+        localStorage.setItem('handSessions', JSON.stringify(sessions));
       }
 
-      return counts;
-    }
+      window.location.href = 'stats.html';
+    });
+  </script>
+
+  <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
+  <script>
+    document.getElementById('btnReset').addEventListener('click', () => {
+      // Réinitialise tous les compteurs visibles
+      document.querySelectorAll('.counter').forEach(counter => {
+        counter.textContent = '0';
+      });
+
+      // Décoche toutes les cases à cocher
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+
+      // Vide la section des mains sélectionnées
+      const section = document.getElementById('mainsSelectionnees');
+      if (section) section.innerHTML = '';
+
+      // Supprime uniquement les mains sélectionnées locales pour la session actuelle
+      localStorage.removeItem('selectedHands');
+      localStorage.removeItem('pokerHandCounts');
+
+      // 👇 Introduire un délai de 1,5 secondes avant de recharger la page
+      setTimeout(() => {
+        location.reload(); // Recharge la page sans affecter le reporting
+      }, 500); // 1,5 seconde de délai
+    });
   </script>
 </body>
 </html>
