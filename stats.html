@@ -87,8 +87,8 @@
     function normalizeHand(hand) {
       if (hand.length === 3) {
         const [c1, c2, type] = hand.split('');
-        // Si la carte c1 est plus forte que c2 (indice plus bas), on la garde en premier
-        return getCardRank(c1) < getCardRank(c2) ? c2 + c1 + type : hand;
+        // Inverser les cartes si la première carte est plus faible (indice plus élevé)
+        return getCardRank(c1) > getCardRank(c2) ? c2 + c1 + type : hand;
       }
       return hand;
     }
