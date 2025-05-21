@@ -80,8 +80,8 @@
   if (hand.length === 3) {
     const [c1, c2, type] = hand.split('');
     console.log(`Comparaison des cartes : ${c1} et ${c2}`);
-    console.log(`Indices dans handRanking : ${handRanking.indexOf(c1)} vs ${handRanking.indexOf(c2)}`);
-    return handRanking.indexOf(c1) > handRanking.indexOf(c2) ? c2 + c1 + type : hand;
+    console.log(`Indices dans handRanking : ${ranks.indexOf(c1)} vs ${ranks.indexOf(c2)}`);
+    return ranks.indexOf(c1) > ranks.indexOf(c2) ? c2 + c1 + type : hand;
   }
   return hand;
   }
