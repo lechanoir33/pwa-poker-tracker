@@ -75,6 +75,34 @@
       '54o','53o','52o','43o','42o','32o'
     ];
 
+// Tableau des rangs des cartes
+const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+
+// Exemple de main : 'KA' (roi et as)
+const hand = 'KA';
+
+// Fonction pour obtenir l'indice de chaque carte dans le tableau ranks
+function getCardRank(card) {
+  return ranks.indexOf(card);
+}
+
+// Exemple : obtenir l'indice de chaque carte dans la main
+const card1 = hand[0]; // K
+const card2 = hand[1]; // A
+
+const rank1 = getCardRank(card1); // Indice de 'K'
+const rank2 = getCardRank(card2); // Indice de 'A'
+
+console.log(`Indice de ${card1}: ${rank1}`); // Affiche l'indice du 'K'
+console.log(`Indice de ${card2}: ${rank2}`); // Affiche l'indice de 'A'
+
+// Comparer les deux cartes pour les trier, par exemple :
+if (rank1 < rank2) {
+  console.log(`${card2} est plus fort que ${card1}`);
+} else {
+  console.log(`${card1} est plus fort que ${card2}`);
+}
+    
     // Fonction de normalisation des mains
     function normalizeHand(hand) {
   if (hand.length === 3) {
