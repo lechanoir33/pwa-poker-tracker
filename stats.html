@@ -81,7 +81,7 @@
     const [c1, c2, type] = hand.split('');
     console.log(`Normalisation avant : ${c1}, ${c2}, ${type}`);  // Debugging
     // Normalisation : on place la carte la plus forte en premier
-    const normalized = handRanking.indexOf(c1) > handRanking.indexOf(c2) ? c2 + c1 + type : hand;
+    const normalized = handRanking.indexOf(c1) < handRanking.indexOf(c2) ? c2 + c1 + type : hand;
     console.log(`Normalisation après : ${normalized}`);  // Debugging
     return normalized;
   }
