@@ -119,6 +119,8 @@
       tbody.appendChild(dateRow);
 
       const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
+      const handsToSave = []; // Initialisation de handsToSave
+      
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
 
