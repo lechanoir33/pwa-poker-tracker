@@ -104,6 +104,19 @@
   }, 100);
 });
 </script>
-  
+// Ajouter un gestionnaire d'événements pour le bouton RESET
+    document.getElementById('btnReset').addEventListener('click', () => {
+      // Réinitialiser le tableau des mains sélectionnées
+      const selectedHands = [];
+
+      // Mettre à jour localStorage pour effacer les mains sélectionnées
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+
+      // Réinitialiser le bas de la page (les mains sélectionnées)
+      document.getElementById('mainsSelectionnees').innerHTML = '';
+      
+    });
+  </script>
+    
 </body>
 </html>
