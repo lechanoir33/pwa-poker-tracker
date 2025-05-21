@@ -140,6 +140,23 @@ function saveReportedHands(hands) {
   });
   localStorage.setItem('reportedHands', JSON.stringify(savedHands));
 }
+
+// Vérifier si une réinitialisation a eu lieu
+const resetFlag = localStorage.getItem('resetFlag');
+
+// Si réinitialisation a eu lieu, récupérer les mains reportées
+if (resetFlag === 'true') {
+  console.log("Réinitialisation effectuée, récupération des mains reportées.");
+
+  // Récupérer les mains reportées depuis localStorage
+  const savedHands = JSON.parse(localStorage.getItem('reportedHands')) || [];
+  
+  // Afficher les mains reportées récupérées
+  savedHands.forEach(hand => {
+    const row = document.createElement('tr');
+    
+    const handCell = document.createElement('td');
+    handCell.textContent = hand;
         
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
