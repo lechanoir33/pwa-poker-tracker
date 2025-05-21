@@ -73,29 +73,27 @@
   <!-- ✅ Script de RESET -->
   <script>
     document.getElementById('btnReset').addEventListener('click', () => {
-  // Réinitialise tous les compteurs à 0
-  document.querySelectorAll('.counter').forEach(counter => {
-    counter.textContent = '0';
-  });
+      // Réinitialise tous les compteurs
+      document.querySelectorAll('.counter').forEach(counter => {
+        counter.textContent = '0';
+      });
 
-  // Décoche toutes les cases à cocher
-  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-    checkbox.checked = false;
-  });
+      // Décoche toutes les cases à cocher
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
 
-  // Vide la section des mains sélectionnées
-  const section = document.getElementById('mainsSelectionnees');
-  if (section) section.innerHTML = '';
+      // Vide la section des mains sélectionnées
+      const section = document.getElementById('mainsSelectionnees');
+      if (section) section.innerHTML = '';
 
-  // Supprime les mains sélectionnées stockées localement, mais conserve les comptages des mains
-  localStorage.removeItem('selectedHands');
-  // On conserve les comptages dans localStorage (ne pas supprimer 'pokerHandCounts')
-  
-  // Optionnel : Si tu as une fonction getSelectedHandCounts qui doit persister, elle doit être appelée ici
-  const counts = getSelectedHandCounts();
+      // Supprime les mains sélectionnées stockées localement (mais pas handSessions)
+      localStorage.removeItem('selectedHands');
+localStorage.removeItem('pokerHandCounts');
+location.reload();
 
-  // Recharge la page pour une remise à zéro propre tout en conservant les données de comptage
-  location.reload();
+    // 👇 Recharge propre de la page sans recharger les anciennes données
+    location.reload();
   });
 </script>
 </body>
