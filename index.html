@@ -90,8 +90,10 @@
       // Supprime les mains sélectionnées stockées localement (mais pas handSessions)
       localStorage.removeItem('selectedHands');
 localStorage.removeItem('pokerHandCounts');
-location.reload();
+      location.reload();
 
+      const counts = getSelectedHandCounts();
+      
     // 👇 Recharge propre de la page sans recharger les anciennes données
     location.reload();
   });
