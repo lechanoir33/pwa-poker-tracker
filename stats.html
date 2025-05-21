@@ -79,15 +79,12 @@
     function normalizeHand(hand) {
   if (hand.length === 3) {
     const [c1, c2, type] = hand.split('');
-    console.log(`Normalisation avant : ${c1}, ${c2}, ${type}`);  // Debugging
-    // Normalisation : on place la carte la plus forte en premier
-    const normalized = handRanking.indexOf(c1) < handRanking.indexOf(c2) ? c2 + c1 + type : hand;
-    console.log(`Normalisation après : ${normalized}`);  // Debugging
-    return normalized;
+    console.log(`Comparaison des cartes : ${c1} et ${c2}`);
+    console.log(`Indices dans handRanking : ${handRanking.indexOf(c1)} vs ${handRanking.indexOf(c2)}`);
+    return handRanking.indexOf(c1) > handRanking.indexOf(c2) ? c2 + c1 + type : hand;
   }
   return hand;
-}
-  
+  }
 
     // Fonction de tri des mains par force
     function sortByStrength(hands) {
