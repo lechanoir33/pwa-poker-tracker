@@ -56,20 +56,17 @@ if (!resetDone && selectedHands.length > 0) {
   const today = new Date().toLocaleDateString('fr-FR');
 
   const existing = sessions.find(session => session.date === today);
-  const resetDone = localStorage.getItem('resetDone') === 'true';
 
-  // 🔁 Ajout des mains à la session existante
-const existing = sessions.find(session => session.date === today);
-if (existing) {
-  existing.hands = existing.hands.concat(selectedHands);
-} else if (!resetDone) {
-  sessions.push({
-    date: today,
-    hands: selectedHands
-  });
-}
-
-localStorage.setItem('handSessions', JSON.stringify(sessions));
+  if (existing) {
+    // Ajoute les mains à la session existante (concaténation)
+    existing.hands = existing.hands.concat(selectedHands);
+  } else {
+    // Crée une nouvelle session seulement si pas de reset
+    sessions.push({
+      date: today,
+      hands: selectedHands
+    });
+  }
 
   localStorage.setItem('handSessions', JSON.stringify(sessions));
 }
