@@ -52,10 +52,11 @@
       const currentSession = sessions[sessions.length - 1];
       const hands = currentSession.hands || [];
 
-      // Compter les occurrences des mains
-      const counts = {};
-      hands.forEach(({ hand }) => {
-        counts[hand] = (counts[hand] || 0) + 1;
+      //Compter les occurrences
+      const countMap = {};
+      sessionHands.forEach(entry => {
+        const hand = entry.hand;
+        countMap[hand] = (countMap[hand] || 0) + 1;
       });
 
       // Stocker le résultat dans localStorage sous "handHistory"
@@ -89,16 +90,28 @@
           return indexA - indexB;
         });
 
-      // Afficher les résultats
-      const tbody = document.querySelector('#statsTable tbody');
-      tbody.innerHTML = '';
+   // Affichage
+      const titleRow = document.createElement('tr');
+      titleRow.innerHTML = `<td colspan="2" class="session-title">${sessionDate}</td>`;
+      tbody.appendChild(titleRow);
 
-      sortedHands.forEach(({ hand, count }) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${hand}</td><td>${count > 1 ? `<sup>${count}</sup>` : count}</td>`;
-        tbody.appendChild(tr);
+      sortedHands.forEach(hand => {
+        const row = document.createElement('tr');
+
+        const handCell = document.createElement('td');
+        handCell.innerHTML = countMap[hand] > 1
+          ? `${hand}<sup style="color:red;">${countMap[hand]}</sup>`
+          : hand;
+
+        const countCell = document.createElement('td');
+        countCell.textContent = countMap[hand];
+
+        row.appendChild(handCell);
+        row.appendChild(countCell);
+        tbody.appendChild(row);
       });
     }
+  <
   </script>
 </body>
 </html>
