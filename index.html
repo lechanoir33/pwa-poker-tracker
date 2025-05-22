@@ -121,10 +121,10 @@
     const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
     const baseDate = new Date().toLocaleDateString('fr-FR');
 
-    // Filtrer les sessions existantes de la même journée
+    // Trouver les sessions existantes pour aujourd’hui
     const todaySessions = sessions.filter(session => session.date.startsWith(baseDate));
 
-    // Générer une nouvelle étiquette de session
+    // Calcul du nom de session : 22/05/2025, 22/05/2025 #2, #3...
     let newDate;
     if (todaySessions.length === 0) {
       newDate = baseDate;
@@ -137,35 +137,36 @@
       newDate = `${baseDate} #${maxSuffix + 1}`;
     }
 
-    // Récupérer toutes les mains visibles avec un compteur > 0
-    const allCells = document.querySelectorAll('.mains');
-    const currentHands = [];
-
-    allCells.forEach(cell => {
-      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
-      if (count > 0) {
-        currentHands.push({
-          hand: cell.dataset.hand,
-          count,
-          checked: true
-        });
-      }
-    });
-
-    // Créer et stocker la nouvelle session
+    // Nouvelle session vide
     const newSession = {
       date: newDate,
-      hands: currentHands
+      hands: []
     };
 
+    // Ajout dans handSessions
     sessions.push(newSession);
     localStorage.setItem('handSessions', JSON.stringify(sessions));
 
-    // ✅ On vide les compteurs locaux mais garde les exposants côté stats
+    // Reset visuel et données temporaires
     localStorage.removeItem('pokerHandCounts');
+    localStorage.removeItem('selectedHands');
     localStorage.setItem('resetDone', 'true');
 
-    // On recharge la page pour vider les compteurs (comme le bouton Reset)
+    // Remet tous les compteurs à zéro sur la page
+    document.querySelectorAll('.counter').forEach(counter => {
+      counter.textContent = '0';
+    });
+
+    // Décoche toutes les cases
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+
+    // Vide la section des mains sélectionnées
+    const section = document.getElementById('mainsSelectionnees');
+    if (section) section.innerHTML = '';
+
+    // Recharge la page (sans toucher aux sessions précédentes ni exposants stats)
     setTimeout(() => {
       location.reload();
     }, 500);
