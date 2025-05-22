@@ -34,52 +34,51 @@
 
   <!-- Script pour aller vers stats.html et enregistrer les mains -->
   <script>
-    document.getElementById('btnStats').addEventListener('click', () => {
-      const allCells = document.querySelectorAll('.mains');
-      const selectedHands = [];
+  document.getElementById('btnStats').addEventListener('click', () => {
+    const allCells = document.querySelectorAll('.mains');
+    const selectedHands = [];
 
-      allCells.forEach(cell => {
-        const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
-        if (count > 0) {
-          selectedHands.push({
-            hand: cell.dataset.hand,
-            checked: true,
-            count: count
-          });
-        }
-       }); // ✅ fermeture correcte du forEach
+    allCells.forEach(cell => {
+      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+      if (count > 0) {
+        selectedHands.push({
+          hand: cell.dataset.hand,
+          checked: true,
+          count: count
+        });
+      }
+    });
 
-      const resetDone = localStorage.getItem('resetDone') === 'true';
-      if (selectedHands.length > 0) {
-        const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-        const today = new Date().toLocaleDateString('fr-FR');
+    const resetDone = localStorage.getItem('resetDone') === 'true';
+    if (selectedHands.length > 0) {
+      const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+      const today = new Date().toLocaleDateString('fr-FR');
 
-        let existing = sessions.find(session => session.date === today);
-        if (!existing && !resetDone) {
-          // Crée une nouvelle session seulement si pas de reset
-          existing = { date: today, hands: [] };
-          sessions.push(existing);
-        }
-
-        if (existing) {
-          // Ajoute seulement les mains qui ne sont pas déjà dans existing.hands
-          selectedHands.forEach(sh => {
-            const alreadyExists = existing.hands.some(h => h.hand === sh.hand);
-            if (!alreadyExists) {   
-        existing.hands.push({
-          hand: sh.hand,
-        checked: sh.checked,
-        count: sh.count // ✅ LIGNE AJOUTÉE pour conserver l'exposant
-      });
-    }
-  }); // ✅ fermeture du forEach
-
-  localStorage.setItem('handSessions', JSON.stringify(sessions));
-        }
+      let existing = sessions.find(session => session.date === today);
+      if (!existing && !resetDone) {
+        existing = { date: today, hands: [] };
+        sessions.push(existing);
       }
 
-      window.location.href = 'stats.html';
-    });
+      if (existing) {
+        selectedHands.forEach(sh => {
+          const alreadyExists = existing.hands.some(h => h.hand === sh.hand);
+          if (!alreadyExists) {
+            existing.hands.push({
+              hand: sh.hand,
+              checked: sh.checked,
+              count: sh.count
+            });
+          }
+        });
+
+        localStorage.setItem('handSessions', JSON.stringify(sessions));
+      }
+    }
+
+    window.location.href = 'stats.html';
+  });
+
   </script>
 
   <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
