@@ -162,7 +162,30 @@ previousSummary[today] = allCounts;
 
 // Sauvegarde dans localStorage
 localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
-    
+
+    // ➕ Affichage du résumé consolidé (handStatsSummary)
+    if (statsSummary.length > 0) {
+      const summaryRow = document.createElement('tr');
+      summaryRow.innerHTML = `<td colspan="2" class="session-title">Résumé cumulatif</td>`;
+      tbody.appendChild(summaryRow);
+
+      const sortedSummary = sortByRanking(statsSummary);
+      sortedSummary.forEach(entry => {
+        const row = document.createElement('tr');
+
+        const handCell = document.createElement('td');
+        handCell.innerHTML = entry.count > 1
+          ? `${entry.hand}<sup style="color:red;">${entry.count}</sup>`
+          : entry.hand;
+
+        const checkedCell = document.createElement('td');
+        checkedCell.textContent = entry.checked ? '✔️' : '❌';
+
+        row.appendChild(handCell);
+        row.appendChild(checkedCell);
+        tbody.appendChild(row);
+      });
+    }
   </script>
 </body>
 </html>
