@@ -56,14 +56,16 @@ if (!resetDone && selectedHands.length > 0) {
   const today = new Date().toLocaleDateString('fr-FR');
 
   const existing = sessions.find(session => session.date === today);
-  if (existing) {
-    existing.hands = selectedHands;
-  } else {
-    sessions.push({
-      date: today,
-      hands: selectedHands
-    });
-  }
+  const resetDone = localStorage.getItem('resetDone') === 'true';
+
+if (existing) {
+  existing.hands = selectedHands;
+} else if (!resetDone) {
+  sessions.push({
+    date: today,
+    hands: selectedHands
+  });
+}
 
   localStorage.setItem('handSessions', JSON.stringify(sessions));
 }
