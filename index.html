@@ -49,23 +49,24 @@
         }
       });
 
-      if (selectedHands.length > 0) {
-        const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-        const today = new Date().toLocaleDateString('fr-FR');
+      const resetDone = localStorage.getItem('resetDone') === 'true';
 
-        // Remplace la session du jour si elle existe, sinon ajoute-la
-        const existing = sessions.find(session => session.date === today);
-        if (existing) {
-          existing.hands = selectedHands;
-        } else {
-          sessions.push({
-            date: today,
-            hands: selectedHands
-          });
-        }
+if (!resetDone && selectedHands.length > 0) {
+  const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  const today = new Date().toLocaleDateString('fr-FR');
 
-        localStorage.setItem('handSessions', JSON.stringify(sessions));
-      }
+  const existing = sessions.find(session => session.date === today);
+  if (existing) {
+    existing.hands = selectedHands;
+  } else {
+    sessions.push({
+      date: today,
+      hands: selectedHands
+    });
+  }
+
+  localStorage.setItem('handSessions', JSON.stringify(sessions));
+}
 
       window.location.href = 'stats.html';
     });
@@ -73,7 +74,11 @@
 
   <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
   <script>
+    
     document.getElementById('btnReset').addEventListener('click', () => {
+      
+      localStorage.setItem('resetDone', 'true'); // ✅ Indique qu’un reset a été fait
+      
       // Réinitialise tous les compteurs visibles
       document.querySelectorAll('.counter').forEach(counter => {
         counter.textContent = '0';
