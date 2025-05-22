@@ -51,16 +51,16 @@
 
       const resetDone = localStorage.getItem('resetDone') === 'true';
 
-if (!resetDone && selectedHands.length > 0) {
+if (selectedHands.length > 0) {
   const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
   const today = new Date().toLocaleDateString('fr-FR');
 
   const existing = sessions.find(session => session.date === today);
 
   if (existing) {
-    // Ajoute les mains à la session existante (concaténation)
+    // Ajoute les mains à la session existante, même après reset
     existing.hands = existing.hands.concat(selectedHands);
-  } else {
+  } else if (!resetDone) {
     // Crée une nouvelle session seulement si pas de reset
     sessions.push({
       date: today,
@@ -77,7 +77,9 @@ if (!resetDone && selectedHands.length > 0) {
 
   <!-- ✅ Script de RESET sans affecter les sessions du reporting -->
   <script>
-    
+    window.addEventListener('load', () => {
+  localStorage.setItem('resetDone', 'false');
+});
     document.getElementById('btnReset').addEventListener('click', () => {
       
       localStorage.setItem('resetDone', 'true'); // ✅ Indique qu’un reset a été fait
