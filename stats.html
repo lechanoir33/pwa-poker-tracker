@@ -60,6 +60,7 @@
   </table>
 
   <script>
+    // Liste des mains triées par force
     const handRanking = [
       'AA', 'KK', 'AKs', 'QQ', 'JJ', 'AKo', 'AQs', 'AQo', 'AJs', 'TT', 'KQs', 'ATs', 'KJs', 'AJo', 'QJs',
       '99', 'JTs', 'KTs', 'QTs', '88', 'KQo', 'A9s', 'T9s', 'Q9s', 'KJo', 'A8s', 'A7s', 'J9s',
@@ -74,37 +75,55 @@
       '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
     ];
 
-    // ✏️ Récupération de toutes les sessions
-    const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
-    const tbody = document.querySelector('#statsTable tbody');
+    // Compter les occurrences de chaque main sélectionnée
+    function getSelectedHandCounts() {
+      const raw = localStorage.getItem('selectedHands');
+      const counts = {};
 
-    if (sessionData.length > 0) {
-      // ✏️ Dernière session seulement = session en cours
-      const lastSession = sessionData[sessionData.length - 1];
+      try {
+        const hands = JSON.parse(raw) || [];
+        hands.forEach(entry => {
+          const key = entry.hand;
+          counts[key] = (counts[key] || 0) + 1;
+        });
+      } catch (e) {
+        return {};
+      }
 
-      // ✏️ Création d’un compteur d’occurrences
-      const handCounts = {};
-      lastSession.hands.forEach(entry => {
-        handCounts[entry.hand] = (handCounts[entry.hand] || 0) + 1;
-      });
-
-      // ✏️ Tri des mains selon le handRanking
-      const sortedHands = [...lastSession.hands].sort((a, b) => {
+      return counts;
+    }
+    
+    // Fonction pour trier les mains selon le classement handRanking
+    function sortByRanking(hands) {
+      return hands.sort((a, b) => {
         const indexA = handRanking.indexOf(a.hand);
         const indexB = handRanking.indexOf(b.hand);
-        return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+        
+        if (indexA === -1 && indexB === -1) return 0;
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        
+        return indexA - indexB; // Tri selon l'indice dans handRanking
       });
+    }
 
+    const tbody = document.querySelector('#statsTable tbody');
+    const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
+
+    // Récupère les comptes des mains sélectionnées
+    const selectedHandCounts = getSelectedHandCounts();
+
+    sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
-      dateRow.innerHTML = `<td colspan="2" class="session-title">${lastSession.date}</td>`;
+      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
       tbody.appendChild(dateRow);
 
+      const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
 
         const handCell = document.createElement('td');
-        const count = handCounts[entry.hand];
-
+        const count = selectedHandCounts[entry.hand] || 1;
         handCell.innerHTML = count > 1
           ? `${entry.hand}<sup style="color:red;">${count}</sup>`
           : entry.hand;
@@ -116,14 +135,32 @@
         row.appendChild(checkedCell);
         tbody.appendChild(row);
       });
+    });
 
-      // ✏️ Sauvegarde par date en résumé (optionnel)
-      const summaryKey = 'handStatsSummary';
-      const today = lastSession.date;
-      const previousSummary = JSON.parse(localStorage.getItem(summaryKey)) || {};
-      previousSummary[today] = handCounts;
-      localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
-    }
+    // -- Sauvegarde consolidée des occurrences par date --
+const summaryKey = 'handStatsSummary';
+const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+const previousSummary = JSON.parse(localStorage.getItem(summaryKey)) || {};
+
+// Fusionner tous les compteurs de la session affichée
+const allCounts = {};
+
+// On rebalaye toutes les sessions affichées
+sessionData.forEach(session => {
+  session.hands.forEach(entry => {
+    const hand = entry.hand;
+    const count = selectedHandCounts[hand] || 1; // Ou 1 si non compté plusieurs fois
+    allCounts[hand] = (allCounts[hand] || 0) + count;
+  });
+});
+
+// Ajoute ou met à jour la date du jour dans le résumé
+previousSummary[today] = allCounts;
+
+// Sauvegarde dans localStorage
+localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
+    
   </script>
 </body>
 </html>
+
