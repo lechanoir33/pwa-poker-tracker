@@ -77,7 +77,7 @@
 
     // Compter les occurrences de chaque main sélectionnée
     function getSelectedHandCounts() {
-      const raw = localStorage.getItem('selectedHands');
+      const raw = localStorage.getItem('selectedHands') || localStorage.getItem('selectedHandsBackup');;
       const counts = {};
 
       try {
