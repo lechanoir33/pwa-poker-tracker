@@ -89,7 +89,8 @@
       if (section) section.innerHTML = '';
 
       // Supprime uniquement les mains sélectionnées locales pour la session actuelle
-      
+      localStorage.removeItem('selectedHands');
+      localStorage.removeItem('pokerHandCounts');
 
       // 👇 Introduire un délai de 1,5 secondes avant de recharger la page
       setTimeout(() => {
