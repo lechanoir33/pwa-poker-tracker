@@ -47,7 +47,8 @@
             count: count
           });
         }
-      });
+       }); // ✅ fermeture correcte du forEach
+     }
 
       const resetDone = localStorage.getItem('resetDone') === 'true';
       if (selectedHands.length > 0) {
@@ -68,13 +69,14 @@
             if (!alreadyExists) {   
         existing.hands.push({
           hand: sh.hand,
-          checked: sh.checked,
-          count: sh.count // ✅ LIGNE AJOUTÉE pour conserver l'exposan
-          });
-        }
+        checked: sh.checked,
+        count: sh.count // ✅ LIGNE AJOUTÉE pour conserver l'exposant
+      });
+    }
+  }); // ✅ fermeture du forEach
 
-        localStorage.setItem('handSessions', JSON.stringify(sessions));
-      }
+  localStorage.setItem('handSessions', JSON.stringify(sessions)); // ✅ au bon niveau
+} // ✅ fermeture
 
       window.location.href = 'stats.html';
     });
