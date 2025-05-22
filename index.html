@@ -12,7 +12,7 @@
   <h1>MAINS REÇUES</h1>
 
   <button id="btnStats">Stats</button>
-  <button id="btnReset">Reset</button> <!-- ✅ Bouton RESET -->
+  <button id="btnReset">Reset</button> <!-- ✅ Bouton RESET ajouté -->
 
   <div id="tableau"></div>
 
@@ -49,21 +49,24 @@
       });
 
       const resetDone = localStorage.getItem('resetDone') === 'true';
-
       if (selectedHands.length > 0) {
         const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
         const today = new Date().toLocaleDateString('fr-FR');
 
-        const existing = sessions.find(session => session.date === today);
+        let existing = sessions.find(session => session.date === today);
+        if (!existing && !resetDone) {
+          // Crée une nouvelle session seulement si pas de reset
+          existing = { date: today, hands: [] };
+          sessions.push(existing);
+        }
 
         if (existing) {
-          // Ajoute les mains à la session existante, même après reset
-          existing.hands = existing.hands.concat(selectedHands);
-        } else if (!resetDone) {
-          // Crée une nouvelle session seulement si pas de reset
-          sessions.push({
-            date: today,
-            hands: selectedHands
+          // Ajoute seulement les mains qui ne sont pas déjà dans existing.hands
+          selectedHands.forEach(sh => {
+            const alreadyExists = existing.hands.some(h => h.hand === sh.hand);
+            if (!alreadyExists) {
+              existing.hands.push(sh);
+            }
           });
         }
 
@@ -81,9 +84,9 @@
     });
 
     document.getElementById('btnReset').addEventListener('click', () => {
-      localStorage.setItem('resetDone', 'true'); // Indique qu’un reset a été fait
+      localStorage.setItem('resetDone', 'true'); // ✅ Indique qu’un reset a été fait
 
-      // Réinitialiser uniquement les compteurs visibles sur la page 1
+      // Réinitialise tous les compteurs visibles
       document.querySelectorAll('.counter').forEach(counter => {
         counter.textContent = '0';
       });
@@ -93,17 +96,17 @@
         checkbox.checked = false;
       });
 
-      // Vide la section des mains sélectionnées (page 1)
+      // Vide la section des mains sélectionnées
       const section = document.getElementById('mainsSelectionnees');
       if (section) section.innerHTML = '';
 
-      // Supprime uniquement les données locales de sélection, PAS handSessions
+      // Supprime uniquement les mains sélectionnées locales pour la session actuelle
       localStorage.removeItem('selectedHands');
       localStorage.removeItem('pokerHandCounts');
 
-      // Recharge la page après un court délai
+      // 👇 Introduire un délai de 0,5 seconde avant de recharger la page
       setTimeout(() => {
-        location.reload();
+        location.reload(); // Recharge la page sans affecter le reporting
       }, 500);
     });
   </script>
