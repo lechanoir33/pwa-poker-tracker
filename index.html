@@ -86,6 +86,12 @@
     document.getElementById('btnReset').addEventListener('click', () => {
       localStorage.setItem('resetDone', 'true'); // ✅ Indique qu’un reset a été fait
 
+// Sauvegarder selectedHands avant de l'effacer
+  const selected = localStorage.getItem('selectedHands');
+  if (selected) {
+    localStorage.setItem('selectedHandsBackup', selected);
+  }
+
       // Réinitialise tous les compteurs visibles
       document.querySelectorAll('.counter').forEach(counter => {
         counter.textContent = '0';
