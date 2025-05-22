@@ -86,12 +86,6 @@
     document.getElementById('btnReset').addEventListener('click', () => {
       localStorage.setItem('resetDone', 'true'); // ✅ Indique qu’un reset a été fait
 
-// Sauvegarder selectedHands avant de l'effacer
-  const selected = localStorage.getItem('selectedHands');
-  if (selected) {
-    localStorage.setItem('selectedHandsBackup', selected);
-  }
-
       // Réinitialise tous les compteurs visibles
       document.querySelectorAll('.counter').forEach(counter => {
         counter.textContent = '0';
@@ -106,16 +100,10 @@
       const section = document.getElementById('mainsSelectionnees');
       if (section) section.innerHTML = '';
 
-   // ✅ Sauvegarder selectedHands avant de l’effacer
-const selected = localStorage.getItem('selectedHands');
-if (selected) {
-  localStorage.setItem('selectedHandsBackup', selected);
-}
+      // Supprime uniquement les mains sélectionnées locales pour la session actuelle
+      localStorage.removeItem('selectedHands');
+      localStorage.removeItem('pokerHandCounts');
 
-// Supprime uniquement les mains sélectionnées locales pour la session actuelle
-localStorage.removeItem('selectedHands');
-localStorage.removeItem('pokerHandCounts');
-      
       // 👇 Introduire un délai de 0,5 seconde avant de recharger la page
       setTimeout(() => {
         location.reload(); // Recharge la page sans affecter le reporting
