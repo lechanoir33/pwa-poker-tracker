@@ -44,7 +44,7 @@
           selectedHands.push({
             hand: cell.dataset.hand,
             checked: true,
-            count: count // ✅
+            count: count
           });
         }
       });
@@ -65,13 +65,11 @@
           // Ajoute seulement les mains qui ne sont pas déjà dans existing.hands
           selectedHands.forEach(sh => {
             const alreadyExists = existing.hands.some(h => h.hand === sh.hand);
-            if (!alreadyExists) {
-              🔁 AJOUT ICI : inclure le count
+            if (!alreadyExists) {   
         existing.hands.push({
           hand: sh.hand,
           checked: sh.checked,
           count: sh.count // ✅ LIGNE AJOUTÉE pour conserver l'exposan
-            }
           });
         }
 
