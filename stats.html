@@ -108,8 +108,11 @@
     }
 
     const tbody = document.querySelector('#statsTable tbody');
+    const selectedHandCounts = getSelectedHandCounts();
     const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
+    const statsSummary = JSON.parse(localStorage.getItem('handStatsSummary')) || [];
 
+    // ➕ Affichage des sessio
     // Récupère les comptes des mains sélectionnées
     const selectedHandCounts = getSelectedHandCounts();
 
