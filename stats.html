@@ -136,6 +136,30 @@
         tbody.appendChild(row);
       });
     });
+
+    // -- Sauvegarde consolidée des occurrences par date --
+const summaryKey = 'handStatsSummary';
+const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+const previousSummary = JSON.parse(localStorage.getItem(summaryKey)) || {};
+
+// Fusionner tous les compteurs de la session affichée
+const allCounts = {};
+
+// On rebalaye toutes les sessions affichées
+sessionData.forEach(session => {
+  session.hands.forEach(entry => {
+    const hand = entry.hand;
+    const count = selectedHandCounts[hand] || 1; // Ou 1 si non compté plusieurs fois
+    allCounts[hand] = (allCounts[hand] || 0) + count;
+  });
+});
+
+// Ajoute ou met à jour la date du jour dans le résumé
+previousSummary[today] = allCounts;
+
+// Sauvegarde dans localStorage
+localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
+    
   </script>
 </body>
 </html>
