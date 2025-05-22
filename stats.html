@@ -110,8 +110,11 @@
     const tbody = document.querySelector('#statsTable tbody');
     const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
 
-    // Récupère les comptes des mains sélectionnées
-    const selectedHandCounts = getSelectedHandCounts();
+    // Ne plus utiliser  les comptes des mains sélectionnées
+      const handCounts = {};
+  lastSession.hands.forEach(entry => {
+    handCounts[entry.hand] = (handCounts[entry.hand] || 0) + 1;
+  });
 
     sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
