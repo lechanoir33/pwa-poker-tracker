@@ -58,14 +58,18 @@ if (!resetDone && selectedHands.length > 0) {
   const existing = sessions.find(session => session.date === today);
   const resetDone = localStorage.getItem('resetDone') === 'true';
 
+  // 🔁 Ajout des mains à la session existante
+const existing = sessions.find(session => session.date === today);
 if (existing) {
-  existing.hands = selectedHands;
+  existing.hands = existing.hands.concat(selectedHands);
 } else if (!resetDone) {
   sessions.push({
     date: today,
     hands: selectedHands
   });
 }
+
+localStorage.setItem('handSessions', JSON.stringify(sessions));
 
   localStorage.setItem('handSessions', JSON.stringify(sessions));
 }
