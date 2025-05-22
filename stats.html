@@ -57,6 +57,10 @@
 </table>
 
 <script>
+
+  // 1) Récupérer les sessions (par ex depuis 'handSessions' ou autre)
+const sessions = JSON.parse(localStorage.getItem('handSessions') || '[]');
+  
   // Récupérer l'historique complet depuis localStorage
   function getHandHistory() {
     const raw = localStorage.getItem('handHistory');
