@@ -75,6 +75,20 @@
       '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
     ];
 
+    // Récupère les mains sélectionnées globalement (pour info, pas forcément par session)
+function getSelectedHandCounts() {
+  const raw = localStorage.getItem('selectedHands');
+  const counts = {};
+  try {
+    const hands = JSON.parse(raw) || [];
+    hands.forEach(entry => {
+      const key = entry.hand;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+  } catch (e) {
+    return {};
+  }
+  return counts;
       
     // Compter les occurrences de chaque main sélectionnée
     function getSelectedHandCounts() {
