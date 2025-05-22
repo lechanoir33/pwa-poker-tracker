@@ -123,7 +123,7 @@
         const row = document.createElement('tr');
 
         const handCell = document.createElement('td');
-        const count = selectedHandCounts[entry.hand] || 1;
+        const count = entry.count || 1;
         handCell.innerHTML = count > 1
           ? `${entry.hand}<sup style="color:red;">${count}</sup>`
           : entry.hand;
@@ -149,7 +149,7 @@ const allCounts = {};
 sessionData.forEach(session => {
   session.hands.forEach(entry => {
     const hand = entry.hand;
-    const count = selectedHandCounts[hand] || 1; // Ou 1 si non compté plusieurs fois
+    const count = entry.count || 1; // Ou 1 si non compté plusieurs fois
     allCounts[hand] = (allCounts[hand] || 0) + count;
   });
 });
