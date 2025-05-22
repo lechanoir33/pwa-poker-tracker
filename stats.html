@@ -2,116 +2,165 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Stats Session en Cours</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stats des Mains - Classement empirique</title>
   <style>
     body {
-      background: #111;
+      background-color: #111;
       color: white;
       font-family: Arial, sans-serif;
       padding: 20px;
     }
+
     table {
-      width: 100%;
       border-collapse: collapse;
+      width: 100%;
       margin-top: 20px;
     }
+
     th, td {
       border: 1px solid white;
       padding: 8px;
       text-align: center;
     }
+
     th {
-      background: #333;
+      background-color: #333;
     }
-    sup {
-      color: red;
+
+    a {
+      color: #00f;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .session-title {
+      text-align: left;
+      font-weight: bold;
+      font-size: 1.2em;
+      padding-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Stats des Mains – Session en Cours</h1>
+  <h1>Stats des Mains Sélectionnées (Classement Empirique)</h1>
+  <a href="index.html">← Retour</a>
+
   <table id="statsTable">
     <thead>
       <tr>
         <th>Main</th>
-        <th>Occurrences</th>
+        <th>Coché ?</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
   <script>
-    // Récupérer toutes les sessions depuis le localStorage
-    const sessions = JSON.parse(localStorage.getItem('handSessions') || '[]');
+    // Liste des mains triées par force
+    const handRanking = [
+      'AA', 'KK', 'AKs', 'QQ', 'JJ', 'AKo', 'AQs', 'AQo', 'AJs', 'TT', 'KQs', 'ATs', 'KJs', 'AJo', 'QJs',
+      '99', 'JTs', 'KTs', 'QTs', '88', 'KQo', 'A9s', 'T9s', 'Q9s', 'KJo', 'A8s', 'A7s', 'J9s',
+      'A5s', 'A6s', 'T8s', 'A4s', 'QJo', 'K9s', 'J8s', 'A3s', 'KTo', 'Q8s', 'A2s', 
+      'J7s', 'Q7s', 'K8s', '98s', '97s', '87s', 'T7s', 'Q6s', 'JTo', 'K7s', 'J6s', '76s', 'QTo', 'K6s',
+      'J5s', 'K5s', 'J4s', 'K4s', 'K3s', '65s', 'K2s', 'T6s', 'Q5s', 'Q4s', 'T5s', 'T4s', 'Q3s', '54s',
+      'J3s', 'Q2s', 'J2s', 'T3s', 'T2s', '43s', '42s', '32s', 'A9o', 'A8o', 'A7o', 'A5o', 'A6o', 'A4o',
+      'A3o', 'A2o', 'K9o', 'K8o', 'K7o', 'K6o', 'K5o', 'K4o', 'K3o', 'K2o', 'Q9o', 'Q8o', 'Q7o', 'Q6o',
+      'Q5o', 'Q4o', 'Q3o', 'Q2o', 'J9o', 'J8o', 'J7o', 'J6o', 'J5o', 'J4o', 'J3o', 'J2o', 'T9o', 'T8o',
+      'T7o', 'T6o', 'T5o', 'T4o', 'T3o', 'T2o', '98o', '97o', '96o', '95o', '94o', '93o', '92o', '87o',
+      '86o', '85o', '84o', '83o', '82o', '76o', '75o', '74o', '73o', '72o', '65o', '64o', '63o', '62o',
+      '54o', '53o', '52o', '43o', '42o', '32o', '77', '66', '55', '44', '33', '22'
+    ];
 
-    if (sessions.length === 0) {
-      document.querySelector('#statsTable tbody').innerHTML =
-        '<tr><td colspan="2">Aucune session enregistrée</td></tr>';
-    } else {
-      // Récupérer la session en cours (la dernière)
-      const currentSession = sessions[sessions.length - 1];
-      const hands = currentSession.hands || [];
+    // Compter les occurrences de chaque main sélectionnée
+    function getSelectedHandCounts() {
+      const raw = localStorage.getItem('selectedHands');
+      const counts = {};
 
-      //Compter les occurrences
-      const countMap = {};
-      sessionHands.forEach(entry => {
-        const hand = entry.hand;
-        countMap[hand] = (countMap[hand] || 0) + 1;
-      });
-
-      // Stocker le résultat dans localStorage sous "handHistory"
-      const handHistory = JSON.parse(localStorage.getItem('handHistory') || '{}');
-      handHistory[currentSession.date] = counts;
-      localStorage.setItem('handHistory', JSON.stringify(handHistory));
-
-      // Tri des mains selon leur force (ranking de poker)
-      const handRanking = [
-        'AA', 'KK', 'AKs', 'QQ', 'JJ', 'AKo', 'AQs', 'AQo', 'AJs', 'TT', 'KQs', 'ATs', 'KJs', 'AJo', 'QJs',
-        '99', 'JTs', 'KTs', 'QTs', '88', 'KQo', 'A9s', 'T9s', 'Q9s', 'KJo', 'A8s', 'A7s', 'J9s', 'A5s',
-        'A6s', 'T8s', 'A4s', 'QJo', 'K9s', 'J8s', 'A3s', 'KTo', 'Q8s', 'A2s', 'J7s', 'Q7s', 'K8s', '98s',
-        '97s', '87s', 'T7s', 'Q6s', 'JTo', 'K7s', 'J6s', '76s', 'QTo', 'K6s', 'J5s', 'K5s', 'J4s', 'K4s',
-        'K3s', '65s', 'K2s', 'T6s', 'Q5s', 'Q4s', 'T5s', 'T4s', 'Q3s', '54s', 'J3s', 'Q2s', 'J2s', 'T3s',
-        'T2s', '43s', '42s', '32s', 'A9o', 'A8o', 'A7o', 'A5o', 'A6o', 'A4o', 'A3o', 'A2o', 'K9o', 'K8o',
-        'K7o', 'K6o', 'K5o', 'K4o', 'K3o', 'K2o', 'Q9o', 'Q8o', 'Q7o', 'Q6o', 'Q5o', 'Q4o', 'Q3o', 'Q2o',
-        'J9o', 'J8o', 'J7o', 'J6o', 'J5o', 'J4o', 'J3o', 'J2o', 'T9o', 'T8o', 'T7o', 'T6o', 'T5o', 'T4o',
-        'T3o', 'T2o', '98o', '97o', '96o', '95o', '94o', '93o', '92o', '87o', '86o', '85o', '84o', '83o',
-        '82o', '76o', '75o', '74o', '73o', '72o', '65o', '64o', '63o', '62o', '54o', '53o', '52o', '43o',
-        '42o', '32o', '77', '66', '55', '44', '33', '22'
-      ];
-
-      // Transformer l'objet en tableau puis trier
-      const sortedHands = Object.keys(counts)
-        .map(hand => ({ hand, count: counts[hand] }))
-        .sort((a, b) => {
-          const indexA = handRanking.indexOf(a.hand);
-          const indexB = handRanking.indexOf(b.hand);
-          if (indexA === -1) return 1;
-          if (indexB === -1) return -1;
-          return indexA - indexB;
+      try {
+        const hands = JSON.parse(raw) || [];
+        hands.forEach(entry => {
+          const key = entry.hand;
+          counts[key] = (counts[key] || 0) + 1;
         });
+      } catch (e) {
+        return {};
+      }
 
-   // Affichage
-      const titleRow = document.createElement('tr');
-      titleRow.innerHTML = `<td colspan="2" class="session-title">${sessionDate}</td>`;
-      tbody.appendChild(titleRow);
+      return counts;
+    }
+    
+    // Fonction pour trier les mains selon le classement handRanking
+    function sortByRanking(hands) {
+      return hands.sort((a, b) => {
+        const indexA = handRanking.indexOf(a.hand);
+        const indexB = handRanking.indexOf(b.hand);
+        
+        if (indexA === -1 && indexB === -1) return 0;
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        
+        return indexA - indexB; // Tri selon l'indice dans handRanking
+      });
+    }
 
-      sortedHands.forEach(hand => {
+    const tbody = document.querySelector('#statsTable tbody');
+    const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
+
+    // Récupère les comptes des mains sélectionnées
+    const selectedHandCounts = getSelectedHandCounts();
+
+    sessionData.slice().reverse().forEach(session => {
+      const dateRow = document.createElement('tr');
+      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
+      tbody.appendChild(dateRow);
+
+      const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
+      sortedHands.forEach(entry => {
         const row = document.createElement('tr');
 
         const handCell = document.createElement('td');
-        handCell.innerHTML = countMap[hand] > 1
-          ? `${hand}<sup style="color:red;">${countMap[hand]}</sup>`
-          : hand;
+        const count = selectedHandCounts[entry.hand] || 1;
+        handCell.innerHTML = count > 1
+          ? `${entry.hand}<sup style="color:red;">${count}</sup>`
+          : entry.hand;
 
-        const countCell = document.createElement('td');
-        countCell.textContent = countMap[hand];
+        const checkedCell = document.createElement('td');
+        checkedCell.textContent = entry.checked ? '✔️' : '❌';
 
         row.appendChild(handCell);
-        row.appendChild(countCell);
+        row.appendChild(checkedCell);
         tbody.appendChild(row);
       });
-    }
-  <
+    });
+
+    // -- Sauvegarde consolidée des occurrences par date --
+const summaryKey = 'handStatsSummary';
+const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+const previousSummary = JSON.parse(localStorage.getItem(summaryKey)) || {};
+
+// Fusionner tous les compteurs de la session affichée
+const allCounts = {};
+
+// On rebalaye toutes les sessions affichées
+sessionData.forEach(session => {
+  session.hands.forEach(entry => {
+    const hand = entry.hand;
+    const count = selectedHandCounts[hand] || 1; // Ou 1 si non compté plusieurs fois
+    allCounts[hand] = (allCounts[hand] || 0) + count;
+  });
+});
+
+// Ajoute ou met à jour la date du jour dans le résumé
+previousSummary[today] = allCounts;
+
+// Sauvegarde dans localStorage
+localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
+    
   </script>
 </body>
 </html>
+
