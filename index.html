@@ -66,7 +66,11 @@
           selectedHands.forEach(sh => {
             const alreadyExists = existing.hands.some(h => h.hand === sh.hand);
             if (!alreadyExists) {
-              existing.hands.push(sh);
+              🔁 AJOUT ICI : inclure le count
+        existing.hands.push({
+          hand: sh.hand,
+          checked: sh.checked,
+          count: sh.count // ✅ LIGNE AJOUTÉE pour conserver l'exposan
             }
           });
         }
