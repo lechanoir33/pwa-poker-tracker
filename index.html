@@ -117,14 +117,14 @@
   </script>
 
 <script>
+  // BOUTON "New Session"
   document.getElementById('btnNewSession').addEventListener('click', () => {
     const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
     const baseDate = new Date().toLocaleDateString('fr-FR');
 
-    // Trouver les sessions existantes pour aujourd’hui
+    // Sessions déjà créées aujourd’hui
     const todaySessions = sessions.filter(session => session.date.startsWith(baseDate));
 
-    // Calcul du nom de session : 22/05/2025, 22/05/2025 #2, #3...
     let newDate;
     if (todaySessions.length === 0) {
       newDate = baseDate;
@@ -138,38 +138,74 @@
     }
 
     // Nouvelle session vide
-    const newSession = {
-      date: newDate,
-      hands: []
-    };
-
-    // Ajout dans handSessions
+    const newSession = { date: newDate, hands: [] };
     sessions.push(newSession);
     localStorage.setItem('handSessions', JSON.stringify(sessions));
+    localStorage.setItem('activeSessionDate', newDate); // 🔑 Mémorise la session active
 
-    // Reset visuel et données temporaires
-    localStorage.removeItem('pokerHandCounts');
+    // Reset des données et interface
     localStorage.removeItem('selectedHands');
+    localStorage.removeItem('pokerHandCounts');
     localStorage.setItem('resetDone', 'true');
 
-    // Remet tous les compteurs à zéro sur la page
-    document.querySelectorAll('.counter').forEach(counter => {
-      counter.textContent = '0';
-    });
-
-    // Décoche toutes les cases
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-      checkbox.checked = false;
-    });
-
-    // Vide la section des mains sélectionnées
+    document.querySelectorAll('.counter').forEach(c => c.textContent = '0');
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
     const section = document.getElementById('mainsSelectionnees');
     if (section) section.innerHTML = '';
 
-    // Recharge la page (sans toucher aux sessions précédentes ni exposants stats)
     setTimeout(() => {
-      location.reload();
+      location.reload(); // Recharge pour démarrer proprement
     }, 500);
+  });
+
+  // BOUTON "Stats"
+  document.getElementById('btnStats').addEventListener('click', () => {
+    const allCells = document.querySelectorAll('.mains');
+    const selectedHands = [];
+
+    allCells.forEach(cell => {
+      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+      if (count > 0) {
+        selectedHands.push({
+          hand: cell.dataset.hand,
+          checked: true,
+          count: count
+        });
+      }
+    });
+
+    if (selectedHands.length === 0) return;
+
+    const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+    const activeDate = localStorage.getItem('activeSessionDate');
+    let targetSession;
+
+    // Utilise la session active si elle existe
+    if (activeDate) {
+      targetSession = sessions.find(session => session.date === activeDate);
+    }
+
+    // Sinon, crée une session par défaut pour aujourd'hui
+    if (!targetSession) {
+      const today = new Date().toLocaleDateString('fr-FR');
+      targetSession = { date: today, hands: [] };
+      sessions.push(targetSession);
+      localStorage.setItem('activeSessionDate', today);
+    }
+
+    selectedHands.forEach(sh => {
+      const alreadyExists = targetSession.hands.some(h => h.hand === sh.hand);
+      if (!alreadyExists) {
+        targetSession.hands.push({
+          hand: sh.hand,
+          checked: sh.checked,
+          count: sh.count
+        });
+      }
+    });
+
+    localStorage.setItem('handSessions', JSON.stringify(sessions));
+    window.location.href = 'stats.html';
   });
 </script>
   
