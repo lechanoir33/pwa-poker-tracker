@@ -66,6 +66,38 @@ hands.forEach((hand) => {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
 
+    // Quand une main est ajoutée
+const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+const lastSession = sessions[sessions.length - 1];
+
+if (lastSession) {
+  const existing = lastSession.hands.find(h => h.hand === clickedHand);
+  if (existing) {
+    existing.count += 1;
+  } else {
+    lastSession.hands.push({ hand: clickedHand, count: 1 });
+  }
+  localStorage.setItem('handSessions', JSON.stringify(sessions));
+}
+
+    // Quand une main est supprimée (à partir du footer)
+const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+const lastSession = sessions[sessions.length - 1];
+
+if (lastSession) {
+  const index = lastSession.hands.findIndex(h => h.hand === clickedHand);
+  if (index !== -1) {
+    if (lastSession.hands[index].count > 1) {
+      lastSession.hands[index].count -= 1;
+    } else {
+      lastSession.hands.splice(index, 1);
+    }
+    localStorage.setItem('handSessions', JSON.stringify(sessions));
+  }
+}
+
+    
+    
     // ✅ MODIFICATION : utilisation de la fonction normalizeHand
     const normalizedHand = normalizeHand(hand);
     selectedHands.push({ hand: normalizedHand, checked: false });
