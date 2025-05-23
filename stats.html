@@ -220,6 +220,51 @@ function removeHand(handToRemove) {
   }
 }
 </script>
+
+  <button id="debugReload">Debug Reload handSessions</button>
+
+<script>
+  const tbody = document.querySelector('#statsTable tbody');
+
+  function clearTable() {
+    tbody.innerHTML = '';
+  }
+
+  function renderSessions() {
+    clearTable();
+
+    const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
+
+    sessionData.slice().reverse().forEach(session => {
+      const dateRow = document.createElement('tr');
+      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
+      tbody.appendChild(dateRow);
+
+      session.hands.forEach(entry => {
+        const row = document.createElement('tr');
+
+        const handCell = document.createElement('td');
+        handCell.textContent = entry.hand;
+
+        const checkedCell = document.createElement('td');
+        checkedCell.textContent = entry.checked ? '✔️' : '❌';
+
+        row.appendChild(handCell);
+        row.appendChild(checkedCell);
+        tbody.appendChild(row);
+      });
+    });
+  }
+
+  document.getElementById('debugReload').addEventListener('click', () => {
+    const sessions = JSON.parse(localStorage.getItem('handSessions'));
+    console.log('handSessions actuel:', sessions);
+    renderSessions();
+  });
+
+  // Render au chargement de la page
+  renderSessions();
+</script>
   
 </body>
 </html>
