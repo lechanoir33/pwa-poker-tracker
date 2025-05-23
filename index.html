@@ -33,26 +33,6 @@
   <script src="script.js"></script>
   <script src="compteurService.js"></script>
 
-<script>
-    // MODIF DEBUG — nouvelle version de debugSessions()
-    function debugSessions() {
-      const raw = localStorage.getItem("currentSession");
-      if (!raw) return;
-
-      const current = raw.split(" / ").filter(Boolean);
-      const saved = JSON.parse(localStorage.getItem("handSessions") || "[]");
-
-      if (saved.length > 0) {
-        // Met à jour uniquement la DERNIÈRE session avec currentSession filtrée
-        saved[saved.length - 1].hands = current;
-        localStorage.setItem("handSessions", JSON.stringify(saved));
-      }
-
-      renderSessions(); // met à jour la page 2 (STATS)
-      console.log("Debug : main synchronisée avec handSessions."); // MODIF DEBUG
-    }
-  </script>
-  
   <!-- Script pour aller vers stats.html et enregistrer les mains -->
   <script>
   document.getElementById('btnStats').addEventListener('click', () => {
@@ -227,85 +207,7 @@
     localStorage.setItem('handSessions', JSON.stringify(sessions));
     window.location.href = 'stats.html';
   });
-
-  // -------------------------------------------
-  // ✅ AJOUT : Fonction pour supprimer une main
-  function removeHand(handToRemove) {
-    console.log('Suppression de la main:', handToRemove);
-    // Supprimer dans selectedHands (page 1)
-    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands = selectedHands.filter(hand => hand.hand !== handToRemove);
-    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-
-    // Supprimer dans la session active de handSessions (page 2)
-    const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-    const activeDate = localStorage.getItem('activeSessionDate');
-    if (activeDate) {
-      const session = sessions.find(s => s.date === activeDate);
-      if (session) {
-        session.hands = session.hands.filter(h => h.hand !== handToRemove);
-        localStorage.setItem('handSessions', JSON.stringify(sessions));
-      }
-    }
-
-    // Mettre à jour l'affichage compteur et checkbox
-    const cell = document.querySelector(`.mains[data-hand="${handToRemove}"]`);
-    if (cell) {
-      const counter = cell.querySelector('.counter');
-      if (counter) counter.textContent = '0';
-      const checkbox = cell.querySelector('input[type="checkbox"]');
-      if (checkbox) checkbox.checked = false;
-    }
-
-    // Retirer la main dans la section mains sélectionnées
-    const selectionDiv = document.getElementById('mainsSelectionnees');
-    if (selectionDiv) {
-      const handElem = selectionDiv.querySelector(`[data-hand="${handToRemove}"]`);
-      if (handElem) selectionDiv.removeChild(handElem);
-    }
-  }
-
-  // ✅ AJOUT : Fonction pour afficher les mains sélectionnées avec bouton "x" suppression
-  function afficherMainsSelectionnees() {
-    const selectionDiv = document.getElementById('mainsSelectionnees');
-    selectionDiv.innerHTML = '';
-
-    let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-
-    selectedHands.forEach(handObj => {
-      const handElem = document.createElement('div');
-      handElem.dataset.hand = handObj.hand;
-      handElem.style.margin = '0 8px 8px 0';
-      handElem.style.padding = '4px 8px';
-      handElem.style.background = '#333';
-      handElem.style.borderRadius = '4px';
-      handElem.style.display = 'flex';
-      handElem.style.alignItems = 'center';
-      handElem.style.color = 'white';
-
-      handElem.textContent = handObj.hand + ' ';
-
-      const btnDelete = document.createElement('button');
-      btnDelete.textContent = 'x';
-      btnDelete.style.marginLeft = '8px';
-      btnDelete.style.cursor = 'pointer';
-      btnDelete.style.background = '#c00';
-      btnDelete.style.color = 'white';
-      btnDelete.style.border = 'none';
-      btnDelete.style.borderRadius = '3px';
-      btnDelete.style.fontWeight = 'bold';
-
-      btnDelete.addEventListener('click', () => {
-        removeHand(handObj.hand);
-        afficherMainsSelectionnees();
-      });
-
-      handElem.appendChild(btnDelete);
-      selectionDiv.appendChild(handElem);
-    });
-  }
 </script>
-
+  
 </body>
 </html>
-  
