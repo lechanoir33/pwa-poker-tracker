@@ -182,7 +182,7 @@ function updateSelectedHandsDisplay() {
     checkbox.addEventListener('change', () => {
       selectedHands[index].checked = checkbox.checked;
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-      updateNoteBadge();  // 🔥 Ajout : mettre à jour la note quand on coche/décoche
+       // 🔥 Ajout : mettre à jour la note quand on coche/décoche
     });
 
     const label = document.createElement('span');
