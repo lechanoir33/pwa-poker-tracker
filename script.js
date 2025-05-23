@@ -80,7 +80,8 @@ hands.forEach((hand) => {
     saveCounts();
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands = selectedHands.filter(h => h.hand !== hand);
+    const normalizedHand = normalizeHand(hand);
+selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
