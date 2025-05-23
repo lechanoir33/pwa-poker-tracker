@@ -65,8 +65,7 @@ hands.forEach((hand) => {
     if (typeof selectedHands[0] === 'string') {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
-    
-    
+
     // ✅ MODIFICATION : utilisation de la fonction normalizeHand
     const normalizedHand = normalizeHand(hand);
     selectedHands.push({ hand: normalizedHand, checked: false });
