@@ -68,7 +68,7 @@ hands.forEach((hand) => {
 
     // ✅ MODIFICATION : utilisation de la fonction normalizeHand
     const normalizedHand = normalizeHand(hand);
-    selectedHands.push({ hand: normalizedHand, checked: false });
+    selectedHands.push({ hand: normalizedHand, checked: true });
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
     updateNoteBadge(); // ✅ Ajout ici : mise à jour de la note uniquement après clic dans le tableau
