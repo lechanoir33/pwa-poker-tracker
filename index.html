@@ -33,6 +33,26 @@
   <script src="script.js"></script>
   <script src="compteurService.js"></script>
 
+<script>
+    // MODIF DEBUG — nouvelle version de debugSessions()
+    function debugSessions() {
+      const raw = localStorage.getItem("currentSession");
+      if (!raw) return;
+
+      const current = raw.split(" / ").filter(Boolean);
+      const saved = JSON.parse(localStorage.getItem("handSessions") || "[]");
+
+      if (saved.length > 0) {
+        // Met à jour uniquement la DERNIÈRE session avec currentSession filtrée
+        saved[saved.length - 1].hands = current;
+        localStorage.setItem("handSessions", JSON.stringify(saved));
+      }
+
+      renderSessions(); // met à jour la page 2 (STATS)
+      console.log("Debug : main synchronisée avec handSessions."); // MODIF DEBUG
+    }
+  </script>
+  
   <!-- Script pour aller vers stats.html et enregistrer les mains -->
   <script>
   document.getElementById('btnStats').addEventListener('click', () => {
