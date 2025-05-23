@@ -1,7 +1,7 @@
 const hands = [];
 const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
-// ✅ MODIFICATION : ajout de la fonction de normalisation
+// ✅ MODIFICATION : ajout de la fonction normalisation
 function normalizeHand(hand) {
   if (hand.length === 3) {
     const [c1, c2, type] = hand.split('');
