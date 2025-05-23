@@ -181,6 +181,46 @@ previousSummary[today] = allCounts;
 localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
     
   </script>
+
+  <script>
+function removeHand(handToRemove) {
+  console.log('Suppression de la main:', handToRemove);
+
+  let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  selectedHands = selectedHands.filter(hand => hand.hand !== handToRemove);
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  console.log('selectedHands après suppression:', selectedHands);
+
+  const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  const activeDate = localStorage.getItem('activeSessionDate');
+  console.log('Session active:', activeDate);
+
+  if (activeDate) {
+    const session = sessions.find(s => s.date === activeDate);
+    console.log('Session trouvée:', session);
+    if (session) {
+      session.hands = session.hands.filter(h => h.hand !== handToRemove);
+      console.log('Mains session après suppression:', session.hands);
+      localStorage.setItem('handSessions', JSON.stringify(sessions));
+    }
+  }
+
+  const cell = document.querySelector(`.mains[data-hand="${handToRemove}"]`);
+  if (cell) {
+    const counter = cell.querySelector('.counter');
+    if (counter) counter.textContent = '0';
+    const checkbox = cell.querySelector('input[type="checkbox"]');
+    if (checkbox) checkbox.checked = false;
+  }
+
+  const selectionDiv = document.getElementById('mainsSelectionnees');
+  if (selectionDiv) {
+    const handElem = selectionDiv.querySelector(`[data-hand="${handToRemove}"]`);
+    if (handElem) selectionDiv.removeChild(handElem);
+  }
+}
+</script>
+  
 </body>
 </html>
 
