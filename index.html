@@ -211,6 +211,7 @@
   // -------------------------------------------
   // ✅ AJOUT : Fonction pour supprimer une main
   function removeHand(handToRemove) {
+    console.log('Suppression de la main:', handToRemove);
     // Supprimer dans selectedHands (page 1)
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
     selectedHands = selectedHands.filter(hand => hand.hand !== handToRemove);
