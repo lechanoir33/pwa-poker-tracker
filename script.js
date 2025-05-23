@@ -1,7 +1,7 @@
 const hands = [];
 const ranks = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 
-// Fonction de normalisation : met la carte la plus forte en premier dans les mains à 3 caractères (ex: KsJs -> JsKs)
+// ✅ MODIFICATION : ajout de la fonction de normalisation
 function normalizeHand(hand) {
   if (hand.length === 3) {
     const [c1, c2, type] = hand.split('');
@@ -10,7 +10,6 @@ function normalizeHand(hand) {
   return hand;
 }
 
-// Génération des mains de poker (169 mains)
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
     if (i === j) {
@@ -61,32 +60,17 @@ hands.forEach((hand) => {
     checkbox.checked = count > 0;
     saveCounts();
 
-    // Mise à jour session courante dans localStorage
-    let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-    if (sessions.length === 0) {
-      sessions.push({ date: new Date().toISOString(), hands: {} });
-    }
-    const currentSession = sessions[sessions.length - 1];
-
-    const normalizedHand = normalizeHand(hand);
-    if (!currentSession.hands[normalizedHand]) {
-      currentSession.hands[normalizedHand] = 0;
-    }
-    currentSession.hands[normalizedHand]++;
-
-    localStorage.setItem('handSessions', JSON.stringify(sessions));
-
-    // Mise à jour liste mains sélectionnées (pour bas de page)
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+
     if (typeof selectedHands[0] === 'string') {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
+
+    // ✅ MODIFICATION : utilisation de la fonction normalizeHand
+    const normalizedHand = normalizeHand(hand);
     selectedHands.push({ hand: normalizedHand, checked: false });
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
-
-    // Mise à jour affichage page 2 (si présente)
-    displayCurrentSessionHands();
   };
 
   const resetCounter = () => {
@@ -95,24 +79,11 @@ hands.forEach((hand) => {
     div.style.backgroundColor = 'rgb(0, 0, 31)';
     saveCounts();
 
-    // Mise à jour session courante dans localStorage
-    let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-    if (sessions.length === 0) return;
-    const currentSession = sessions[sessions.length - 1];
-
-    const normalizedHand = normalizeHand(hand);
-    if (currentSession.hands[normalizedHand]) {
-      delete currentSession.hands[normalizedHand];
-      localStorage.setItem('handSessions', JSON.stringify(sessions));
-    }
-
-    // Mise à jour liste mains sélectionnées
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-    selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
+    const normalizedHand = normalizeHand(hand);
+selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
-
-    displayCurrentSessionHands();
   };
 
   div.addEventListener('click', (e) => {
@@ -138,7 +109,7 @@ hands.forEach((hand) => {
   tableau.appendChild(div);
 });
 
-// Sauvegarde des compteurs dans localStorage
+// Sauvegarde des compteurs
 function saveCounts() {
   const counts = {};
   document.querySelectorAll('.mains').forEach(div => {
@@ -149,7 +120,7 @@ function saveCounts() {
   localStorage.setItem('pokerHandCounts', JSON.stringify(counts));
 }
 
-// Chargement des compteurs depuis localStorage
+// Chargement des compteurs
 function loadCounts() {
   const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
   document.querySelectorAll('.mains').forEach(div => {
@@ -174,7 +145,7 @@ function updateColor(div, count) {
   div.style.backgroundColor = `rgb(0, 0, ${blue})`;
 }
 
-// Affichage bas de page des mains sélectionnées
+// Affichage bas de page
 function updateSelectedHandsDisplay() {
   const container = document.getElementById('mainsSelectionnees');
   if (!container) return;
@@ -222,43 +193,13 @@ function updateSelectedHandsDisplay() {
   });
 }
 
-// Empêche clic droit, sélection et double-clic
+// Sécurité
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault());
 
-// Affichage des mains de la session courante (page 2)
-function displayCurrentSessionHands() {
-  const container = document.getElementById('sessionHandsDisplay');
-  if (!container) return;
-
-  let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-  if (sessions.length === 0) {
-    container.textContent = 'Aucune session enregistrée.';
-    return;
-  }
-
-  const currentSession = sessions[sessions.length - 1];
-  const hands = currentSession.hands;
-
-  container.innerHTML = '';
-
-  // Trier les mains alphabétiquement
-  const sortedHands = Object.keys(hands).sort();
-
-  sortedHands.forEach(hand => {
-    const count = hands[hand];
-    if (count > 0) {
-      const div = document.createElement('div');
-      div.style.color = 'white';
-      div.textContent = `${hand} : ${count} fois`;
-      container.appendChild(div);
-    }
-  });
-}
-
+// Chargement initial
 window.onload = () => {
   loadCounts();
   updateSelectedHandsDisplay();
-  displayCurrentSessionHands();
 };
