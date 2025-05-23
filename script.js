@@ -181,6 +181,7 @@ function updateSelectedHandsDisplay() {
     checkbox.addEventListener('change', () => {
       selectedHands[index].checked = checkbox.checked;
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+      updateNoteBadge();  // 🔥 Ajout : mettre à jour la note quand on coche/décoche
     });
 
     const label = document.createElement('span');
@@ -191,6 +192,8 @@ function updateSelectedHandsDisplay() {
     wrapper.appendChild(label);
     container.appendChild(wrapper);
   });
+  
+  updateNoteBadge(); // 🔥 Ajout : mettre à jour la note après affichage
 }
 
 const handRanking = [
@@ -241,16 +244,16 @@ function updateNoteBadge() {
   badge.textContent = average;
 }
 
-// Appelle la fonction au chargement
-window.addEventListener('load', updateNoteBadge);
+// ✅ MODIFICATION MISE EN ÉVIDENCE : Regroupement des appels dans un seul chargement
+window.onload = () => {
+  loadCounts();
+  updateSelectedHandsDisplay();
+  updateNoteBadge(); // 🔥 Ajout ici pour que la note s’affiche au chargement
+};
 
 // Sécurité
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault());
 
-// Chargement initial
-window.onload = () => {
-  loadCounts();
-  updateSelectedHandsDisplay();
-};
+
