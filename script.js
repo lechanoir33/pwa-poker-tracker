@@ -71,7 +71,8 @@ hands.forEach((hand) => {
     selectedHands.push({ hand: normalizedHand, checked: false });
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
-  };
+    updateNoteBadge(); // ✅ Ajout ici : mise à jour de la note uniquement après clic dans le tableau
+};
 
   const resetCounter = () => {
     counter.textContent = '0';
