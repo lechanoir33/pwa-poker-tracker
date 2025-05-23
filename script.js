@@ -193,6 +193,57 @@ function updateSelectedHandsDisplay() {
   });
 }
 
+const handRanking = [
+  "AA", "KK", "QQ", "JJ", "AKs", "TT", "AKo", "99", "AQs", "AQo",
+  "AJs", "KQs", "55", "KQo", "K9s", "T9s", "J9s", "Q9s", "44", "A8s",
+  "ATo", "33", "A7s", "A5s", "KJo", "98s", "22", "A6s", "A9o", "A4s",
+  "KTs", "A2s", "A8o", "JTo", "A7o", "J8s", "A5o", "KTo", "87s", "A6o",
+  "A4o", "K8s", "97s", "QTo", "A3o", "Q8s", "76s", "A2o", "T7s", "86s",
+  "K7s", "K6s", "K5s", "K9o", "J7s", "65s", "T9o", "K4s", "54s", "Q7s",
+  "96s", "85s", "T8o", "98o", "64s", "K3s", "75s", "Q6s", "J6s", "87o",
+  "T6s", "74s", "95s", "K2s", "K7o", "Q9o", "T5s", "K6o", "K5o", "J9o",
+  "Q5s", "Q4s", "Q3s", "J8o", "K4o", "Q2s", "K3o", "Q8o", "J7o", "J5s",
+  "97o", "J4s", "T4s", "K2o", "J3s", "43s", "Q7o", "Q6o", "T7o"
+];
+
+// Donne une note sur 10 selon la position dans la grille (0 = meilleure main)
+function getHandScore(hand) {
+  const normalized = normalizeHand(hand); // utilise ta fonction existante
+  const idx = handRanking.indexOf(normalized);
+  if (idx === -1) return 1; // Main inconnue : note très faible
+  const maxNote = 10;
+  const rawNote = maxNote - (idx / handRanking.length) * maxNote;
+  return Math.round(rawNote * 10) / 10; // arrondi à 1 décimale
+}
+
+// Calcule et affiche la note moyenne pondérée à partir des mains du bas
+function updateNoteBadge() {
+  const badge = document.getElementById('note-badge');
+  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  
+  if (!selectedHands.length) {
+    badge.textContent = '--';
+    return;
+  }
+
+  let total = 0;
+  let count = 0;
+
+  selectedHands.forEach(({ hand, checked }) => {
+    if (checked) {
+      const score = getHandScore(hand);
+      total += score;
+      count++;
+    }
+  });
+
+  const average = count ? (total / count).toFixed(1) : '--';
+  badge.textContent = average;
+}
+
+// Appelle la fonction au chargement
+window.addEventListener('load', updateNoteBadge);
+
 // Sécurité
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
