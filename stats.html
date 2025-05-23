@@ -60,6 +60,24 @@
   </table>
 
   <script>
+
+    // Normalise les mains (ex: QKo devient KQo)
+function normalizeHand(hand) {
+  if (hand.length !== 2 && hand.length !== 3) return hand;
+
+  let ranks = "23456789TJQKA";
+  let [rank1, rank2, suited] = hand.length === 2
+    ? [hand[0], hand[1], ""]
+    : [hand[0], hand[1], hand[2]];
+
+  if (ranks.indexOf(rank2) > ranks.indexOf(rank1)) {
+    return rank2 + rank1 + suited;
+  }
+
+  return rank1 + rank2 + suited;
+}
+
+    
     // Liste des mains triées par force
     const handRanking = [
       'AA', 'KK', 'AKs', 'QQ', 'JJ', 'AKo', 'AQs', 'AQo', 'AJs', 'TT', 'KQs', 'ATs', 'KJs', 'AJo', 'QJs',
@@ -124,9 +142,11 @@
 
         const handCell = document.createElement('td');
         const count = entry.count || 1;
+        const hand = normalizeHand(entry.hand);
         handCell.innerHTML = count > 1
-          ? `${entry.hand}<sup style="color:red;">${count}</sup>`
-          : entry.hand;
+  ? `${hand}<sup style="color:red;">${count}</sup>`
+  : hand;
+
 
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
@@ -148,7 +168,7 @@ const allCounts = {};
 // On rebalaye toutes les sessions affichées
 sessionData.forEach(session => {
   session.hands.forEach(entry => {
-    const hand = entry.hand;
+    const hand = normalizeHand(entry.hand);
     const count = entry.count || 1; // Ou 1 si non compté plusieurs fois
     allCounts[hand] = (allCounts[hand] || 0) + count;
   });
