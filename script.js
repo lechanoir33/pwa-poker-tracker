@@ -10,6 +10,23 @@ function normalizeHand(hand) {
   return hand;
 }
 
+// --- NOUVEAU : fonctions utilitaires pour gérer la session en cours ---
+function getCurrentSession() {
+  let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  if (sessions.length === 0) {
+    sessions.push({ date: new Date().toISOString(), hands: [] });
+    localStorage.setItem('handSessions', JSON.stringify(sessions));
+  }
+  return sessions[sessions.length - 1];
+}
+
+function saveCurrentSession(session) {
+  let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  sessions[sessions.length - 1] = session;
+  localStorage.setItem('handSessions', JSON.stringify(sessions));
+}
+// --- FIN fonctions utilitaires ---
+
 for (let i = 0; i < ranks.length; i++) {
   for (let j = 0; j < ranks.length; j++) {
     if (i === j) {
@@ -66,11 +83,17 @@ hands.forEach((hand) => {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
     }
 
-    // ✅ MODIFICATION : utilisation de la fonction normalizeHand
     const normalizedHand = normalizeHand(hand);
     selectedHands.push({ hand: normalizedHand, checked: false });
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
+
+    // --- NOUVEAU : mise à jour de la session en cours dans handSessions
+    const session = getCurrentSession();
+    if (!session.hands.includes(normalizedHand)) {
+      session.hands.push(normalizedHand);
+      saveCurrentSession(session);
+    }
   };
 
   const resetCounter = () => {
@@ -81,9 +104,14 @@ hands.forEach((hand) => {
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
     const normalizedHand = normalizeHand(hand);
-selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
+    selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
+
+    // --- NOUVEAU : suppression de la main de la session en cours dans handSessions
+    const session = getCurrentSession();
+    session.hands = session.hands.filter(h => h !== normalizedHand);
+    saveCurrentSession(session);
   };
 
   div.addEventListener('click', (e) => {
@@ -108,6 +136,30 @@ selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
 
   tableau.appendChild(div);
 });
+
+// --- NOUVEAU : fonction de reset global avec ajout de nouvelle session ---
+function resetAll() {
+  // Remise à zéro des compteurs et UI (à adapter à ton code exact)
+  document.querySelectorAll('.mains').forEach(div => {
+    const counter = div.querySelector('.counter');
+    const checkbox = div.querySelector('input[type="checkbox"]');
+    counter.textContent = '0';
+    checkbox.checked = false;
+    div.style.backgroundColor = 'rgb(0, 0, 31)';
+  });
+
+  // Remise à zéro de selectedHands
+  localStorage.setItem('selectedHands', JSON.stringify([]));
+  updateSelectedHandsDisplay();
+  saveCounts();
+
+  // Ajout d'une nouvelle session vide dans handSessions
+  let sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  sessions.push({ date: new Date().toISOString(), hands: [] });
+  localStorage.setItem('handSessions', JSON.stringify(sessions));
+}
+// --- FIN resetAll ---
+
 
 // Sauvegarde des compteurs
 function saveCounts() {
