@@ -133,7 +133,8 @@ function normalizeHand(hand) {
 
     sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
-      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
+const noteText = session.note ? ` — Note : ${session.note}` : '';
+dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}${noteText}</td>`;
       tbody.appendChild(dateRow);
 
       const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
