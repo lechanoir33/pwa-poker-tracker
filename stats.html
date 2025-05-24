@@ -60,54 +60,48 @@
   </table>
 
   <script>
+    function normalizeHand(hand) {
+      if (hand.length !== 2 && hand.length !== 3) return hand;
 
-    // Normalise les mains (ex: QKo devient KQo)
-function normalizeHand(hand) {
-  if (hand.length !== 2 && hand.length !== 3) return hand;
+      let ranks = "23456789TJQKA";
+      let [rank1, rank2, suited] = hand.length === 2
+        ? [hand[0], hand[1], ""]
+        : [hand[0], hand[1], hand[2]];
 
-  let ranks = "23456789TJQKA";
-  let [rank1, rank2, suited] = hand.length === 2
-    ? [hand[0], hand[1], ""]
-    : [hand[0], hand[1], hand[2]];
+      if (ranks.indexOf(rank2) > ranks.indexOf(rank1)) {
+        return rank2 + rank1 + suited;
+      }
 
-  if (ranks.indexOf(rank2) > ranks.indexOf(rank1)) {
-    return rank2 + rank1 + suited;
-  }
+      return rank1 + rank2 + suited;
+    }
 
-  return rank1 + rank2 + suited;
-}
-
-    
-    // Liste des mains triées par force
     const handRanking = {
-  "AA": 10, "KK": 10, "QQ": 10, "JJ": 9, "TT": 8, "99": 7, "88": 7, "77": 6, "66": 6, "55": 5, "44": 5, "33": 4, "22": 4,
-  "AKs": 10, "AQs": 9, "AJs": 8, "ATs": 7, "A9s": 6, "A8s": 5, "A7s": 5, "A6s": 4, "A5s": 4, "A4s": 3, "A3s": 3, "A2s": 2,
-  "AKo": 9, "AQo": 7, "AJo": 6, "ATo": 5, "A9o": 4, "A8o": 3, "A7o": 2, "A6o": 2, "A5o": 1, "A4o": 1, "A3o": 1, "A2o": 1,
-  "KQs": 8, "KJs": 7, "KTs": 6, "K9s": 5, "K8s": 4, "K7s": 3, "K6s": 3, "K5s": 2, "K4s": 2, "K3s": 1, "K2s": 1,
-  "KQo": 7, "KJo": 5, "KTo": 5, "K9o": 4, "K8o": 3, "K7o": 2, "K6o": 2, "K5o": 1, "K4o": 1, "K3o": 1, "K2o": 1,
-  "QJs": 7, "QTs": 6, "Q9s": 5, "Q8s": 4, "Q7s": 3, "Q6s": 3, "Q5s": 2, "Q4s": 2, "Q3s": 1, "Q2s": 1,
-  "QJo": 5, "QTo": 4, "Q9o": 3, "Q8o": 2, "Q7o": 2, "Q6o": 1, "Q5o": 1, "Q4o": 1, "Q3o": 1, "Q2o": 1,
-  "JTs": 6, "J9s": 5, "J8s": 4, "J7s": 3, "J6s": 3, "J5s": 2, "J4s": 1, "J3s": 1, "J2s": 1,
-  "JTo": 5, "J9o": 4, "J8o": 4, "J7o": 3, "J6o": 2, "J5o": 1, "J4o": 1, "J3o": 1, "J2o": 1,
-  "T9s": 6, "T8s": 5, "T7s": 4, "T6s": 3, "T5s": 2, "T4s": 2, "T3s": 1, "T2s": 1,
-  "T8o": 4, "T7o": 3, "T6o": 2, "T5o": 1, "T4o": 1, "T3o": 1, "T2o": 1,
-  "98s": 5, "97s": 4, "96s": 3, "95s": 2, "94s": 2, "93s": 1, "92s": 1,
-  "94o": 1, "93o": 1, "92o": 1,
-  "87s": 4, "86s": 3, "85s": 2, "84s": 2, "83s": 1, "82s": 1,
-  "76s": 4, "75s": 3, "74s": 2, "73s": 2, "72s": 1,
-  "72o": 1,
-  "65s": 3, "64s": 2, "63s": 1, "62s": 1,
-  "54s": 2, "53s": 1, "52s": 1,
-  "43s": 1, "42s": 1,
-  "32s": 1,
-  "63o": 1, "62o": 1, "53o": 1, "52o": 1, "43o": 1, "42o": 1, "32o": 1
-};
+      "AA": 10, "KK": 10, "QQ": 10, "JJ": 9, "TT": 8, "99": 7, "88": 7, "77": 6, "66": 6, "55": 5, "44": 5, "33": 4, "22": 4,
+      "AKs": 10, "AQs": 9, "AJs": 8, "ATs": 7, "A9s": 6, "A8s": 5, "A7s": 5, "A6s": 4, "A5s": 4, "A4s": 3, "A3s": 3, "A2s": 2,
+      "AKo": 9, "AQo": 7, "AJo": 6, "ATo": 5, "A9o": 4, "A8o": 3, "A7o": 2, "A6o": 2, "A5o": 1, "A4o": 1, "A3o": 1, "A2o": 1,
+      "KQs": 8, "KJs": 7, "KTs": 6, "K9s": 5, "K8s": 4, "K7s": 3, "K6s": 3, "K5s": 2, "K4s": 2, "K3s": 1, "K2s": 1,
+      "KQo": 7, "KJo": 5, "KTo": 5, "K9o": 4, "K8o": 3, "K7o": 2, "K6o": 2, "K5o": 1, "K4o": 1, "K3o": 1, "K2o": 1,
+      "QJs": 7, "QTs": 6, "Q9s": 5, "Q8s": 4, "Q7s": 3, "Q6s": 3, "Q5s": 2, "Q4s": 2, "Q3s": 1, "Q2s": 1,
+      "QJo": 5, "QTo": 4, "Q9o": 3, "Q8o": 2, "Q7o": 2, "Q6o": 1, "Q5o": 1, "Q4o": 1, "Q3o": 1, "Q2o": 1,
+      "JTs": 6, "J9s": 5, "J8s": 4, "J7s": 3, "J6s": 3, "J5s": 2, "J4s": 1, "J3s": 1, "J2s": 1,
+      "JTo": 5, "J9o": 4, "J8o": 4, "J7o": 3, "J6o": 2, "J5o": 1, "J4o": 1, "J3o": 1, "J2o": 1,
+      "T9s": 6, "T8s": 5, "T7s": 4, "T6s": 3, "T5s": 2, "T4s": 2, "T3s": 1, "T2s": 1,
+      "T8o": 4, "T7o": 3, "T6o": 2, "T5o": 1, "T4o": 1, "T3o": 1, "T2o": 1,
+      "98s": 5, "97s": 4, "96s": 3, "95s": 2, "94s": 2, "93s": 1, "92s": 1,
+      "94o": 1, "93o": 1, "92o": 1,
+      "87s": 4, "86s": 3, "85s": 2, "84s": 2, "83s": 1, "82s": 1,
+      "76s": 4, "75s": 3, "74s": 2, "73s": 2, "72s": 1,
+      "72o": 1,
+      "65s": 3, "64s": 2, "63s": 1, "62s": 1,
+      "54s": 2, "53s": 1, "52s": 1,
+      "43s": 1, "42s": 1,
+      "32s": 1,
+      "63o": 1, "62o": 1, "53o": 1, "52o": 1, "43o": 1, "42o": 1, "32o": 1
+    };
 
-    // Compter les occurrences de chaque main sélectionnée
     function getSelectedHandCounts() {
-      const raw = localStorage.getItem('selectedHands') || localStorage.getItem('selectedHandsBackup');;
+      const raw = localStorage.getItem('selectedHands') || localStorage.getItem('selectedHandsBackup');
       const counts = {};
-
       try {
         const hands = JSON.parse(raw) || [];
         hands.forEach(entry => {
@@ -117,63 +111,61 @@ function normalizeHand(hand) {
       } catch (e) {
         return {};
       }
-
       return counts;
     }
-    
-    // Fonction pour trier les mains selon le classement handRanking
+
     function sortByRanking(hands) {
-      return hands.sort((a, b) => {
-        const indexA = handRanking.indexOf(a.hand);
-        const indexB = handRanking.indexOf(b.hand);
-        
-        if (indexA === -1 && indexB === -1) return 0;
-        if (indexA === -1) return 1;
-        if (indexB === -1) return -1;
-        
-        return indexA - indexB; // Tri selon l'indice dans handRanking
+      return hands.slice().sort((a, b) => {
+        const noteA = a.note ?? handRanking[normalizeHand(a.hand)] ?? 0;
+        const noteB = b.note ?? handRanking[normalizeHand(b.hand)] ?? 0;
+        return noteB - noteA;
       });
     }
 
     const tbody = document.querySelector('#statsTable tbody');
     const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
 
-function calculateWeightedAverage(hands) {
-  let totalWeight = 0;
-  let totalCount = 0;
+    function calculateWeightedAverage(hands) {
+      let totalWeight = 0;
+      let totalCount = 0;
+      hands.forEach(entry => {
+        const hand = normalizeHand(entry.hand);
+        const count = entry.count || 1;
+        const score = handRanking[hand] || 0;
+        totalWeight += score * count;
+        totalCount += count;
+      });
+      return totalCount === 0 ? 0 : (totalWeight / totalCount).toFixed(2);
+    }
 
-  hands.forEach(entry => {
-    const hand = normalizeHand(entry.hand);
-    const count = entry.count || 1;
-    const score = handRanking[hand] || 0;
-
-    totalWeight += score * count;
-    totalCount += count;
-  });
-
-  return totalCount === 0 ? 0 : (totalWeight / totalCount).toFixed(2);
-}
-    
-    // Récupère les comptes des mains sélectionnées
     const selectedHandCounts = getSelectedHandCounts();
 
     sessionData.slice().reverse().forEach(session => {
+      if (!session.note) {
+        session.note = calculateWeightedAverage(session.hands);
+      }
+
       const dateRow = document.createElement('tr');
-const noteText = session.note ? ` — Note : ${session.note}` : '';
-dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}${noteText}</td>`;
+      const noteText = session.note ? ` — Note : ${session.note}` : '';
+      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}${noteText}</td>`;
       tbody.appendChild(dateRow);
 
-      const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
+      // Ajoute une note individuelle si absente
+      session.hands.forEach(entry => {
+        if (entry.note == null) {
+          entry.note = handRanking[normalizeHand(entry.hand)] || 0;
+        }
+      });
+
+      const sortedHands = sortByRanking(session.hands);
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
-
         const handCell = document.createElement('td');
         const count = entry.count || 1;
         const hand = normalizeHand(entry.hand);
         handCell.innerHTML = count > 1
-  ? `${hand}<sup style="color:red;">${count}</sup>`
-  : hand;
-
+          ? `${hand}<sup style="color:red;">${count}</sup> <span style="color:yellow;">(${entry.note})</span>`
+          : `${hand} <span style="color:yellow;">(${entry.note})</span>`;
 
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
@@ -184,29 +176,20 @@ dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}${note
       });
     });
 
-    // -- Sauvegarde consolidée des occurrences par date --
-const summaryKey = 'handStatsSummary';
-const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-const previousSummary = JSON.parse(localStorage.getItem(summaryKey)) || {};
-
-// Fusionner tous les compteurs de la session affichée
-const allCounts = {};
-
-// On rebalaye toutes les sessions affichées
-sessionData.forEach(session => {
-  session.hands.forEach(entry => {
-    const hand = normalizeHand(entry.hand);
-    const count = entry.count || 1; // Ou 1 si non compté plusieurs fois
-    allCounts[hand] = (allCounts[hand] || 0) + count;
-  });
-});
-
-// Ajoute ou met à jour la date du jour dans le résumé
-previousSummary[today] = allCounts;
-
-// Sauvegarde dans localStorage
-localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
-    
+    // Consolidation des occurrences
+    const summaryKey = 'handStatsSummary';
+    const today = new Date().toISOString().split('T')[0];
+    const previousSummary = JSON.parse(localStorage.getItem(summaryKey)) || {};
+    const allCounts = {};
+    sessionData.forEach(session => {
+      session.hands.forEach(entry => {
+        const hand = normalizeHand(entry.hand);
+        const count = entry.count || 1;
+        allCounts[hand] = (allCounts[hand] || 0) + count;
+      });
+    });
+    previousSummary[today] = allCounts;
+    localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
   </script>
 </body>
 </html>
