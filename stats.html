@@ -45,7 +45,7 @@
     }
 
     .badge-note {
-  background-color: #FFD700;
+  background-color: #FFD017;
   color: black;
   border-radius: 8px;
   padding: 2px 8px;
@@ -171,11 +171,9 @@ dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date} ${not
       sortedHands.forEach(entry => {
         const row = document.createElement('tr');
         const handCell = document.createElement('td');
-        const count = entry.count || 1;
-        const hand = normalizeHand(entry.hand);
-        handCell.innerHTML = count > 1
-          ? `${hand}<sup style="color:red;">${count}</sup> <span style="color:yellow;">(${entry.note})</span>`
-          : `${hand} <span style="color:yellow;">(${entry.note})</span>`;
+const count = entry.count || 1;
+const hand = normalizeHand(entry.hand);
+handCell.textContent = count > 1 ? `${hand} (${count})` : hand;
 
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
