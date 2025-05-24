@@ -260,12 +260,10 @@ const handRanking = {
 
 // Donne une note sur 10 selon la position dans la grille (0 = meilleure main)
 function getHandScore(hand) {
-  const normalized = normalizeHand(hand); // utilise ta fonction existante
-  const idx = handRanking.indexOf(normalized);
-  if (idx === -1) return 1; // Main inconnue : note très faible
-  const maxNote = 10;
-  const rawNote = maxNote - (idx / handRanking.length) * maxNote;
-  return Math.round(rawNote * 10) / 10; // arrondi à 1 décimale
+  const normalized = normalizeHand(hand);
+  const score = handRanking[normalized];
+  if (score === undefined) return 1; // main inconnue, note faible
+  return score;
 }
 
 // Calcule et affiche la note moyenne pondérée à partir des mains du bas
