@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
- 
   <title>Stats des Mains - Classement empirique</title>
   <style>
     body {
@@ -47,7 +46,6 @@
   </style>
 </head>
 <body>
-  
   <h1>Stats des Mains Sélectionnées (Classement Empirique)</h1>
   <a href="index.html">← Retour</a>
 
@@ -135,29 +133,8 @@ function normalizeHand(hand) {
 
     sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
-
-// cellule date
-const dateCell = document.createElement('td');
-dateCell.className = 'session-title';
-dateCell.textContent = session.date;
-
-// cellule badge avec un span stylisé (tu peux adapter le style)
-const badgeCell = document.createElement('td');
-const badgeSpan = document.createElement('span');
-badgeSpan.id = 'note-badge'; // à faire si c’est le seul badge de la page
-badgeSpan.style.backgroundColor = '#f1c40f';
-badgeSpan.style.color = '#000';
-badgeSpan.style.fontWeight = 'bold';
-badgeSpan.style.padding = '6px 12px';
-badgeSpan.style.borderRadius = '12px';
-badgeSpan.style.display = 'inline-block';
-badgeSpan.style.fontSize = '16px';
-badgeSpan.textContent = '--';  // À remplacer par la note calculée plus tard
-badgeCell.appendChild(badgeSpan);
-
-dateRow.appendChild(dateCell);
-dateRow.appendChild(badgeCell);
-tbody.appendChild(dateRow);
+      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
+      tbody.appendChild(dateRow);
 
       const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
       sortedHands.forEach(entry => {
@@ -202,31 +179,6 @@ previousSummary[today] = allCounts;
 
 // Sauvegarde dans localStorage
 localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
-
-// Calcule et affiche la note moyenne pondérée à partir des mains du bas de page
-function updateNoteBadge() {
-  const badge = document.getElementById('note-badge');
-  const selectedHands = getSelectedHands(); // à adapter selon ton code
-  const total = selectedHands.reduce((acc, hand) => acc + (handRanking[hand] || 0), 0);
-  const avg = selectedHands.length > 0 ? (total / selectedHands.length).toFixed(1) : '--';
-  badge.textContent = avg;
-  }
-
-  let total = 0;
-  let count = 0;
-
-  selectedHands.forEach(({ hand, checked }) => {
-    if (checked) {
-      const score = getHandScore(hand);
-      total += score;
-      count++;
-    }
-  });
-
-  const average = count ? (total / count).toFixed(1) : '--';
-  badge.textContent = average;
-}
-
     
   </script>
 </body>
