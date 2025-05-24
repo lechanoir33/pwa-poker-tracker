@@ -290,7 +290,8 @@ function updateNoteBadge() {
 
 // ✅ MODIFICATION MISE EN ÉVIDENCE : Regroupement des appels dans un seul chargement
 function loadSelectedHands() {
-  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  const selectedHands = JSON.parse(localStorage.getItem('selectedHands'));
+  if (!selectedHands || selectedHands.length === 0) return; // 
   const handsDivs = document.querySelectorAll('.mains');
 
   handsDivs.forEach(div => {
