@@ -72,7 +72,7 @@ hands.forEach((hand) => {
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
     updateNoteBadge(); // ✅ Ajout ici : mise à jour de la note uniquement après clic dans le tableau
-};
+  };
 
   const resetCounter = () => {
     counter.textContent = '0';
@@ -82,7 +82,7 @@ hands.forEach((hand) => {
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
     const normalizedHand = normalizeHand(hand);
-selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
+    selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
@@ -182,7 +182,7 @@ function updateSelectedHandsDisplay() {
     checkbox.addEventListener('change', () => {
       selectedHands[index].checked = checkbox.checked;
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-       // 🔥 Ajout : mettre à jour la note quand on coche/décoche
+      updateNoteBadge(); // 🔥 Ajout : mettre à jour la note quand on coche/décoche
     });
 
     const label = document.createElement('span');
@@ -193,21 +193,37 @@ function updateSelectedHandsDisplay() {
     wrapper.appendChild(label);
     container.appendChild(wrapper);
   });
-  
+
   updateNoteBadge(); // 🔥 Ajout : mettre à jour la note après affichage
 }
 
-  const handRanking = [
-  "AA", "KK", "QQ", "JJ", "AKs", "TT", "AKo", "99", "AQs", "AQo",
-  "AJs", "KQs", "55", "KQo", "K9s", "T9s", "J9s", "Q9s", "44", "A8s",
-  "ATo", "33", "A7s", "A5s", "KJo", "98s", "22", "A6s", "A9o", "A4s",
-  "KTs", "A2s", "A8o", "JTo", "A7o", "J8s", "A5o", "KTo", "87s", "A6o",
-  "A4o", "K8s", "97s", "QTo", "A3o", "Q8s", "76s", "A2o", "T7s", "86s",
-  "K7s", "K6s", "K5s", "K9o", "J7s", "65s", "T9o", "K4s", "54s", "Q7s",
-  "96s", "85s", "T8o", "98o", "64s", "K3s", "75s", "Q6s", "J6s", "87o",
-  "T6s", "74s", "95s", "K2s", "K7o", "Q9o", "T5s", "K6o", "K5o", "J9o",
-  "Q5s", "Q4s", "Q3s", "J8o", "K4o", "Q2s", "K3o", "Q8o", "J7o", "J5s",
-  "97o", "J4s", "T4s", "K2o", "J3s", "43s", "Q7o", "Q6o", "T7o"
+// ✅ MODIFICATION : liste complète des 169 mains
+const handRanking = [
+  'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
+  'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
+  'KQs','KJs','KTs','K9s','K8s','K7s','K6s','K5s','K4s','K3s','K2s',
+  'QJs','QTs','Q9s','Q8s','Q7s','Q6s','Q5s','Q4s','Q3s','Q2s',
+  'JTs','J9s','J8s','J7s','J6s','J5s','J4s','J3s','J2s',
+  'T9s','T8s','T7s','T6s','T5s','T4s','T3s','T2s',
+  '98s','97s','96s','95s','94s','93s','92s',
+  '87s','86s','85s','84s','83s','82s',
+  '76s','75s','74s','73s','72s',
+  '65s','64s','63s','62s',
+  '54s','53s','52s',
+  '43s','42s',
+  '32s',
+  'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o',
+  'KQo','KJo','KTo','K9o','K8o','K7o','K6o','K5o','K4o','K3o','K2o',
+  'QJo','QTo','Q9o','Q8o','Q7o','Q6o','Q5o','Q4o','Q3o','Q2o',
+  'JTo','J9o','J8o','J7o','J6o','J5o','J4o','J3o','J2o',
+  'T9o','T8o','T7o','T6o','T5o','T4o','T3o','T2o',
+  '98o','97o','96o','95o','94o','93o','92o',
+  '87o','86o','85o','84o','83o','82o',
+  '76o','75o','74o','73o','72o',
+  '65o','64o','63o','62o',
+  '54o','53o','52o',
+  '43o','42o',
+  '32o'
 ];
 
 // Donne une note sur 10 selon la position dans la grille (0 = meilleure main)
@@ -224,7 +240,7 @@ function getHandScore(hand) {
 function updateNoteBadge() {
   const badge = document.getElementById('note-badge');
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-  
+
   if (!selectedHands.length) {
     badge.textContent = '--';
     return;
