@@ -295,20 +295,11 @@ function loadSelectedHands() {
 
   handsDivs.forEach(div => {
     const hand = div.dataset.hand;
-    const counter = div.querySelector('.counter');
     const checkbox = div.querySelector('input[type="checkbox"]');
 
     const found = selectedHands.find(h => h.hand === hand && h.checked);
-
-    if (found) {
-      counter.textContent = '1';  // ou la vraie valeur si tu veux
-      checkbox.checked = true;
-      updateColor(div, 1);
-    } else {
-      counter.textContent = '0';
-      checkbox.checked = false;
-      updateColor(div, 0);
-    }
+    checkbox.checked = !!found;
+    // Ne pas modifier le compteur ici !
   });
 }
 
