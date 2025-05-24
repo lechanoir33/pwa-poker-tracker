@@ -296,10 +296,23 @@ function loadSelectedHands() {
   handsDivs.forEach(div => {
     const hand = div.dataset.hand;
     const checkbox = div.querySelector('input[type="checkbox"]');
+    const counter = div.querySelector('.counter');
 
     const found = selectedHands.find(h => h.hand === hand && h.checked);
-    checkbox.checked = !!found;
-    // Ne pas modifier le compteur ici !
+
+    if (found) {
+      checkbox.checked = true;
+      // Mets à jour le compteur si besoin, ici on fait une valeur minimale de 1 si compteur à 0
+      if (parseInt(counter.textContent, 10) === 0) {
+        counter.textContent = '1';
+      }
+      updateColor(div, parseInt(counter.textContent, 10));
+    } else {
+      checkbox.checked = false;
+      // Si non trouvé, on peut garder le compteur tel quel ou le remettre à 0 si tu préfères
+      // Ici on ne touche pas pour ne pas perdre les compteurs sauvegardés
+      updateColor(div, parseInt(counter.textContent, 10) || 0);
+    }
   });
 }
 
