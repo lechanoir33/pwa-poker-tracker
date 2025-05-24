@@ -316,9 +316,49 @@ function loadSelectedHands() {
   });
 }
 
+function loadCounts() {
+  const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
+  document.querySelectorAll('.mains').forEach(div => {
+    const hand = div.dataset.hand;
+    const counter = div.querySelector('.counter');
+    const checkbox = div.querySelector('input[type="checkbox"]');
+    const count = counts[hand] || 0;
+    counter.textContent = count;
+    checkbox.checked = count > 0;
+    updateColor(div, count);
+  });
+}
+
+function loadSelectedHands() {
+  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  const handsDivs = document.querySelectorAll('.mains');
+
+  handsDivs.forEach(div => {
+    const hand = div.dataset.hand;
+    const checkbox = div.querySelector('input[type="checkbox"]');
+    const counter = div.querySelector('.counter');
+
+    // Recherche l'entrée correspondante dans selectedHands (normalisée)
+    const found = selectedHands.find(h => h.hand === hand && h.checked);
+
+    if (found) {
+      checkbox.checked = true;
+      // Si compteur à 0 mais main cochée, on met compteur à 1
+      if (parseInt(counter.textContent, 10) === 0) {
+        counter.textContent = '1';
+      }
+      updateColor(div, parseInt(counter.textContent, 10));
+    } else {
+      checkbox.checked = false;
+      // Garde compteur tel quel ou 0 si tu veux
+      updateColor(div, parseInt(counter.textContent, 10) || 0);
+    }
+  });
+}
+
 window.onload = () => {
-  loadCounts();
-  loadSelectedHands();
+  loadCounts();          // Remplit les compteurs
+  loadSelectedHands();   // Coche les cases selon selectedHands
   updateSelectedHandsDisplay();
   updateNoteBadge();
 };
