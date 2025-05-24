@@ -72,7 +72,7 @@ hands.forEach((hand) => {
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
     updateNoteBadge(); // ✅ Ajout ici : mise à jour de la note uniquement après clic dans le tableau
-  };
+};
 
   const resetCounter = () => {
     counter.textContent = '0';
@@ -82,7 +82,7 @@ hands.forEach((hand) => {
 
     let selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
     const normalizedHand = normalizeHand(hand);
-    selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
+selectedHands = selectedHands.filter(h => h.hand !== normalizedHand);
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     updateSelectedHandsDisplay();
   };
@@ -182,7 +182,7 @@ function updateSelectedHandsDisplay() {
     checkbox.addEventListener('change', () => {
       selectedHands[index].checked = checkbox.checked;
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-      updateNoteBadge(); // 🔥 Ajout : mettre à jour la note quand on coche/décoche
+       // 🔥 Ajout : mettre à jour la note quand on coche/décoche
     });
 
     const label = document.createElement('span');
@@ -193,81 +193,38 @@ function updateSelectedHandsDisplay() {
     wrapper.appendChild(label);
     container.appendChild(wrapper);
   });
-
+  
   updateNoteBadge(); // 🔥 Ajout : mettre à jour la note après affichage
 }
 
-// ✅ MODIFICATION : liste complète des 169 mains
-const handRanking = {
-  // Paires
-  "AA": 10, "KK": 10, "QQ": 10, "JJ": 9, "TT": 8, "99": 7, "88": 7, "77": 6, "66": 6, "55": 5, "44": 5, "33": 4, "22": 4,
+  const handRanking = [
+  "AA", "KK", "QQ", "JJ", "AKs", "TT", "AKo", "99", "AQs", "AQo",
+  "AJs", "KQs", "55", "KQo", "K9s", "T9s", "J9s", "Q9s", "44", "A8s",
+  "ATo", "33", "A7s", "A5s", "KJo", "98s", "22", "A6s", "A9o", "A4s",
+  "KTs", "A2s", "A8o", "JTo", "A7o", "J8s", "A5o", "KTo", "87s", "A6o",
+  "A4o", "K8s", "97s", "QTo", "A3o", "Q8s", "76s", "A2o", "T7s", "86s",
+  "K7s", "K6s", "K5s", "K9o", "J7s", "65s", "T9o", "K4s", "54s", "Q7s",
+  "96s", "85s", "T8o", "98o", "64s", "K3s", "75s", "Q6s", "J6s", "87o",
+  "T6s", "74s", "95s", "K2s", "K7o", "Q9o", "T5s", "K6o", "K5o", "J9o",
+  "Q5s", "Q4s", "Q3s", "J8o", "K4o", "Q2s", "K3o", "Q8o", "J7o", "J5s",
+  "97o", "J4s", "T4s", "K2o", "J3s", "43s", "Q7o", "Q6o", "T7o"
+];
 
-  // As-x suited
-  "AKs": 10, "AQs": 9, "AJs": 8, "ATs": 7, "A9s": 6, "A8s": 5, "A7s": 5, "A6s": 4, "A5s": 4, "A4s": 3, "A3s": 3, "A2s": 2,
-
-  // As-x offsuit
-  "AKo": 9, "AQo": 7, "AJo": 6, "ATo": 5, "A9o": 4, "A8o": 3, "A7o": 2, "A6o": 2, "A5o": 1, "A4o": 1, "A3o": 1, "A2o": 1,
-
-  // Roi-x suited
-  "KQs": 8, "KJs": 7, "KTs": 6, "K9s": 5, "K8s": 4, "K7s": 3, "K6s": 3, "K5s": 2, "K4s": 2, "K3s": 1, "K2s": 1,
-
-  // Roi-x offsuit
-  "KQo": 7, "KJo": 5, "KTo": 5, "K9o": 4, "K8o": 3, "K7o": 2, "K6o": 2, "K5o": 1, "K4o": 1, "K3o": 1, "K2o": 1,
-
-  // Dame-x suited
-  "QJs": 7, "QTs": 6, "Q9s": 5, "Q8s": 4, "Q7s": 3, "Q6s": 3, "Q5s": 2, "Q4s": 2, "Q3s": 1, "Q2s": 1,
-
-  // Dame-x offsuit
-  "QJo": 5, "QTo": 4, "Q9o": 3, "Q8o": 2, "Q7o": 2, "Q6o": 1, "Q5o": 1, "Q4o": 1, "Q3o": 1, "Q2o": 1,
-
-  // Valet-x suited
-  "JTs": 6, "J9s": 5, "J8s": 4, "J7s": 3, "J6s": 3, "J5s": 2, "J4s": 1, "J3s": 1, "J2s": 1,
-
-  // Valet-x offsuit
-  "JTo": 5, "J9o": 4, "J8o": 4, "J7o": 3, "J6o": 2, "J5o": 1, "J4o": 1, "J3o": 1, "J2o": 1,
-
-  // Dix-x suited
-  "T9s": 6, "T8s": 5, "T7s": 4, "T6s": 3, "T5s": 2, "T4s": 2, "T3s": 1, "T2s": 1,
-
-  // Dix-x offsuit
-  "T8o": 4, "T7o": 3, "T6o": 2, "T5o": 1, "T4o": 1, "T3o": 1, "T2o": 1,
-
-  // 9-x suited
-  "98s": 5, "97s": 4, "96s": 3, "95s": 2, "94s": 2, "93s": 1, "92s": 1,
-
-  // 9-x offsuit
-  "94o": 1, "93o": 1, "92o": 1,
-
-  // 8-x suited
-  "87s": 4, "86s": 3, "85s": 2, "84s": 2, "83s": 1, "82s": 1,
-
-  // 7-x suited
-  "76s": 4, "75s": 3, "74s": 2, "73s": 2, "72s": 1,
-
-  // 7-x offsuit
-  "72o": 1,
-
-  // petites cartes hors suites et suited
-  "65s": 3, "64s": 2, "63s": 1, "62s": 1,
-  "54s": 2, "53s": 1, "52s": 1,
-  "43s": 1, "42s": 1,
-  "32s": 1,
-
-  // Offsuited petites mains non listées
-  "63o": 1, "62o": 1, "53o": 1, "52o": 1, "43o": 1, "42o": 1, "32o": 1
-};
-
-// Donne la note
-
-
-// Affichage dans le badge
-document.getElementById("average-note").textContent = averageNote;
+// Donne une note sur 10 selon la position dans la grille (0 = meilleure main)
+function getHandScore(hand) {
+  const normalized = normalizeHand(hand); // utilise ta fonction existante
+  const idx = handRanking.indexOf(normalized);
+  if (idx === -1) return 1; // Main inconnue : note très faible
+  const maxNote = 10;
+  const rawNote = maxNote - (idx / handRanking.length) * maxNote;
+  return Math.round(rawNote * 10) / 10; // arrondi à 1 décimale
+}
 
 // Calcule et affiche la note moyenne pondérée à partir des mains du bas
 function updateNoteBadge() {
   const badge = document.getElementById('note-badge');
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-
+  
   if (!selectedHands.length) {
     badge.textContent = '--';
     return;
@@ -278,7 +235,7 @@ function updateNoteBadge() {
 
   selectedHands.forEach(({ hand, checked }) => {
     if (checked) {
-      const score = handRanking[hand] || 0;
+      const score = getHandScore(hand);
       total += score;
       count++;
     }
@@ -289,79 +246,10 @@ function updateNoteBadge() {
 }
 
 // ✅ MODIFICATION MISE EN ÉVIDENCE : Regroupement des appels dans un seul chargement
-function loadSelectedHands() {
-  const selectedHands = JSON.parse(localStorage.getItem('selectedHands'));
-  if (!selectedHands || selectedHands.length === 0) return; // 
-  const handsDivs = document.querySelectorAll('.mains');
-
-  handsDivs.forEach(div => {
-    const hand = div.dataset.hand;
-    const checkbox = div.querySelector('input[type="checkbox"]');
-    const counter = div.querySelector('.counter');
-
-    const found = selectedHands.find(h => h.hand === hand && h.checked);
-
-    if (found) {
-      checkbox.checked = true;
-      // Mets à jour le compteur si besoin, ici on fait une valeur minimale de 1 si compteur à 0
-      if (parseInt(counter.textContent, 10) === 0) {
-        counter.textContent = '1';
-      }
-      updateColor(div, parseInt(counter.textContent, 10));
-    } else {
-      checkbox.checked = false;
-      // Si non trouvé, on peut garder le compteur tel quel ou le remettre à 0 si tu préfères
-      // Ici on ne touche pas pour ne pas perdre les compteurs sauvegardés
-      updateColor(div, parseInt(counter.textContent, 10) || 0);
-    }
-  });
-}
-
-function loadCounts() {
-  const counts = JSON.parse(localStorage.getItem('pokerHandCounts')) || {};
-  document.querySelectorAll('.mains').forEach(div => {
-    const hand = div.dataset.hand;
-    const counter = div.querySelector('.counter');
-    const checkbox = div.querySelector('input[type="checkbox"]');
-    const count = counts[hand] || 0;
-    counter.textContent = count;
-    checkbox.checked = count > 0;
-    updateColor(div, count);
-  });
-}
-
-function loadSelectedHands() {
-  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-  const handsDivs = document.querySelectorAll('.mains');
-
-  handsDivs.forEach(div => {
-    const hand = div.dataset.hand;
-    const checkbox = div.querySelector('input[type="checkbox"]');
-    const counter = div.querySelector('.counter');
-
-    // Recherche l'entrée correspondante dans selectedHands (normalisée)
-    const found = selectedHands.find(h => h.hand === hand && h.checked);
-
-    if (found) {
-      checkbox.checked = true;
-      // Si compteur à 0 mais main cochée, on met compteur à 1
-      if (parseInt(counter.textContent, 10) === 0) {
-        counter.textContent = '1';
-      }
-      updateColor(div, parseInt(counter.textContent, 10));
-    } else {
-      checkbox.checked = false;
-      // Garde compteur tel quel ou 0 si tu veux
-      updateColor(div, parseInt(counter.textContent, 10) || 0);
-    }
-  });
-}
-
 window.onload = () => {
-  loadCounts();          // Remplit les compteurs
-  loadSelectedHands();   // Coche les cases selon selectedHands
+  loadCounts();
   updateSelectedHandsDisplay();
-  updateNoteBadge();
+  updateNoteBadge(); // 🔥 Ajout ici pour que la note s’affiche au chargement
 };
 
 // Sécurité
