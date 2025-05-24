@@ -144,6 +144,7 @@ dateCell.textContent = session.date;
 // cellule badge avec un span stylisé (tu peux adapter le style)
 const badgeCell = document.createElement('td');
 const badgeSpan = document.createElement('span');
+badgeSpan.id = 'note-badge'; // à faire si c’est le seul badge de la page
 badgeSpan.style.backgroundColor = '#f1c40f';
 badgeSpan.style.color = '#000';
 badgeSpan.style.fontWeight = 'bold';
@@ -205,11 +206,10 @@ localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
 // Calcule et affiche la note moyenne pondérée à partir des mains du bas de page
 function updateNoteBadge() {
   const badge = document.getElementById('note-badge');
-  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-  
-  if (!selectedHands.length) {
-    badge.textContent = '--';
-    return;
+  const selectedHands = getSelectedHands(); // à adapter selon ton code
+  const total = selectedHands.reduce((acc, hand) => acc + (handRanking[hand] || 0), 0);
+  const avg = selectedHands.length > 0 ? (total / selectedHands.length).toFixed(1) : '--';
+  badge.textContent = avg;
   }
 
   let total = 0;
