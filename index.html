@@ -157,7 +157,45 @@
     }
 
     // Nouvelle session vide
-    const newSession = { date: newDate, hands: [] };
+    // Fonction pour calculer la moyenne pondérée
+function calculateAverageScore(hands) {
+  if (!hands.length) return 0;
+  const mainRanking = {
+    'AA': 10, 'KK': 9.5, 'QQ': 9, 'JJ': 8.5, 'TT': 8,
+    'AKs': 7.5, 'AQs': 7, 'AJs': 6.5, 'ATs': 6,
+    'AKo': 6.5, 'AQo': 6, 'AJo': 5.5, 'ATo': 5
+    // Tu peux compléter ici ta grille perso
+  };
+  const total = hands.reduce((sum, h) => sum + (mainRanking[h.hand] || 0), 0);
+  return (total / hands.length).toFixed(2);
+}
+
+// Récupère les mains sélectionnées avant le reset
+const allCells = document.querySelectorAll('.mains');
+const selectedHands = [];
+
+allCells.forEach(cell => {
+  const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+  if (count > 0) {
+    selectedHands.push({
+      hand: cell.dataset.hand,
+      checked: true,
+      count: count
+    });
+  }
+});
+
+const averageScore = calculateAverageScore(selectedHands);
+
+// Nouvelle session vide avec note précédente sauvegardée
+if (selectedHands.length > 0) {
+  const lastSession = sessions.find(s => s.date === localStorage.getItem('activeSessionDate'));
+  if (lastSession && !lastSession.note) {
+    lastSession.note = averageScore;
+  }
+}
+
+const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans note
     sessions.push(newSession);
     localStorage.setItem('handSessions', JSON.stringify(sessions));
     localStorage.setItem('activeSessionDate', newDate); // 🔑 Mémorise la session active
