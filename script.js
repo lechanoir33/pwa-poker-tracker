@@ -198,43 +198,74 @@ function updateSelectedHandsDisplay() {
 }
 
 // ✅ MODIFICATION : liste complète des 169 mains
-const handRanking = [
-  'AA','KK','QQ','JJ','TT','99','88','77','66','55','44','33','22',
-  'AKs','AQs','AJs','ATs','A9s','A8s','A7s','A6s','A5s','A4s','A3s','A2s',
-  'KQs','KJs','KTs','K9s','K8s','K7s','K6s','K5s','K4s','K3s','K2s',
-  'QJs','QTs','Q9s','Q8s','Q7s','Q6s','Q5s','Q4s','Q3s','Q2s',
-  'JTs','J9s','J8s','J7s','J6s','J5s','J4s','J3s','J2s',
-  'T9s','T8s','T7s','T6s','T5s','T4s','T3s','T2s',
-  '98s','97s','96s','95s','94s','93s','92s',
-  '87s','86s','85s','84s','83s','82s',
-  '76s','75s','74s','73s','72s',
-  '65s','64s','63s','62s',
-  '54s','53s','52s',
-  '43s','42s',
-  '32s',
-  'AKo','AQo','AJo','ATo','A9o','A8o','A7o','A6o','A5o','A4o','A3o','A2o',
-  'KQo','KJo','KTo','K9o','K8o','K7o','K6o','K5o','K4o','K3o','K2o',
-  'QJo','QTo','Q9o','Q8o','Q7o','Q6o','Q5o','Q4o','Q3o','Q2o',
-  'JTo','J9o','J8o','J7o','J6o','J5o','J4o','J3o','J2o',
-  'T9o','T8o','T7o','T6o','T5o','T4o','T3o','T2o',
-  '98o','97o','96o','95o','94o','93o','92o',
-  '87o','86o','85o','84o','83o','82o',
-  '76o','75o','74o','73o','72o',
-  '65o','64o','63o','62o',
-  '54o','53o','52o',
-  '43o','42o',
-  '32o'
-];
+const handRanking = {
+  // Paires
+  "AA": 10, "KK": 10, "QQ": 10, "JJ": 9, "TT": 8, "99": 7, "88": 7, "77": 6, "66": 6, "55": 5, "44": 5, "33": 4, "22": 4,
 
-// Donne une note sur 10 selon la position dans la grille (0 = meilleure main)
-function getHandScore(hand) {
-  const normalized = normalizeHand(hand); // utilise ta fonction existante
-  const idx = handRanking.indexOf(normalized);
-  if (idx === -1) return 1; // Main inconnue : note très faible
-  const maxNote = 10;
-  const rawNote = maxNote - (idx / handRanking.length) * maxNote;
-  return Math.round(rawNote * 10) / 10; // arrondi à 1 décimale
-}
+  // As-x suited
+  "AKs": 10, "AQs": 9, "AJs": 8, "ATs": 7, "A9s": 6, "A8s": 5, "A7s": 5, "A6s": 4, "A5s": 4, "A4s": 3, "A3s": 3, "A2s": 2,
+
+  // As-x offsuit
+  "AKo": 9, "AQo": 7, "AJo": 6, "ATo": 5, "A9o": 4, "A8o": 3, "A7o": 2, "A6o": 2, "A5o": 1, "A4o": 1, "A3o": 1, "A2o": 1,
+
+  // Roi-x suited
+  "KQs": 8, "KJs": 7, "KTs": 6, "K9s": 5, "K8s": 4, "K7s": 3, "K6s": 3, "K5s": 2, "K4s": 2, "K3s": 1, "K2s": 1,
+
+  // Roi-x offsuit
+  "KQo": 7, "KJo": 5, "KTo": 5, "K9o": 4, "K8o": 3, "K7o": 2, "K6o": 2, "K5o": 1, "K4o": 1, "K3o": 1, "K2o": 1,
+
+  // Dame-x suited
+  "QJs": 7, "QTs": 6, "Q9s": 5, "Q8s": 4, "Q7s": 3, "Q6s": 3, "Q5s": 2, "Q4s": 2, "Q3s": 1, "Q2s": 1,
+
+  // Dame-x offsuit
+  "QJo": 5, "QTo": 4, "Q9o": 3, "Q8o": 2, "Q7o": 2, "Q6o": 1, "Q5o": 1, "Q4o": 1, "Q3o": 1, "Q2o": 1,
+
+  // Valet-x suited
+  "JTs": 6, "J9s": 5, "J8s": 4, "J7s": 3, "J6s": 3, "J5s": 2, "J4s": 1, "J3s": 1, "J2s": 1,
+
+  // Valet-x offsuit
+  "JTo": 5, "J9o": 4, "J8o": 4, "J7o": 3, "J6o": 2, "J5o": 1, "J4o": 1, "J3o": 1, "J2o": 1,
+
+  // Dix-x suited
+  "T9s": 6, "T8s": 5, "T7s": 4, "T6s": 3, "T5s": 2, "T4s": 2, "T3s": 1, "T2s": 1,
+
+  // Dix-x offsuit
+  "T8o": 4, "T7o": 3, "T6o": 2, "T5o": 1, "T4o": 1, "T3o": 1, "T2o": 1,
+
+  // 9-x suited
+  "98s": 5, "97s": 4, "96s": 3, "95s": 2, "94s": 2, "93s": 1, "92s": 1,
+
+  // 9-x offsuit
+  "94o": 1, "93o": 1, "92o": 1,
+
+  // 8-x suited
+  "87s": 4, "86s": 3, "85s": 2, "84s": 2, "83s": 1, "82s": 1,
+
+  // 7-x suited
+  "76s": 4, "75s": 3, "74s": 2, "73s": 2, "72s": 1,
+
+  // 7-x offsuit
+  "72o": 1,
+
+  // petites cartes hors suites et suited
+  "65s": 3, "64s": 2, "63s": 1, "62s": 1,
+  "54s": 2, "53s": 1, "52s": 1,
+  "43s": 1, "42s": 1,
+  "32s": 1,
+
+  // Offsuited petites mains non listées
+  "63o": 1, "62o": 1, "53o": 1, "52o": 1, "43o": 1, "42o": 1, "32o": 1
+};
+
+// Donne la note
+const selectedHands = [...document.querySelectorAll("#selected-hands .hand-label")]
+  .map(label => label.textContent.trim());
+
+const totalNote = selectedHands.reduce((acc, hand) => acc + (handRanking[hand] || 0), 0);
+const averageNote = selectedHands.length ? (totalNote / selectedHands.length).toFixed(1) : 0;
+
+// Affichage dans le badge
+document.getElementById("average-note").textContent = averageNote;
 
 // Calcule et affiche la note moyenne pondérée à partir des mains du bas
 function updateNoteBadge() {
