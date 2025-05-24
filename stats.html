@@ -149,8 +149,28 @@ function normalizeHand(hand) {
 
     sessionData.slice().reverse().forEach(session => {
       const dateRow = document.createElement('tr');
-      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}</td>`;
-      tbody.appendChild(dateRow);
+
+// cellule date
+const dateCell = document.createElement('td');
+dateCell.className = 'session-title';
+dateCell.textContent = session.date;
+
+// cellule badge avec un span stylisé (tu peux adapter le style)
+const badgeCell = document.createElement('td');
+const badgeSpan = document.createElement('span');
+badgeSpan.style.backgroundColor = '#f1c40f';
+badgeSpan.style.color = '#000';
+badgeSpan.style.fontWeight = 'bold';
+badgeSpan.style.padding = '6px 12px';
+badgeSpan.style.borderRadius = '12px';
+badgeSpan.style.display = 'inline-block';
+badgeSpan.style.fontSize = '16px';
+badgeSpan.textContent = '--';  // À remplacer par la note calculée plus tard
+badgeCell.appendChild(badgeSpan);
+
+dateRow.appendChild(dateCell);
+dateRow.appendChild(badgeCell);
+tbody.appendChild(dateRow);
 
       const sortedHands = sortByRanking(session.hands); // Trier les mains selon handRanking
       sortedHands.forEach(entry => {
