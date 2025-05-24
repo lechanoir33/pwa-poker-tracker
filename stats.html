@@ -138,6 +138,22 @@ function normalizeHand(hand) {
     const tbody = document.querySelector('#statsTable tbody');
     const sessionData = JSON.parse(localStorage.getItem('handSessions')) || [];
 
+function calculateWeightedAverage(hands) {
+  let totalWeight = 0;
+  let totalCount = 0;
+
+  hands.forEach(entry => {
+    const hand = normalizeHand(entry.hand);
+    const count = entry.count || 1;
+    const score = handRanking[hand] || 0;
+
+    totalWeight += score * count;
+    totalCount += count;
+  });
+
+  return totalCount === 0 ? 0 : (totalWeight / totalCount).toFixed(2);
+}
+    
     // Récupère les comptes des mains sélectionnées
     const selectedHandCounts = getSelectedHandCounts();
 
