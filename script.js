@@ -289,10 +289,34 @@ function updateNoteBadge() {
 }
 
 // ✅ MODIFICATION MISE EN ÉVIDENCE : Regroupement des appels dans un seul chargement
+function loadSelectedHands() {
+  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  const handsDivs = document.querySelectorAll('.mains');
+
+  handsDivs.forEach(div => {
+    const hand = div.dataset.hand;
+    const counter = div.querySelector('.counter');
+    const checkbox = div.querySelector('input[type="checkbox"]');
+
+    const found = selectedHands.find(h => h.hand === hand && h.checked);
+
+    if (found) {
+      counter.textContent = '1';  // ou la vraie valeur si tu veux
+      checkbox.checked = true;
+      updateColor(div, 1);
+    } else {
+      counter.textContent = '0';
+      checkbox.checked = false;
+      updateColor(div, 0);
+    }
+  });
+}
+
 window.onload = () => {
   loadCounts();
+  loadSelectedHands();
   updateSelectedHandsDisplay();
-  updateNoteBadge(); // 🔥 Ajout ici pour que la note s’affiche au chargement
+  updateNoteBadge();
 };
 
 // Sécurité
