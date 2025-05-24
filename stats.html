@@ -201,6 +201,32 @@ previousSummary[today] = allCounts;
 
 // Sauvegarde dans localStorage
 localStorage.setItem(summaryKey, JSON.stringify(previousSummary));
+
+// Calcule et affiche la note moyenne pondérée à partir des mains du bas de page
+function updateNoteBadge() {
+  const badge = document.getElementById('note-badge');
+  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
+  
+  if (!selectedHands.length) {
+    badge.textContent = '--';
+    return;
+  }
+
+  let total = 0;
+  let count = 0;
+
+  selectedHands.forEach(({ hand, checked }) => {
+    if (checked) {
+      const score = getHandScore(hand);
+      total += score;
+      count++;
+    }
+  });
+
+  const average = count ? (total / count).toFixed(1) : '--';
+  badge.textContent = average;
+}
+
     
   </script>
 </body>
