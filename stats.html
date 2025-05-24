@@ -173,7 +173,9 @@ dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date} ${not
         const handCell = document.createElement('td');
 const count = entry.count || 1;
 const hand = normalizeHand(entry.hand);
-handCell.textContent = count > 1 ? `${hand} (${count})` : hand;
+handCell.innerHTML = count > 1
+  ? `${hand}<sup style="color:red;">${count}</sup>`
+  : hand;
 
         const checkedCell = document.createElement('td');
         checkedCell.textContent = entry.checked ? '✔️' : '❌';
