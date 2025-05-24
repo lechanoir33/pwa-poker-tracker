@@ -10,6 +10,20 @@
 </head>
 <body>
   <h1>MAINS REÇUES</h1> <h1 style="display: flex; align-items: center; gap: 12px;">
+ <span id="note-badge" style="
+    background-color: #f1c40f;
+    color: #000;
+    position: center;
+    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 50%;
+    transform: rotate(-12deg);
+    display: inline-block;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    font-size: 18px;
+  ">
+    --
+  </span>
 
 </h1>
 
@@ -37,21 +51,7 @@
   <script src="script.js"></script>
   <script src="compteurService.js"></script>
 
-    <span id="note-badge" style="
-    background-color: #f1c40f;
-    color: #000;
-    position: center;
-    font-weight: bold;
-    padding: 8px 14px;
-    border-radius: 50%;
-    transform: rotate(-12deg);
-    display: inline-block;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    font-size: 18px;
-  ">
-    --
-  </span>
-
+   
   <!-- Script pour aller vers stats.html et enregistrer les mains -->
   <script>
   document.getElementById('btnStats').addEventListener('click', () => {
