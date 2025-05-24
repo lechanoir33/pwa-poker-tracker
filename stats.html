@@ -43,6 +43,16 @@
       font-size: 1.2em;
       padding-top: 20px;
     }
+
+    .badge-note {
+  background-color: yellow;
+  color: black;
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.9em;
+  font-weight: bold;
+  margin-left: 10px;
+}
   </style>
 </head>
 <body>
@@ -146,8 +156,8 @@
       }
 
       const dateRow = document.createElement('tr');
-      const noteText = session.note ? ` — Note : ${session.note}` : '';
-      dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date}${noteText}</td>`;
+      const noteBadge = session.note ? `<span class="badge-note">${session.note}</span>` : '';
+dateRow.innerHTML = `<td colspan="2" class="session-title">${session.date} ${noteBadge}</td>`;
       tbody.appendChild(dateRow);
 
       // Ajoute une note individuelle si absente
