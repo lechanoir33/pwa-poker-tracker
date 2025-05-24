@@ -258,11 +258,7 @@ const handRanking = {
 };
 
 // Donne la note
-const selectedHands = [...document.querySelectorAll("#selected-hands .hand-label")]
-  .map(label => label.textContent.trim());
 
-const totalNote = selectedHands.reduce((acc, hand) => acc + (handRanking[hand] || 0), 0);
-const averageNote = selectedHands.length ? (totalNote / selectedHands.length).toFixed(1) : 0;
 
 // Affichage dans le badge
 document.getElementById("average-note").textContent = averageNote;
