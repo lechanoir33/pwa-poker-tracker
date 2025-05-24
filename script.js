@@ -278,7 +278,7 @@ function updateNoteBadge() {
 
   selectedHands.forEach(({ hand, checked }) => {
     if (checked) {
-      const score = getHandScore(hand);
+      const score = handRanking[hand] || 0;
       total += score;
       count++;
     }
