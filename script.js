@@ -295,8 +295,7 @@ function updateNoteBadge() {
   let totalCount = 0;
 
   selectedHands.forEach(({ hand }) => {
-    const normalized = normalizeHand(hand);
-    const note = handRanking[normalized] || 0;
+    const note = getHandScore(hand); // ✅ Utilise la fonction cohérente
     totalScore += note;
     totalCount++;
   });
