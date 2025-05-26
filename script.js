@@ -295,7 +295,7 @@ function updateNoteBadge() {
     let totalCount = 0;
 
     selectedHands.forEach(({ hand }) => {
-        const note = mainRanking[hand] || 0;
+        const note = handRanking[hand] || 0;
         totalScore += note;
         totalCount++;
     });
