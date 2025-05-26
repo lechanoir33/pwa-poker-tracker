@@ -287,9 +287,9 @@ function updateNoteBadge() {
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 
   if (selectedHands.length === 0) {
-    noteBadge.textContent = '';
-    return;
-  }
+  noteBadge.textContent = '—';  // Ou "0.00" ou autre symbole pour garder la taille
+  return;
+}
 
   let totalScore = 0;
   let totalCount = 0;
