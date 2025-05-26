@@ -217,66 +217,69 @@ const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans n
 
   // BOUTON "Stats"
   document.getElementById('btnStats').addEventListener('click', () => {
-    const allCells = document.querySelectorAll('.mains');
-    const selectedHands = [];
+  const allCells = document.querySelectorAll('.mains');
+  const selectedHands = [];
 
-    allCells.forEach(cell => {
-      const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
-      if (count > 0) {
-        selectedHands.push({
-          hand: cell.dataset.hand,
-          checked: true,
-          count: count
-        });
-      }
-    });
-
-    if (selectedHands.length === 0) return;
-
-    const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
-    const activeDate = localStorage.getItem('activeSessionDate');
-    let targetSession;
-
-    // Utilise la session active si elle existe
-    if (activeDate) {
-      targetSession = sessions.find(session => session.date === activeDate);
+  allCells.forEach(cell => {
+    const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
+    if (count > 0) {
+      selectedHands.push({
+        hand: cell.dataset.hand,
+        checked: true,
+        count: count
+      });
     }
-
-    // Sinon, crée une session par défaut pour aujourd'hui
-    if (!targetSession) {
-      const today = new Date().toLocaleDateString('fr-FR');
-      targetSession = { date: today, hands: [] };
-      sessions.push(targetSession);
-      localStorage.setItem('activeSessionDate', today);
-    }
-
-// Grouper les mains par nom et sommer les counts
-const groupedHands = {};
-selectedHands.forEach(sh => {
-  const key = sh.hand;
-  if (!groupedHands[key]) {
-    groupedHands[key] = { ...sh };
-  } else {
-    groupedHands[key].count = (groupedHands[key].count || 1) + (sh.count || 1);
-  }
-});
-    
-    Object.values(groupedHands).forEach(sh => {
-  const existing = targetSession.hands.find(h => h.hand === sh.hand);
-  if (existing) {
-    existing.count = (existing.count || 1) + sh.count;
-  } else {
-    targetSession.hands.push({
-      hand: sh.hand,
-      checked: sh.checked,
-      count: sh.count
-    });
-  }
-});
-
-    localStorage.setItem('handSessions', JSON.stringify(sessions));
-    window.location.href = 'stats.html';
   });
+
+  if (selectedHands.length === 0) return;
+
+  const sessions = JSON.parse(localStorage.getItem('handSessions')) || [];
+  const activeDate = localStorage.getItem('activeSessionDate');
+  let targetSession;
+
+  if (activeDate) {
+    targetSession = sessions.find(session => session.date === activeDate);
+  }
+
+  if (!targetSession) {
+    const today = new Date().toLocaleDateString('fr-FR');
+    targetSession = { date: today, hands: [] };
+    sessions.push(targetSession);
+    localStorage.setItem('activeSessionDate', today);
+  }
+
+  // Grouper les mains par nom et sommer les counts
+  const groupedHands = {};
+  selectedHands.forEach(sh => {
+    const key = sh.hand;
+    if (!groupedHands[key]) {
+      groupedHands[key] = { ...sh };
+    } else {
+      groupedHands[key].count = (groupedHands[key].count || 1) + (sh.count || 1);
+    }
+  });
+
+  Object.values(groupedHands).forEach(sh => {
+    const existing = targetSession.hands.find(h => h.hand === sh.hand);
+    if (existing) {
+      existing.count = (existing.count || 1) + sh.count;
+    } else {
+      targetSession.hands.push({
+        hand: sh.hand,
+        checked: sh.checked,
+        count: sh.count
+      });
+    }
+  });
+
+  localStorage.setItem('handSessions', JSON.stringify(sessions));
+
+  // 🧼 Supprime selectedHands pour éviter les doublons à l’ouverture de stats.html
+  localStorage.removeItem('selectedHands');
+
+  window.location.href = 'stats.html';
+});
+  
 </script>
   
 </body>
