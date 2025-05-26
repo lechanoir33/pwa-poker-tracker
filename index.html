@@ -220,6 +220,7 @@ const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans n
   const allCells = document.querySelectorAll('.mains');
   const selectedHands = [];
 
+  // 🟡 Récupérer toutes les mains avec un count > 0
   allCells.forEach(cell => {
     const count = parseInt(cell.querySelector('.counter')?.textContent || '0');
     if (count > 0) {
@@ -237,6 +238,7 @@ const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans n
   const activeDate = localStorage.getItem('activeSessionDate');
   let targetSession;
 
+  // ✅ Récupérer ou créer la session active
   if (activeDate) {
     targetSession = sessions.find(session => session.date === activeDate);
   }
@@ -248,35 +250,33 @@ const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans n
     localStorage.setItem('activeSessionDate', today);
   }
 
-  // Grouper les mains par nom et sommer les counts
-  const groupedHands = {};
-  selectedHands.forEach(sh => {
-    const key = sh.hand;
-    if (!groupedHands[key]) {
-      groupedHands[key] = { ...sh };
-    } else {
-      groupedHands[key].count = (groupedHands[key].count || 1) + (sh.count || 1);
-    }
-  });
+  let hasChanges = false;
 
-  Object.values(groupedHands).forEach(sh => {
+  // ✅ Mettre à jour uniquement les mains nouvelles ou modifiées
+  selectedHands.forEach(sh => {
     const existing = targetSession.hands.find(h => h.hand === sh.hand);
+
     if (existing) {
-      existing.count = (existing.count || 1) + sh.count;
+      if (sh.count > existing.count) {
+        existing.count = sh.count;
+        hasChanges = true;
+      }
     } else {
       targetSession.hands.push({
         hand: sh.hand,
         checked: sh.checked,
         count: sh.count
       });
+      hasChanges = true;
     }
   });
 
-  localStorage.setItem('handSessions', JSON.stringify(sessions));
+  // ✅ Sauvegarder seulement s’il y a eu un changement
+  if (hasChanges) {
+    localStorage.setItem('handSessions', JSON.stringify(sessions));
+  }
 
-  // 🧼 Supprime selectedHands pour éviter les doublons à l’ouverture de stats.html
-  localStorage.removeItem('selectedHands');
-
+  // 🔁 Aller sur la page STATS dans tous les cas
   window.location.href = 'stats.html';
 });
   
