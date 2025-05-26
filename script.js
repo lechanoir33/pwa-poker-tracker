@@ -157,7 +157,7 @@ function updateSelectedHandsDisplay() {
   try {
     selectedHands = JSON.parse(raw) || [];
     if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
-      selectedHands = selectedHands.map(h => ({ hand: h, checked: true, played: false, folded: false }));
+      selectedHands = selectedHands.map(h => ({ hand: h, played: false, folded: false }));
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     }
   } catch (e) {
@@ -168,6 +168,39 @@ function updateSelectedHandsDisplay() {
 
   selectedHands.forEach((entry, index) => {
     if (typeof entry.hand !== 'string') return;
+
+    if (entry.played === undefined) entry.played = false;
+    if (entry.folded === undefined) entry.folded = false;
+
+    const wrapper = document.createElement('div');
+    wrapper.style.margin = '4px';
+    wrapper.style.display = 'flex';
+    wrapper.style.gap = '0';  // <- ici, pas d’espace entre les cases
+
+    const checkboxPlayed = document.createElement('input');
+    checkboxPlayed.type = 'checkbox';
+    checkboxPlayed.checked = entry.played;
+
+    checkboxPlayed.addEventListener('change', () => {
+      selectedHands[index].played = checkboxPlayed.checked;
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    });
+
+    const checkboxFolded = document.createElement('input');
+    checkboxFolded.type = 'checkbox';
+    checkboxFolded.checked = entry.folded;
+
+    checkboxFolded.addEventListener('change', () => {
+      selectedHands[index].folded = checkboxFolded.checked;
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    });
+
+    wrapper.appendChild(checkboxPlayed);
+    wrapper.appendChild(checkboxFolded);
+
+    container.appendChild(wrapper);
+  });
+}
 
     // Initialisation si propriétés absentes
     if (entry.played === undefined) entry.played = false;
