@@ -304,9 +304,7 @@ function updateNoteBadge() {
     noteBadge.textContent = averageNote;
 }
 
-  const average = count ? (total / count).toFixed(1) : '--';
-  badge.textContent = average;
-}
+
 
 // ✅ MODIFICATION MISE EN ÉVIDENCE : Regroupement des appels dans un seul chargement
 window.onload = () => {
