@@ -283,7 +283,7 @@ function getHandScore(hand) {
 
 // Calcule et affiche la note moyenne pondérée à partir des mains du bas
 function updateNoteBadge() {
-  const noteBadge = document.getElementById('noteBadge');
+  const noteBadge = document.getElementById('note-Badge');
   const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 
   if (selectedHands.length === 0) {
