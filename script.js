@@ -177,26 +177,27 @@ function updateSelectedHandsDisplay() {
     wrapper.style.display = 'flex';
     wrapper.style.gap = '0';  // <- ici, pas d’espace entre les cases
 
-    const checkboxPlayed = document.createElement('input');
-    checkboxPlayed.type = 'checkbox';
-    checkboxPlayed.checked = entry.played;
+    // Création de la double case compacte
+const checkboxPlayed = document.createElement('input');
+checkboxPlayed.type = 'checkbox';
+checkboxPlayed.checked = entry.played;
+checkboxPlayed.style.marginRight = '2px';
+checkboxPlayed.addEventListener('change', () => {
+  entry.played = checkboxPlayed.checked;
+  saveSelectedHands();
+});
 
-    checkboxPlayed.addEventListener('change', () => {
-      selectedHands[index].played = checkboxPlayed.checked;
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-    });
+const checkboxFolded = document.createElement('input');
+checkboxFolded.type = 'checkbox';
+checkboxFolded.checked = entry.folded;
+checkboxFolded.style.marginRight = '6px'; // petit espace avant la main
+checkboxFolded.addEventListener('change', () => {
+  entry.folded = checkboxFolded.checked;
+  saveSelectedHands();
+});
 
-    const checkboxFolded = document.createElement('input');
-    checkboxFolded.type = 'checkbox';
-    checkboxFolded.checked = entry.folded;
+// Ajout dans le wrapper AVANT le texte de la main
 
-    checkboxFolded.addEventListener('change', () => {
-      selectedHands[index].folded = checkboxFolded.checked;
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-    });
-
-    wrapper.appendChild(checkboxPlayed);
-    wrapper.appendChild(checkboxFolded);
 
     container.appendChild(wrapper);
   });
