@@ -283,24 +283,26 @@ function getHandScore(hand) {
 
 // Calcule et affiche la note moyenne pondérée à partir des mains du bas
 function updateNoteBadge() {
-  const badge = document.getElementById('note-badge');
-  const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
-  
-  if (!selectedHands.length) {
-    badge.textContent = '--';
-    return;
-  }
+    const noteBadge = document.getElementById('noteBadge');
+    const selectedHands = JSON.parse(localStorage.getItem('selectedHands')) || [];
 
-  let total = 0;
-  let count = 0;
-
-  selectedHands.forEach(({ hand, checked }) => {
-    if (checked) {
-      const score = getHandScore(hand);
-      total += score;
-      count++;
+    if (selectedHands.length === 0) {
+        noteBadge.textContent = '';
+        return;
     }
-  });
+
+    let totalScore = 0;
+    let totalCount = 0;
+
+    selectedHands.forEach(({ hand }) => {
+        const note = mainRanking[hand] || 0;
+        totalScore += note;
+        totalCount++;
+    });
+
+    const averageNote = totalCount ? (totalScore / totalCount).toFixed(2) : 0;
+    noteBadge.textContent = averageNote;
+}
 
   const average = count ? (total / count).toFixed(1) : '--';
   badge.textContent = average;
