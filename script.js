@@ -167,33 +167,47 @@ function updateSelectedHandsDisplay() {
   container.innerHTML = '';
 
   selectedHands.forEach((entry, index) => {
-    if (typeof entry.hand !== 'string') return;
+  if (typeof entry.hand !== 'string') return;
 
-    const wrapper = document.createElement('div');
-    wrapper.style.margin = '4px';
-    wrapper.style.display = 'flex';
-    wrapper.style.alignItems = 'center';
+  const wrapper = document.createElement('div');
+  wrapper.style.margin = '4px';
+  wrapper.style.display = 'flex';
+  wrapper.style.alignItems = 'center';
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = false;
-    checkbox.style.marginRight = '5px';
+  // Création de la première checkbox
+  const checkbox1 = document.createElement('input');
+  checkbox1.type = 'checkbox';
+  checkbox1.checked = false;
+  checkbox1.style.marginRight = '0px'; // Pas d'espace entre les deux cases
 
-    checkbox.addEventListener('change', () => {
-      selectedHands[index].checked = checkbox.checked;
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-       updateNoteBadge(); // <-- Il faut ajouter cet appel
-      // 🔥 Ajout : mettre à jour la note quand on coche/décoche
-    });
+  // Création de la deuxième checkbox
+  const checkbox2 = document.createElement('input');
+  checkbox2.type = 'checkbox';
+  checkbox2.checked = false;
+  checkbox2.style.marginLeft = '0px';
 
-    const label = document.createElement('span');
-    label.textContent = entry.hand + ' /';
-    label.style.color = 'white';
-
-    wrapper.appendChild(checkbox);
-    wrapper.appendChild(label);
-    container.appendChild(wrapper);
+  // Événements identiques pour checkbox1 (pour éviter effet sur la note, on ne change rien)
+  checkbox1.addEventListener('change', () => {
+    selectedHands[index].checked = checkbox1.checked;
+    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    updateNoteBadge();
   });
+
+  // Même chose pour checkbox2 (on peut laisser sans effet si tu veux)
+  checkbox2.addEventListener('change', () => {
+    // Optionnel : on ne modifie pas selectedHands ni note pour la 2e case
+  });
+
+  const label = document.createElement('span');
+  label.textContent = entry.hand + ' /';
+  label.style.color = 'white';
+  label.style.marginLeft = '5px'; // un peu d'espace entre la 2e case et le texte
+
+  wrapper.appendChild(checkbox1);
+  wrapper.appendChild(checkbox2);
+  wrapper.appendChild(label);
+  container.appendChild(wrapper);
+});
   
   updateNoteBadge(); // 🔥 Ajout : mettre à jour la note après affichage
 }
