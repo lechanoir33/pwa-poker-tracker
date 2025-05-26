@@ -250,10 +250,21 @@ const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans n
       localStorage.setItem('activeSessionDate', today);
     }
 
-    selectedHands.forEach(sh => {
+// Grouper les mains par nom et sommer les counts
+const groupedHands = {};
+selectedHands.forEach(sh => {
+  const key = sh.hand;
+  if (!groupedHands[key]) {
+    groupedHands[key] = { ...sh };
+  } else {
+    groupedHands[key].count = (groupedHands[key].count || 1) + (sh.count || 1);
+  }
+});
+    
+    Object.values(groupedHands).forEach(sh => {
   const existing = targetSession.hands.find(h => h.hand === sh.hand);
   if (existing) {
-    existing.count = (existing.count || 1) + 1;
+    existing.count = (existing.count || 1) + sh.count;
   } else {
     targetSession.hands.push({
       hand: sh.hand,
