@@ -251,15 +251,17 @@ const newSession = { date: newDate, hands: [] }; // 👉 nouvelle session sans n
     }
 
     selectedHands.forEach(sh => {
-      const alreadyExists = targetSession.hands.some(h => h.hand === sh.hand);
-      if (!alreadyExists) {
-        targetSession.hands.push({
-          hand: sh.hand,
-          checked: sh.checked,
-          count: sh.count
-        });
-      }
+  const existing = targetSession.hands.find(h => h.hand === sh.hand);
+  if (existing) {
+    existing.count = (existing.count || 1) + 1;
+  } else {
+    targetSession.hands.push({
+      hand: sh.hand,
+      checked: sh.checked,
+      count: sh.count
     });
+  }
+});
 
     localStorage.setItem('handSessions', JSON.stringify(sessions));
     window.location.href = 'stats.html';
