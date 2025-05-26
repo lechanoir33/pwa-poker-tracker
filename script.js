@@ -316,8 +316,10 @@ window.onload = () => {
 
 // Sécurité
 document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('selectstart', e => e.preventDefault());
-  document.addEventListener('dblclick', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+document.addEventListener('dblclick', e => e.preventDefault());
+document.addEventListener('DOMContentLoaded', () => {
+  updateNoteBadge();
 });
 
 
