@@ -157,7 +157,7 @@ function updateSelectedHandsDisplay() {
   try {
     selectedHands = JSON.parse(raw) || [];
     if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
-      selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
+      selectedHands = selectedHands.map(h => ({ hand: h, checked: true, played: false, folded: false }));
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
     }
   } catch (e) {
@@ -169,33 +169,48 @@ function updateSelectedHandsDisplay() {
   selectedHands.forEach((entry, index) => {
     if (typeof entry.hand !== 'string') return;
 
+    // Initialisation si propriétés absentes
+    if (entry.played === undefined) entry.played = false;
+    if (entry.folded === undefined) entry.folded = false;
+
     const wrapper = document.createElement('div');
     wrapper.style.margin = '4px';
     wrapper.style.display = 'flex';
     wrapper.style.alignItems = 'center';
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = false;
-    checkbox.style.marginRight = '5px';
+    const checkboxPlayed = document.createElement('input');
+    checkboxPlayed.type = 'checkbox';
+    checkboxPlayed.checked = entry.played;
+    checkboxPlayed.style.marginRight = '5px';
 
-    checkbox.addEventListener('change', () => {
-      selectedHands[index].checked = checkbox.checked;
+    checkboxPlayed.addEventListener('change', () => {
+      selectedHands[index].played = checkboxPlayed.checked;
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-       updateNoteBadge(); // <-- Il faut ajouter cet appel
-      // 🔥 Ajout : mettre à jour la note quand on coche/décoche
+      updateNoteBadge(); // Facultatif si tu veux adapter la note à l’une des deux cases
+    });
+
+    const checkboxFolded = document.createElement('input');
+    checkboxFolded.type = 'checkbox';
+    checkboxFolded.checked = entry.folded;
+    checkboxFolded.style.marginRight = '5px';
+
+    checkboxFolded.addEventListener('change', () => {
+      selectedHands[index].folded = checkboxFolded.checked;
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+      updateNoteBadge();
     });
 
     const label = document.createElement('span');
     label.textContent = entry.hand + ' /';
     label.style.color = 'white';
 
-    wrapper.appendChild(checkbox);
+    wrapper.appendChild(checkboxPlayed);
+    wrapper.appendChild(checkboxFolded);
     wrapper.appendChild(label);
     container.appendChild(wrapper);
   });
-  
-  updateNoteBadge(); // 🔥 Ajout : mettre à jour la note après affichage
+
+  updateNoteBadge();
 }
 
   // ✅ MODIFICATION : liste complète des 169 mains
