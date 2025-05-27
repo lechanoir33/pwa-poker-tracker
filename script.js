@@ -196,6 +196,12 @@ function updateSelectedHandsDisplay() {
   checkbox2.checked = checked;
   checkbox2.style.marginLeft = '0px';
 
+    checkbox2.addEventListener('change', () => {
+  selectedHands[index].checked = checkbox2.checked;
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  updateNoteBadge();
+});
+
   // Événements identiques pour checkbox1 (pour éviter effet sur la note, on ne change rien)
   checkbox1.addEventListener('change', () => {
     selectedHands[index].checked = checkbox1.checked;
