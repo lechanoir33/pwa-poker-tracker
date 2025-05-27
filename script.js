@@ -191,16 +191,17 @@ function updateSelectedHandsDisplay() {
   // Création de la deuxième checkbox
   const checkbox2 = document.createElement('input');
   checkbox2.type = 'checkbox';
-  checkbox2.checked = false;
+  checkbox2.checked = checked;
   checkbox2.style.marginLeft = '0px';
-
-    
 
   // Événements identiques pour checkbox1 (pour éviter effet sur la note, on ne change rien)
   
 
   // Même chose pour checkbox2 (on peut laisser sans effet si tu veux)
   checkbox2.addEventListener('change', () => {
+    selectedHands[index].checked = checkbox2.checked;
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  updateNoteBadge();
     // Optionnel : on ne modifie pas selectedHands ni note pour la 2e case
   });
 
