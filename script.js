@@ -193,21 +193,19 @@ checkbox1.addEventListener('change', () => {
 
   // Création de la deuxième checkbox
   const checkbox2 = document.createElement('input');
-checkbox2.type = 'checkbox';
-checkbox2.checked = false; // Toujours décochée au départ
-checkbox2.style.marginLeft = '0px';
-
-// Cette case ne fait rien d’autre
-checkbox2.addEventListener('change', () => {
-  // Aucune influence : pas de stockage, pas de note
-});
-    
-    // Optionnel : on ne modifie pas selectedHands ni note pour la 2e case
+  checkbox2.type = 'checkbox';
+  checkbox2.checked = checked2;
+  checkbox2.style.marginLeft = '0px';
+  checkbox2.addEventListener('change', () => {
+    selectedHands[index].checked2 = checkbox2.checked;
+    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    // Ne fait rien d'autre (pas de note)
+  });
 
   const label = document.createElement('span');
   label.textContent = hand + ' /';
   label.style.color = 'white';
-  label.style.marginLeft = '5px'; // un peu d'espace entre la 2e case et le texte
+  label.style.marginLeft = '5px';
 
   wrapper.appendChild(checkbox1);
   wrapper.appendChild(checkbox2);
