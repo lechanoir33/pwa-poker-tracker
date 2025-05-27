@@ -155,14 +155,17 @@ function updateSelectedHandsDisplay() {
   let selectedHands = [];
 
   try {
-    selectedHands = JSON.parse(raw) || [];
-    if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
-      selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
-      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-    }
-  } catch (e) {
-    selectedHands = [];
+  selectedHands = JSON.parse(raw) || [];
+
+  // ✅ Ne convertir que si ce sont encore des chaînes (ancien format)
+  const allAreStrings = selectedHands.every(h => typeof h === 'string');
+  if (allAreStrings) {
+    selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
+    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
   }
+} catch (e) {
+  selectedHands = [];
+}
 
   container.innerHTML = '';
 
@@ -180,6 +183,12 @@ function updateSelectedHandsDisplay() {
   checkbox1.type = 'checkbox';
   checkbox1.checked = checked;
   checkbox1.style.marginRight = '0px'; // Pas d'espace entre les deux cases
+    
+    checkbox1.addEventListener('change', () => {
+  selectedHands[index].checked = checkbox1.checked;
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  updateNoteBadge();
+});
 
   // Création de la deuxième checkbox
   const checkbox2 = document.createElement('input');
