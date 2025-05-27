@@ -157,10 +157,8 @@ function updateSelectedHandsDisplay() {
   try {
   selectedHands = JSON.parse(raw) || [];
 
-  // ✅ Ne convertir que si ce sont encore des chaînes (ancien format)
-  const allAreStrings = selectedHands.every(h => typeof h === 'string');
-  if (allAreStrings) {
-    selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
+  /if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
+    selectedHands = selectedHands.map(h => ({ hand: h, checked: false }));
     localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
   }
 } catch (e) {
@@ -178,10 +176,10 @@ function updateSelectedHandsDisplay() {
   wrapper.style.alignItems = 'center';
 
   // Création de la première checkbox
-    const { hand, checked = true } = entry;
+    const { hand, checked = false } = entry;
   const checkbox1 = document.createElement('input');
   checkbox1.type = 'checkbox';
-  checkbox1.checked = false;
+  checkbox1.checked = checked;
   checkbox1.style.marginRight = '0px'; // Pas d'espace entre les deux cases
     
     checkbox1.addEventListener('change', () => {
