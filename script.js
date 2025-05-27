@@ -175,6 +175,7 @@ function updateSelectedHandsDisplay() {
   wrapper.style.alignItems = 'center';
 
   // Création de la première checkbox
+    const { hand, checked = true } = entry;
   const checkbox1 = document.createElement('input');
   checkbox1.type = 'checkbox';
   checkbox1.checked = checked;
