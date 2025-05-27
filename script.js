@@ -158,9 +158,12 @@ function updateSelectedHandsDisplay() {
   selectedHands = JSON.parse(raw) || [];
 
   if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
-    selectedHands = selectedHands.map(h => ({ hand: h, checked: false }));
-    localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-  }
+  selectedHands = selectedHands.map(h => ({
+    hand: h,
+    checked: false,
+    checked2: false // 👈 ajout ici
+  }));
+  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
 } catch (e) {
   selectedHands = [];
 }
@@ -178,32 +181,28 @@ function updateSelectedHandsDisplay() {
   // Création de la première checkbox
     const { hand, checked = false } = entry;
   const checkbox1 = document.createElement('input');
-  checkbox1.type = 'checkbox';
-  checkbox1.checked = checked;
-  checkbox1.style.marginRight = '0px'; // Pas d'espace entre les deux cases
-    
-    checkbox1.addEventListener('change', () => {
-  selectedHands[index].checked = checkbox1.checked;
+checkbox1.type = 'checkbox';
+checkbox1.checked = checked; // récupéré du localStorage
+checkbox1.style.marginRight = '0px';
+
+checkbox1.addEventListener('change', () => {
+  selectedHands[index].checked = checkbox1.checked; // on persiste uniquement celle-ci
   localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-  updateNoteBadge();
+  // 🔥 PAS de updateNoteBadge(), car tu ne veux pas que ça influence la note
 });
 
   // Création de la deuxième checkbox
   const checkbox2 = document.createElement('input');
-  checkbox2.type = 'checkbox';
-  checkbox2.checked = checked;
-  checkbox2.style.marginLeft = '0px';
+checkbox2.type = 'checkbox';
+checkbox2.checked = false; // Toujours décochée au départ
+checkbox2.style.marginLeft = '0px';
 
-  // Événements identiques pour checkbox1 (pour éviter effet sur la note, on ne change rien)
-  
-
-  // Même chose pour checkbox2 (on peut laisser sans effet si tu veux)
-  checkbox2.addEventListener('change', () => {
-    selectedHands[index].checked = checkbox2.checked;
-  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-  updateNoteBadge();
+// Cette case ne fait rien d’autre
+checkbox2.addEventListener('change', () => {
+  // Aucune influence : pas de stockage, pas de note
+});
+    
     // Optionnel : on ne modifie pas selectedHands ni note pour la 2e case
-  });
 
   const label = document.createElement('span');
   label.textContent = hand + ' /';
