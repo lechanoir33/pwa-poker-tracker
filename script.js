@@ -193,7 +193,7 @@ function updateSelectedHandsDisplay() {
   // Création de la deuxième checkbox
   const checkbox2 = document.createElement('input');
   checkbox2.type = 'checkbox';
-  checkbox2.checked = checked;
+  checkbox2.checked = false;
   checkbox2.style.marginLeft = '0px';
 
     checkbox2.addEventListener('change', () => {
