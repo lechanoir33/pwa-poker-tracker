@@ -164,6 +164,7 @@ function updateSelectedHandsDisplay() {
     checked2: false // 👈 ajout ici
   }));
   localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+}
 } catch (e) {
   selectedHands = [];
 }
