@@ -181,7 +181,7 @@ function updateSelectedHandsDisplay() {
     const { hand, checked = true } = entry;
   const checkbox1 = document.createElement('input');
   checkbox1.type = 'checkbox';
-  checkbox1.checked = checked;
+  checkbox1.checked = false;
   checkbox1.style.marginRight = '0px'; // Pas d'espace entre les deux cases
     
     checkbox1.addEventListener('change', () => {
