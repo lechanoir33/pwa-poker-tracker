@@ -156,6 +156,8 @@ function updateSelectedHandsDisplay() {
 
   try {
     selectedHands = JSON.parse(raw) || [];
+
+    // Migration si l'ancien format est encore présent
     if (selectedHands.length > 0 && typeof selectedHands[0] === 'string') {
       selectedHands = selectedHands.map(h => ({ hand: h, checked: true }));
       localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
@@ -167,12 +169,31 @@ function updateSelectedHandsDisplay() {
   container.innerHTML = '';
 
   selectedHands.forEach((entry, index) => {
-  if (typeof entry.hand !== 'string') return;
+    if (typeof entry.hand !== 'string') return;
 
-  const wrapper = document.createElement('div');
-  wrapper.style.margin = '4px';
-  wrapper.style.display = 'flex';
-  wrapper.style.alignItems = 'center';
+    const wrapper = document.createElement('div');
+    wrapper.style.margin = '4px';
+    wrapper.style.display = 'flex';
+    wrapper.style.alignItems = 'center';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = entry.checked ?? true;
+
+    checkbox.addEventListener('change', () => {
+      selectedHands[index].checked = checkbox.checked;
+      localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+    });
+
+    const label = document.createElement('label');
+    label.style.marginLeft = '8px';
+    label.textContent = entry.hand;
+
+    wrapper.appendChild(checkbox);
+    wrapper.appendChild(label);
+    container.appendChild(wrapper);
+  });
+}
 
   // Création de la première checkbox
   const checkbox1 = document.createElement('input');
