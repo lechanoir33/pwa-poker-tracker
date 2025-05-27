@@ -179,7 +179,7 @@ function updateSelectedHandsDisplay() {
   wrapper.style.alignItems = 'center';
 
   // Création de la première checkbox
-    const { hand, checked = false } = entry;
+    const { hand, checked = false, checked2 = false } = entry;
   const checkbox1 = document.createElement('input');
 checkbox1.type = 'checkbox';
 checkbox1.checked = checked; // récupéré du localStorage
