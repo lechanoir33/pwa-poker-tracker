@@ -174,21 +174,6 @@ function updateSelectedHandsDisplay() {
   wrapper.style.display = 'flex';
   wrapper.style.alignItems = 'center';
 
-const { hand, checked = true } = entry; // ✅ ligne à insérer en haut du foreach
-
-const checkbox = document.createElement('input');
-checkbox.type = 'checkbox';
-checkbox.checked = checked; // ✅ conserve l'état
-
-checkbox.addEventListener('change', () => {
-  selectedHands[index].checked = checkbox.checked;
-  localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
-});
-
-wrapper.appendChild(checkbox);
-wrapper.appendChild(label); // si tu veux voir le nom de la main
-container.appendChild(wrapper); // pour l’injection dans la page
-    
   // Création de la première checkbox
   const checkbox1 = document.createElement('input');
   checkbox1.type = 'checkbox';
