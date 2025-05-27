@@ -200,7 +200,7 @@ function updateSelectedHandsDisplay() {
   });
 
   const label = document.createElement('span');
-  label.textContent = entry.hand + ' /';
+  label.textContent = hand + ' /';
   label.style.color = 'white';
   label.style.marginLeft = '5px'; // un peu d'espace entre la 2e case et le texte
 
