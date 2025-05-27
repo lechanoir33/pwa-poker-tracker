@@ -177,13 +177,13 @@ function updateSelectedHandsDisplay() {
   // Création de la première checkbox
   const checkbox1 = document.createElement('input');
   checkbox1.type = 'checkbox';
-  checkbox1.checked = false;
+  checkbox1.checked = checked;
   checkbox1.style.marginRight = '0px'; // Pas d'espace entre les deux cases
 
   // Création de la deuxième checkbox
   const checkbox2 = document.createElement('input');
   checkbox2.type = 'checkbox';
-  checkbox2.checked = false;
+  checkbox2.checked = checked;
   checkbox2.style.marginLeft = '0px';
 
   // Événements identiques pour checkbox1 (pour éviter effet sur la note, on ne change rien)
