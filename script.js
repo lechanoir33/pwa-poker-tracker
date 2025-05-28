@@ -352,7 +352,7 @@ function updateAlignmentIndex() {
 
   const indexEl = document.createElement('div');
   indexEl.id = 'alignment-index';
-  indexEl.textContent = `Indice d’alignement : ${index} %`;
+  indexEl.textContent = `HIT : ${index} %`;
 
   indexEl.style.color = index >= 70 ? 'lime' : index >= 40 ? 'orange' : 'red';
   indexEl.style.fontWeight = 'bold';
