@@ -189,6 +189,7 @@ checkbox1.style.marginRight = '0px';
 checkbox1.addEventListener('change', () => {
   selectedHands[index].checked = checkbox1.checked; // on persiste uniquement celle-ci
   localStorage.setItem('selectedHands', JSON.stringify(selectedHands));
+  updateAlignmentIndex();
   // 🔥 PAS de updateNoteBadge(), car tu ne veux pas que ça influence la note
 });
 
@@ -315,6 +316,7 @@ function updateNoteBadge() {
 window.onload = () => {
   loadCounts();
   updateSelectedHandsDisplay();
+  updateAlignmentIndex(); // ✅ Ajout : mettre à jour l’indice
   updateNoteBadge(); // 🔥 Ajout ici pour que la note s’affiche au chargement
 };
 
@@ -325,5 +327,38 @@ document.addEventListener('dblclick', e => e.preventDefault());
 document.addEventListener('DOMContentLoaded', () => {
   updateNoteBadge();
 });
+
+function updateAlignmentIndex() {
+  const container = document.getElementById('mainsSelectionnees');
+  if (!container) return;
+
+  const raw = localStorage.getItem('selectedHands');
+  let selectedHands = [];
+
+  try {
+    selectedHands = JSON.parse(raw) || [];
+  } catch (e) {
+    selectedHands = [];
+  }
+
+  const totalChecked1 = selectedHands.filter(h => h.checked).length;
+  const totalChecked2 = selectedHands.filter(h => h.checked2).length;
+
+  const index = totalChecked1 === 0 ? 0 : Math.round((totalChecked2 / totalChecked1) * 100);
+
+  // Supprimer l'ancien indice s'il existe
+  let oldIndex = document.getElementById('alignment-index');
+  if (oldIndex) oldIndex.remove();
+
+  const indexEl = document.createElement('div');
+  indexEl.id = 'alignment-index';
+  indexEl.textContent = `Indice d’alignement : ${index} %`;
+
+  indexEl.style.color = index >= 70 ? 'lime' : index >= 40 ? 'orange' : 'red';
+  indexEl.style.fontWeight = 'bold';
+  indexEl.style.marginTop = '12px';
+
+  container.parentElement.appendChild(indexEl); // l’ajoute juste sous les mains sélectionnées
+}
 
 
